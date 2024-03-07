@@ -1,5 +1,5 @@
 # ScriptHookDotNet-for-IVSDKDotNet
-GTA IV [ScriptHookDotNet](https://github.com/HazardX/gta4_scripthookdotnet) from HazardX with a IV-SDK .NET translation layer on-top to make mods created with ScriptHookDotNet work with IV-SDK .NET! - No more rain bug!
+GTA IV [ScriptHookDotNet](https://github.com/HazardX/gta4_scripthookdotnet) from [HazardX](https://twitter.com/HazardX) with a IV-SDK .NET translation layer on-top to make mods created with ScriptHookDotNet work with IV-SDK .NET! - No more rain bug!
 
 ### Currently in development!
 
