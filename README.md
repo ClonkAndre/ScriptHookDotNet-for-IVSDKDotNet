@@ -1,7 +1,7 @@
 # ScriptHookDotNet-for-IVSDKDotNet
 GTA IV ScriptHookDotNet from HazardX with a IV-SDK .NET translation layer on-top to make mods created with ScriptHookDotNet work with IV-SDK .NET!
 
-## Currently in development!
+### Currently in development!
 
 ## Limitations / Bugs
 There might be things which are not yet implemented, mods that simply crash the game or other weird bugs.
