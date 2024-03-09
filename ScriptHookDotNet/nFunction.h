@@ -38,6 +38,9 @@ namespace GTA
 		CLASS_ATTRIBUTES
 		public ref class Function sealed
 		{
+		internal:
+			static System::Object^ ConvertReturnTypeToExpectedType(System::Object^ returnValue, Type^ expectedType);
+
 		public:
 			~Function() { }
 

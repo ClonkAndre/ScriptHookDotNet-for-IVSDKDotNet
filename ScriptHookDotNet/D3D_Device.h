@@ -36,30 +36,11 @@ namespace GTA {
 	value class ImageInformation;
 	value class Viewport;
 
-
-
 	using namespace System;
-	//using namespace SlimDX;
 
 	//#pragma unmanaged
 
-	class Direct3DHookNative :
-		public ID3DDeviceHook {
-
-		private:
-
-		void OnCreateDevice(ID3DDevice *cDevice, PresentParameters *cPresentParameters) { /* nothing to do here */ }
-		void OnResetDevice(ID3DDevice *cDevice, PresentParameters *cPresentParameters);
-		void OnLostDevice(ID3DDevice *cDevice);
-		void OnDestroyDevice(ID3DDevice *cDevice) { /* nothing to do here */ }
-		void OnRender(ID3DDevice *cDevice);
-
-	};
-
 	//#pragma managed
-
-	//using namespace System;
-	//using namespace SlimDX;
 
 	private ref class Direct3D sealed {
 
@@ -68,7 +49,6 @@ namespace GTA {
 
 		//static u32 devicePtr = 0;
 		//static GTA::Direct3D9::Device^ pDevice;
-		static Direct3DHookNative* nativeHook = new Direct3DHookNative();
 		static IDirect3DDevice9* cDevice = NULL;
 		//static ID3DXSprite* sprite = NULL;
 		static bool bDrawing = false;
@@ -78,8 +58,8 @@ namespace GTA {
 
 		//static Direct3D();
 
-		~Direct3D() {
-			if (nativeHook != NULL) delete nativeHook;
+		~Direct3D()
+		{
 			cDevice = 0;
 		}
 

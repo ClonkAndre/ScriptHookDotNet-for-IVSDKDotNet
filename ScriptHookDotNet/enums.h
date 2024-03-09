@@ -21,13 +21,15 @@
 */
 
 #pragma once
+
+#include "include_defines.h"
+
 #pragma managed
 
 namespace GTA
 {
 
 	using namespace System;
-	using namespace System::IO;
 
 	[FlagsAttribute]
 	public enum class AnimationFlags
@@ -1393,13 +1395,6 @@ namespace GTA
 		v1110 = 0x01010100, // EFLC
 		v1120 = 0x01010200, // EFLC
 		v1130 = 0x01010300, // EFLC
-	};
-
-	private enum class cppHookVersion : u32
-	{
-		UnknownVersion = 0,
-		v0_4_0 = 0x0400, // 0.4.0
-		v0_5_1 = 0x0510, // 0.5.1
 	};
 
 }

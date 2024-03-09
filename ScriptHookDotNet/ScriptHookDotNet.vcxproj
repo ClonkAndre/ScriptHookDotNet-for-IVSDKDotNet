@@ -69,7 +69,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(WindowsSdkDir)include;$(DXSDK_2008-03)Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(WindowsSdkDir)include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_SHDN;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -81,7 +81,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);$(DXSDK_DIR)Lib\x86\d3dx9.lib;..\ScriptHook\bin\ScriptHook.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(DXSDK_DIR)Lib\x86\d3dx9.lib</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>
@@ -93,7 +93,8 @@
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>..\bin\_postbuild.bat</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -136,12 +137,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Reference Include="ClonksCodingLib.GTAIV">
-      <HintPath>..\..\..\Documents\GitHub\GTAIV\ClonksCodingLib.GTAIV\ClonksCodingLib.GTAIV\ClonksCodingLib.GTAIV\bin\x86\Release\ClonksCodingLib.GTAIV.dll</HintPath>
+      <HintPath>..\..\ClonksCodingLib.GTAIV\ClonksCodingLib.GTAIV\ClonksCodingLib.GTAIV\bin\x86\Release\ClonksCodingLib.GTAIV.dll</HintPath>
     </Reference>
     <Reference Include="IVSDKDotNetWrapper">
-      <HintPath>..\..\..\Documents\GitHub\GTAIV\IVSDKDotNet\Debug\IVSDKDotNetWrapper.dll</HintPath>
-      <Private>false</Private>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <HintPath>..\..\IVSDKDotNet\Debug\IVSDKDotNetWrapper.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
@@ -249,26 +248,6 @@
     <ClCompile Include="Viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\ScriptHook\Game.h" />
-    <ClInclude Include="..\ScriptHook\GameTypes.h" />
-    <ClInclude Include="..\ScriptHook\Log.h" />
-    <ClInclude Include="..\ScriptHook\NativeContext.h" />
-    <ClInclude Include="..\ScriptHook\NativeFiberThread.h" />
-    <ClInclude Include="..\ScriptHook\NativeInvoke.h" />
-    <ClInclude Include="..\ScriptHook\NativeThread.h" />
-    <ClInclude Include="..\ScriptHook\ScriptHookManager.h" />
-    <ClInclude Include="..\ScriptHook\Scripting.h" />
-    <ClInclude Include="..\ScriptHook\ScriptingDirty.h" />
-    <ClInclude Include="..\ScriptHook\ScriptingEnums.h" />
-    <ClInclude Include="..\ScriptHook\ScriptingHelpers.h" />
-    <ClInclude Include="..\ScriptHook\ScriptingTypes.h" />
-    <ClInclude Include="..\ScriptHook\Service.h" />
-    <ClInclude Include="..\ScriptHook\Services\Config.h" />
-    <ClInclude Include="..\ScriptHook\Services\D3DHook.h" />
-    <ClInclude Include="..\ScriptHook\Services\KeyboardHook.h" />
-    <ClInclude Include="..\ScriptHook\Services\Menu.h" />
-    <ClInclude Include="..\ScriptHook\Types.h" />
-    <ClInclude Include="..\ScriptHook\Version.h" />
     <ClInclude Include="Blip.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Checkpoint.h" />

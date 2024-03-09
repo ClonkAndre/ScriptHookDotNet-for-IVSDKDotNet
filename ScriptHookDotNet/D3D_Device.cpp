@@ -36,17 +36,6 @@
 namespace GTA {
 //namespace Direct3D {
 
-	void Direct3DHookNative::OnResetDevice( ID3DDevice *cDevice, PresentParameters *cPresentParameters ) {
-		Direct3D::CheckDevice(cDevice,true);
-	}
-	void Direct3DHookNative::OnLostDevice( ID3DDevice *cDevice ) {
-		Direct3D::OnDeviceLost();
-	}
-	void Direct3DHookNative::OnRender( ID3DDevice *cDevice ) {
-		Direct3D::CheckDevice(cDevice,false);
-		Direct3D::OnRender();
-	}
-
 	//static Direct3D::Direct3D() {
 	//	ObjectList = gcnew System::Collections::Generic::List<GTA::base::iD3DObject^>();
 	//}

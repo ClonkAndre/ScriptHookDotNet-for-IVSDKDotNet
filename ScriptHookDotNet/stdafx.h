@@ -35,10 +35,6 @@
 
 #include <vcclr.h>
 
-#include "../ScriptHook/Services/D3DHook.h"
-#include "../ScriptHook/NativeInvoke.h"
-#include "../ScriptHook/NativeThread.h"
-
 #include "enums.h"
 #include "D3D_enums.h"
 #include "NmEnums.h"

@@ -49,6 +49,7 @@ namespace GTA{
 
 	public:
 		Player(int ID);
+
 		property int ID{
 			int get();
 		}

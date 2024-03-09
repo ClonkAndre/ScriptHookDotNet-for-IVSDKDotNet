@@ -20,6 +20,8 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "nParameter.h"

@@ -142,6 +142,25 @@ namespace unmanaged
 	}
 }
 
+typedef unsigned int u32;
+typedef int i32;
+
+typedef unsigned short u16;
+typedef short i16;
+
+typedef unsigned char u8;
+typedef char i8, ch;
+
+typedef wchar_t wch;
+
+typedef float f32;
+typedef double f64;
+
+typedef bool b8;
+typedef unsigned int b32;
+
+typedef void* ptr;
+
 #define Vector3ToGTAVector3(vec) GTA::Vector3(vec.X, vec.Y, vec.Z)
 #define GTAVector3ToVector3(vec) System::Numerics::Vector3(vec.X, vec.Y, vec.Z)
 
@@ -219,10 +238,6 @@ template <typename R, typename T>
 inline R force_cast(T value) {
 	return *reinterpret_cast<R*>(&value);
 }
-
-typedef unsigned char u8;
-typedef unsigned int u32;
-typedef float f32;
 
 #define WinForms System::Windows::Forms
 

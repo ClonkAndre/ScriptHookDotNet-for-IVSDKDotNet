@@ -59,12 +59,6 @@
     <Filter Include="Objects\Direct3D">
       <UniqueIdentifier>{5f0507a3-71e7-47ac-846b-df2720135b81}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScriptHookHeaders">
-      <UniqueIdentifier>{d305109c-0dc0-4a0e-9699-e45d70ad439e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptHookHeaders\Services">
-      <UniqueIdentifier>{957594fb-02b8-41f2-b44e-9e176bef9417}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Objects\_includes">
       <UniqueIdentifier>{dfab8dfd-bb6a-45a7-aa72-a3e99dc8852c}</UniqueIdentifier>
     </Filter>
@@ -623,66 +617,6 @@
     </ClInclude>
     <ClInclude Include="MemoryStream.h">
       <Filter>Objects\LocalObjects\helper</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\Game.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\GameTypes.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\Log.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\NativeContext.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\NativeFiberThread.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\NativeInvoke.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\NativeThread.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\ScriptHookManager.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\Scripting.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\ScriptingDirty.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\ScriptingEnums.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\ScriptingHelpers.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\ScriptingTypes.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\Service.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\Types.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\Version.h">
-      <Filter>ScriptHookHeaders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\Services\Config.h">
-      <Filter>ScriptHookHeaders\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\Services\D3DHook.h">
-      <Filter>ScriptHookHeaders\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\Services\KeyboardHook.h">
-      <Filter>ScriptHookHeaders\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ScriptHook\Services\Menu.h">
-      <Filter>ScriptHookHeaders\Services</Filter>
     </ClInclude>
     <ClInclude Include="vDynamicMetadata.h">
       <Filter>Objects\ScriptingObjects\helper</Filter>

@@ -20,12 +20,16 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "nFunction.h"
 
 #include "nParameter.h"
 #include "nTemplate.h"
+
+#include "Player.h"
 
 #pragma managed
 
@@ -34,6 +38,27 @@ namespace GTA
 	namespace Native
 	{
 
+		System::Object^ Function::ConvertReturnTypeToExpectedType(System::Object^ returnValue, Type^ expectedType)
+		{
+			if (!returnValue)
+				return nullptr;
+
+			// Get type of value returned by the called native function
+			Type^ returnValueType = returnValue->GetType();
+
+			// Try convert returned int32 value to expected uint32 value
+			if (returnValueType == System::Int32::typeid && expectedType == System::UInt32::typeid)
+				return Convert::ToUInt32(returnValue);
+
+			// Try convert returned uint32 value to expected int32 value
+			if (returnValueType == System::UInt32::typeid && expectedType == System::Int32::typeid)
+				return Convert::ToInt32(returnValue);
+
+			// TODO: Add more if needed
+
+			return returnValue;
+		}
+
 		generic <typename T>
 		T Function::Call(String^ Name, ... array<Parameter^>^ Arguments)
 		{
@@ -41,7 +66,7 @@ namespace GTA
 			{
 				// Copy arguments to object array and convert them if necessary
 				array<Object^>^ args = gcnew array<Object^>(Arguments->Length);
-
+				
 				for (int i = 0; i < args->Length; i++)
 				{
 					Parameter^ param = Arguments[i];
@@ -77,22 +102,24 @@ namespace GTA
 
 						//	}
 						//	break;
-						//case vtype::var_player:
-						//	{
-
-						//	}
-						//	break;
+						case vtype::var_player:
+							{
+								Player^ playerObj = safe_cast<Player^>(param->Value);
+								args[i] = playerObj->ID;
+							}
+							break;
 						//case vtype::var_pickup:
 						//	{
 
 						//	}
 						//	break;
 	
-						//case vtype::var_vector3:
-						//	{
-
-						//	}
-						//	break;
+						case vtype::var_vector3:
+							{
+								Vector3 pos = safe_cast<Vector3>(param->Value);
+								args[i] = GTAVector3ToVector3(pos);
+							}
+							break;
 
 						default:
 							{
@@ -100,12 +127,13 @@ namespace GTA
 							}
 							break;
 					}
-
-
 				}
 
 				// Result
-				T r = IVSDKDotNet::Native::Function::Call<T>(Name, args);
+				System::Object^ r = IVSDKDotNet::Native::Function::Call<System::Object^>(Name, args);
+
+				if (!r)
+					return T();
 
 				// Set new argument values if they are pointers
 				for (int i = 0; i < args->Length; i++)
@@ -116,7 +144,7 @@ namespace GTA
 						Arguments[i]->SetValue(args[i]);
 				}
 
-				return r;
+				return (T)ConvertReturnTypeToExpectedType(r, T::typeid);
 			}
 			catch (...)
 			{
@@ -126,7 +154,7 @@ namespace GTA
 
 		void Function::Call(String^ Name, ... array<Parameter^>^ Arguments)
 		{
-			Call<Object^>(Name, Arguments);
+			Call<System::Object^>(Name, Arguments);
 		}
 
 	}
