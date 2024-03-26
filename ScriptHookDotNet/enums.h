@@ -31,6 +31,13 @@ namespace GTA
 
 	using namespace System;
 
+	public enum class ScriptActionID
+	{
+		KeyDown,
+		KeyUp,
+		ConsoleCommand
+	};
+
 	[FlagsAttribute]
 	public enum class AnimationFlags
 	{

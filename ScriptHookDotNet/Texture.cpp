@@ -28,72 +28,78 @@
 
 #pragma managed
 
-namespace GTA {
+namespace GTA
+{
 
-	void Texture::InitValues() {
-		pInternalPointer = 0;
-		pD3DObjectID = -1;
-	}
-
-	Texture::Texture(array<Byte>^ ImageData) {
+	Texture::Texture(array<Byte>^ ImageData)
+	{
 		InitValues();
-		if ( isNULL(ImageData) || (ImageData->Length == 0) ) throw gcnew Exception("ImageData for Texture is empty!");
+
+		if ( isNULL(ImageData) || (ImageData->Length == 0) )
+			throw gcnew Exception("ImageData for Texture is empty!");
+
 		data = ImageData;
 		//if (!NetHook::isPrimary) GetD3DObjectID(true);
 	}
 
-
-
-	Texture::~Texture() { // Dispose
+	Texture::~Texture()
+	{ // Dispose
 		//Unload(true); DO NOT unload it here! unload does not work in the remote script domain!
 		this->!Texture();
 	}
-	Texture::!Texture() { // Finalize
+	Texture::!Texture()
+	{ // Finalize
 		//Unload(true);
 	}
 
-	//ImageInformation Texture::GetImageInfo() {
-	//	int id = GetD3DObjectID(true);
-	//	if (id < 0) throw new Exception("Unable to load image information!");
+	void Texture::InitValues()
+	{
+		pInternalPointer = 0;
+		pD3DObjectID = -1;
+	}
 
-	//}
-
-	void Texture::Unload(bool permanent) {
-		if (pInternalPointer != 0) {
+	void Texture::Unload(bool permanent)
+	{
+		if (pInternalPointer != 0)
+		{
 			Direct3D::Release(this);
 			pInternalPointer = 0;
 		}
-		if (permanent) {
+		if (permanent)
+		{
 			pD3DObjectID = -1;
 		}
 	}
-
-	void Texture::Reload() {
+	void Texture::Reload()
+	{
 		Unload(false);
-		try {
-			if ( isNULL(data) || (data->Length == 0) ) throw gcnew Exception("No image data!"); //return;
+		try
+		{
+			if ( isNULL(data) || (data->Length == 0) )
+				throw gcnew Exception("No image data!"); //return;
+
 			pInternalPointer = Direct3D::NewTextureInternal(data, pImageInformation);
 		} catchErrors("Texture.GetInternalPointer: Error while creating new texture", pInternalPointer = 0; )
 	}
 
-	int Texture::GetInternalPointer(bool retrieveNew) {
-		if (!NetHook::isPrimary) throw gcnew Exception("Texture.GetInternalPointer cannot be called from remote script domain!");
-		if ( (pInternalPointer == 0) && (retrieveNew) ) Reload();
+	int Texture::GetInternalPointer(bool retrieveNew)
+	{
+		if ( (pInternalPointer == 0) && (retrieveNew) )
+			Reload();
+
 		return pInternalPointer;
 	}
 
-	int Texture::GetD3DObjectID(bool retrieveNew) {
-		if ((pD3DObjectID < 0) && retrieveNew) {
-			//Direct3D::Release(pD3DObjectID); // DO NOT unload it here! unload does not work in the remote script domain!
-			//pD3DObjectID = -1;
-			try {
+	int Texture::GetD3DObjectID(bool retrieveNew)
+	{
+		if ((pD3DObjectID < 0) && retrieveNew)
+		{
+			try
+			{
 				pD3DObjectID = Direct3D::AddNewObject(this);
 			} catchErrors("Texture.GetD3DObjectID: Error while creating new texture", pD3DObjectID = -1; )
-
-			if ( (pD3DObjectID >= 0) && (!NetHook::isPrimary) ) {
-				data = nullptr; // make sure that data is deleted in remote domain after is has been passed to the local domain
-			}
 		}
+
 		return pD3DObjectID;
 	}
 

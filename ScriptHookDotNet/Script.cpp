@@ -32,6 +32,7 @@
 #include "SettingsFile.h"
 #include "fFormHost.h"
 #include "vResources.h"
+#include "Graphics.h"
 
 #pragma managed
 
@@ -67,6 +68,8 @@ namespace GTA
 		BoundKeys = gcnew List<BoundKeyItem>();
 		ScriptCommands = gcnew List<BoundScriptCommandItem>();
 		ConsoleCommands = gcnew List<BoundCommandItem>();
+		ActionQueue = gcnew Queue<ScriptAction>();
+		D3D3ObjectList = gcnew List<GTA::base::iD3DObject^>();
 
 		// Settings
 		pSettings = gcnew SettingsFile(pFullPath + ".ini");
@@ -74,6 +77,7 @@ namespace GTA
 
 		// Other
 		FormHost = gcnew GTA::Forms::FormHost(this);
+		GFX = gcnew Graphics();
 
 		BlockWait = false;
 	}
@@ -173,33 +177,72 @@ namespace GTA
 		bWaiting = true;
 		BlockWait = true;
 
-		// TODO: Call wait here
+		// TODO: Figure out how to make the script wait
 
 		bWaiting = false;
 		BlockWait = false;
 	}
 
-	void Script::Abort()
+	void Script::Abort(bool calledFromManager)
 	{
 		BlockWait = true;
 		bRunning = false;
-	}
 
-	void Script::SendScriptCommand(GTA::Script^ Script, String^ Command, ... array<System::Object^>^ Parameter)
+		// Cleanup stuff
+		if (metadata)
+		{
+			metadata->Clear();
+			metadata = nullptr;
+		}
+		if (BoundKeys)
+		{
+			BoundKeys->Clear();
+			BoundKeys = nullptr;
+		}
+		if (ScriptCommands)
+		{
+			ScriptCommands->Clear();
+			ScriptCommands = nullptr;
+		}
+		if (ConsoleCommands)
+		{
+			ConsoleCommands->Clear();
+			ConsoleCommands = nullptr;
+		}
+		if (ActionQueue)
+		{
+			ActionQueue->Clear();
+			ActionQueue = nullptr;
+		}
+	}
+	void Script::Abort()
 	{
-
+		IVSDKDotNet::Manager::ManagerScript::GetInstance()->AbortScript(GUID);
 	}
+
 	void Script::SendScriptCommand(Guid ScriptGUID, String^ Command, ... array<System::Object^>^ Parameter)
 	{
+		System::Object^ res;
+		IVSDKDotNet::Manager::ManagerScript::GetInstance()->SendScriptCommand(GUID, ScriptGUID, Command, Parameter, res);
+	}
+	void Script::SendScriptCommand(GTA::Script^ Script, String^ Command, ... array<System::Object^>^ Parameter)
+	{
+		if (!Script)
+			return;
 
+		SendScriptCommand(Script->GUID, Command, Parameter);
 	}
 	void Script::SendScriptCommand(String^ ScriptGUID, String^ Command, ... array<System::Object^>^ Parameter)
 	{
+		if (String::IsNullOrWhiteSpace(ScriptGUID))
+			return;
+
 		SendScriptCommand(Guid(ScriptGUID), Command, Parameter);
 	}
+
 	bool Script::isScriptRunning(Guid GUID)
 	{
-		return false;
+		return IVSDKDotNet::Manager::ManagerScript::GetInstance()->IsScriptRunning(GUID);
 	}
 	bool Script::isScriptRunning(String^ GUID)
 	{
@@ -219,26 +262,9 @@ namespace GTA
 
 		BindKey(Key, MethodToBindTo);
 	}
-	void Script::BindConsoleCommand(String^ Command, ConsoleCommandDelegate^ MethodToBindTo)
-	{
-		ConsoleCommands->Add(BoundCommandItem(Command, MethodToBindTo));
-	}
-	void Script::BindConsoleCommand(String^ Command, ConsoleCommandDelegate^ MethodToBindTo, String^ HelpText)
-	{
-		BindConsoleCommand(Command, MethodToBindTo);
-	}
-	void Script::BindScriptCommand(String^ Command, ScriptCommandDelegate^ MethodToBindTo)
-	{
-		ScriptCommands->Add(BoundScriptCommandItem(Command, MethodToBindTo));
-	}
-	void Script::BindPhoneNumber(String^ PhoneNumber, PhoneDialDelegate^ MethodToBindTo)
-	{
-
-	}
-
 	void Script::UnbindKey(WinForms::Keys Key)
 	{
-		for (int i = BoundKeys->Count-1; i >= 0; i--)
+		for (int i = BoundKeys->Count - 1; i >= 0; i--)
 		{
 			if (BoundKeys[i].Key == Key)
 				BoundKeys->RemoveAt(i);
@@ -254,6 +280,15 @@ namespace GTA
 
 		UnbindKey(Key);
 	}
+
+	void Script::BindConsoleCommand(String^ Command, ConsoleCommandDelegate^ MethodToBindTo)
+	{
+		ConsoleCommands->Add(BoundCommandItem(Command, MethodToBindTo));
+	}
+	void Script::BindConsoleCommand(String^ Command, ConsoleCommandDelegate^ MethodToBindTo, String^ HelpText)
+	{
+		BindConsoleCommand(Command, MethodToBindTo);
+	}
 	void Script::UnbindConsoleCommand(String^ Command)
 	{
 		String^ cmd = Command->ToLower();
@@ -264,45 +299,44 @@ namespace GTA
 				ConsoleCommands->RemoveAt(i);
 		}
 	}
+
+	void Script::BindScriptCommand(String^ Command, ScriptCommandDelegate^ MethodToBindTo)
+	{
+		ScriptCommands->Add(BoundScriptCommandItem(Command, MethodToBindTo));
+	}
 	void Script::UnbindScriptCommand(String^ Command)
 	{
 		String^ cmd = Command->ToLower();
 
-		for (int i = ScriptCommands->Count-1; i >= 0; i--)
+		for (int i = ScriptCommands->Count - 1; i >= 0; i--)
 		{
 			if (ScriptCommands[i].Command == cmd)
 				ScriptCommands->RemoveAt(i);
 		}
 	}
+
+	void Script::BindPhoneNumber(String^ PhoneNumber, PhoneDialDelegate^ MethodToBindTo)
+	{
+		// Will not add
+	}
 	void Script::UnbindPhoneNumber(String^ PhoneNumber)
 	{
-
+		// Will not add
 	}
 
 	void Script::ProcessBoundKeys(WinForms::Keys Key)
 	{
 		for (int i = 0; i < BoundKeys->Count; i++)
 		{
-			if (BoundKeys[i].Key == Key)
+			BoundKeyItem item = BoundKeys[i];
+
+			if (item.Key == Key)
 			{
-				BoundKeys[i].Delegate->Invoke();
+				item.Delegate->Invoke();
 				return;
 			}
 		}
 	}
-	//void Script::ProcessBoundConsoleCommands(ScriptCommandEventArgs^ sceva)
-	//{
-	//	String^ cmd = sceva->Command->ToLower();
-
-	//	for (int i = 0; i < ScriptCommands->Count; i++)
-	//	{
-	//		if (ScriptCommands[i].Command == cmd)
-	//		{
-	//			ScriptCommands[i].Delegate->Invoke(sceva->sender, sceva->Parameters);
-	//			return;
-	//		}
-	//	}
-	//}
 	void Script::ProcessBoundScriptCommand(ScriptCommandEventArgs^ sceva)
 	{
 		String^ cmd = sceva->Command->ToLower();
@@ -350,7 +384,7 @@ namespace GTA
 
 		bool bw = BlockWait;
 		BlockWait = true;
-		
+
 		PerFrameDrawing(this, e);
 		FormHost->TriggerDragging();
 
@@ -381,6 +415,51 @@ namespace GTA
 			return;
 
 		KeyUp(this, args);
+	}
+
+	void Script::ScriptCommandReceived(GTA::ScriptCommandEventArgs^ args)
+	{
+		if (!bRunning)
+			return;
+
+		// Go through registered script commands
+		for (int i = 0; i < ScriptCommands->Count; i++)
+		{
+			GTA::BoundScriptCommandItem^ item = ScriptCommands[i];
+
+			if (args->Command->ToLower() == item->Command)
+			{
+				if (item->Delegate)
+					item->Delegate->Invoke(args->sender, args->Parameters);
+
+				break;
+			}
+		}
+
+		// Raise event
+		ScriptCommand(args->sender, args);
+	}
+	void Script::ConsoleCommandReceived(String^ cmd, array<String^>^ args)
+	{
+		if (!bRunning)
+			return;
+
+		// Go through registered console commands
+		for (int i = 0; i < ConsoleCommands->Count; i++)
+		{
+			GTA::BoundCommandItem^ item = ConsoleCommands[i];
+
+			if (item->Command == cmd)
+			{
+				if (item->Delegate)
+					item->Delegate->Invoke(gcnew GTA::ParameterCollection(args));
+
+				break;
+			}
+		}
+
+		// Raise event
+		ConsoleCommand(nullptr, gcnew ConsoleEventArgs(cmd, args));
 	}
 
 	String^ Script::ToString()

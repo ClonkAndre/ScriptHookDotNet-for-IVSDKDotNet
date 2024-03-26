@@ -161,34 +161,46 @@ namespace GTA {
 		return Input->Replace(vbCr,String::Empty)->Split(gcnew array<String^>(1){vbLf}, StringSplitOptions::RemoveEmptyEntries);
 	}
 
-	array<String^>^ Helper::GetResourceNames(System::Type^ SameNamespaceAs) {
-      return SameNamespaceAs->Assembly->GetManifestResourceNames();
+	array<String^>^ Helper::GetResourceNames(System::Type^ SameNamespaceAs)
+	{
+		return SameNamespaceAs->Assembly->GetManifestResourceNames();
 	}
-
-	System::IO::Stream^ Helper::GetResourceStream(String^ ResourceName, System::Type^ SameNamespaceAs) {
-         //Return CurrentAssembly.GetManifestResourceStream(SameNamespaceAs, Name) // DOES NOT WORK!!!
+	System::IO::Stream^ Helper::GetResourceStream(String^ ResourceName, System::Type^ SameNamespaceAs)
+	{
 		String^ dotted = "." + ResourceName;
-      array<String^>^ items = GetResourceNames(SameNamespaceAs);
-		for (int i = 0; i < items->Length; i++) {
-			if ( (items[i]->Equals(ResourceName, StringComparison::InvariantCultureIgnoreCase)) || (items[i]->EndsWith(dotted, StringComparison::InvariantCultureIgnoreCase)) ) {
-				return SameNamespaceAs->Assembly->GetManifestResourceStream(items[i]);
-			}
+		array<String^>^ items = GetResourceNames(SameNamespaceAs);
+
+		for (int i = 0; i < items->Length; i++)
+		{
+			String^ resourceFullName = items[i];
+
+			if ( (resourceFullName->Equals(ResourceName, StringComparison::InvariantCultureIgnoreCase)) || (resourceFullName->EndsWith(dotted, StringComparison::InvariantCultureIgnoreCase)) )
+				return SameNamespaceAs->Assembly->GetManifestResourceStream(resourceFullName);
 		}
-		if (VERBOSE) NetHook::Log("Resource '" + ResourceName + "' not found in Namespace '" + SameNamespaceAs->FullName + "'!");
-      return nullptr;
-	}
 
-	array<Byte>^ Helper::GetResourceData(String^ ResourceName, System::Type^ SameNamespaceAs) {
+		if (VERBOSE)
+			NetHook::Log("Resource '" + ResourceName + "' not found in Namespace '" + SameNamespaceAs->FullName + "'!");
+
+		return nullptr;
+	}
+	array<Byte>^ Helper::GetResourceData(String^ ResourceName, System::Type^ SameNamespaceAs)
+	{
 		System::IO::Stream^ s = GetResourceStream(ResourceName, SameNamespaceAs);
-      if ( isNULL(s) || (s->Length == 0) ) return gcnew array<Byte>(0);
-      array<Byte>^ Data = gcnew array<Byte>((int)s->Length);
-      s->Read(Data, 0, (int)s->Length);
-      return Data;
-	}
 
-	String^ Helper::GetResourceString(String^ ResourceName, System::Type^ SameNamespaceAs, System::Text::Encoding^ optEncoding) {
-		if isNULL(optEncoding) optEncoding = System::Text::Encoding::ASCII;
-      return optEncoding->GetString(GetResourceData(ResourceName, SameNamespaceAs));
+		if (isNULL(s) || (s->Length == 0))
+			return gcnew array<Byte>(0);
+
+		array<Byte>^ Data = gcnew array<Byte>((int)s->Length);
+		s->Read(Data, 0, (int)s->Length);
+
+		return Data;
+	}
+	String^ Helper::GetResourceString(String^ ResourceName, System::Type^ SameNamespaceAs, System::Text::Encoding^ optEncoding)
+	{
+		if isNULL(optEncoding)
+			optEncoding = System::Text::Encoding::ASCII;
+
+		return optEncoding->GetString(GetResourceData(ResourceName, SameNamespaceAs));
 	}
 
 	String^ Helper::CleanPhoneNumber(String^ PhoneNumber) {

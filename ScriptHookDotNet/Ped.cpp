@@ -414,8 +414,8 @@ namespace GTA
 		if (car == 0)
 			return nullptr;
 
-		return gcnew GTA::Vehicle(car);
-		// return ContentCache::GetVehicle(car);
+		// return gcnew GTA::Vehicle(car);
+		return ContentCache::GetVehicle(car);
 	}
 
 	Blip^ Ped::AttachBlip()

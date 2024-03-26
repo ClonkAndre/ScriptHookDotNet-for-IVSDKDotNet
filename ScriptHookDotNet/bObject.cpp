@@ -28,33 +28,32 @@
 
 #pragma managed
 
-namespace GTA {
-namespace base {
+namespace GTA
+{
+	namespace base
+	{
 
-	bool Object::Exists() {
-		if (!bExists) return false;
-		//if (pLastExistsCheck == RemoteScriptDomain::FrameNum) return true;
-		//pLastExistsCheck = RemoteScriptDomain::FrameNum;
-		try {
-			bExists = InternalCheckExists();
-		} catch (...) {
-			bExists = false;
+		bool Object::Exists()
+		{
+			if (!bExists)
+				return false;
+	
+			try
+			{
+				bExists = InternalCheckExists();
+			}
+			catch (...)
+			{
+				bExists = false;
+			}
+	
+			if (bExists)
+				return true;
+	
+			OnCeasedToExist(EventArgs::Empty);
+			VLOG( GetType()->Name + " " + pUID.ToString() + " ceased to exist!" );
+			return false;
 		}
-		if (bExists) return true;
-		OnCeasedToExist(EventArgs::Empty);
-		VLOG( GetType()->Name + " " + pUID.ToString() + " ceased to exist!" );
-		return false;
+
 	}
-
-	//bool Object::ThrowExistError() {
-	//	if (Exists()) return false;
-	//	#ifdef DEBUG
-	//		throw gcnew NonExistingObjectException( NonExistingObjectException::DEFAULT_MESSAGE + " (" + GetType()->Name + " " + pUID.ToString() + ")" );
-	//	#else
-	//		throw gcnew NonExistingObjectException();
-	//	#endif
-	//	return true;
-	//}
-
-}
 }

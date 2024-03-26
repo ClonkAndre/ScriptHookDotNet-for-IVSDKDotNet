@@ -55,8 +55,6 @@ namespace base {
 			return true;
 		}
 
-		//bool ThrowExistError();
-
 		property int UID {
 			int get() { return pUID; }
 		}

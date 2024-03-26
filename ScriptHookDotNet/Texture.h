@@ -29,11 +29,9 @@ namespace GTA {
 
 	CLASS_ATTRIBUTES
 	[Serializable]
-	public ref class Texture sealed
-		: public base::iD3DObject {
-
+	public ref class Texture sealed : public base::iD3DObject
+	{
 	private:
-
 		array<Byte>^ data;
 		
 		[NonSerialized]
@@ -56,11 +54,6 @@ namespace GTA {
 	public:
 		Texture(array<Byte>^ ImageData);
 		~Texture(); // Dispose
-
-
-		//property int Height {
-		//	int get() { return pHeight; }
-		//}
 
 	};
 

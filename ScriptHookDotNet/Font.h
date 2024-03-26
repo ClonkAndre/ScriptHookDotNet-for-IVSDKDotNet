@@ -23,15 +23,13 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-
+namespace GTA
+{
 	CLASS_ATTRIBUTES
 	[Serializable]
-	public ref class Font sealed
-		: public base::iD3DObject {
-
+	public ref class Font sealed : public base::iD3DObject
+	{
 	private:
-
 		String^ pFontFamilyName;
 		float pHeight;
 		bool bBold;
@@ -71,102 +69,117 @@ namespace GTA {
 		Font();
 		~Font(); // Dispose
 
-		property Drawing::Font^ WindowsFont {
+		property Drawing::Font^ WindowsFont 
+		{
 			Drawing::Font^ get();
-			//void set(Drawing::Font^ value);
 		}
 
-		property bool Bold {
-			bool get() {
-				if isNotNULL(inherited) return inherited->Bold;
+		property bool Bold
+		{
+			bool get()
+			{
+				if isNotNULL(inherited)
+					return inherited->Bold;
+
 				return bBold;
 			}
-			//void set(bool value) {
-			//	DestroyInheritance();
-			//	bBold = value;
-			//	bChanged = true;
-			//}
 		}
-		property bool Italic {
-			bool get() {
-				if isNotNULL(inherited) return inherited->Italic;
+		property bool Italic
+		{
+			bool get()
+			{
+				if isNotNULL(inherited)
+					return inherited->Italic;
+
 				return bItalic;
 			}
-			//void set(bool value) {
-			//	DestroyInheritance();
-			//	bItalic = value;
-			//	bChanged = true;
-			//}
 		}
-		property String^ FontFamily {
-			String^ get() {
-				if isNotNULL(inherited) return inherited->FontFamily;
+		property String^ FontFamily
+		{
+			String^ get()
+			{
+				if isNotNULL(inherited)
+					return inherited->FontFamily;
+
 				return pFontFamilyName;
 			}
-			//void set(String^ value) {
-			//	DestroyInheritance();
-			//	pFontFamilyName = value;
-			//	bChanged = true;
-			//}
 		}
-		property float Height {
-			float get() {
-				if isNotNULL(inherited) return inherited->Height;
+		property float Height
+		{
+			float get()
+			{
+				if isNotNULL(inherited)
+					return inherited->Height;
+
 				return pHeight;
 			}
-			//void set(float value) {
-			//	DestroyInheritance();
-			//	pHeight = value;
-			//	bChanged = true;
-			//}
 		}
-		property FontScaling Scaling {
-			FontScaling get() {
-				if isNotNULL(inherited) return inherited->Scaling;
+		property FontScaling Scaling
+		{
+			FontScaling get()
+			{
+				if isNotNULL(inherited)
+					return inherited->Scaling;
+
 				return pScaling;
 			}
-			//void set(FontScaling value) {
-			//	DestroyInheritance();
-			//	pScaling = value;
-			//	bChanged = true;
-			//}
 		}
-		property Drawing::Color Color {
-			Drawing::Color get() {
-				if isNotNULL(inherited) return inherited->Color;
+		property Drawing::Color Color
+		{
+			Drawing::Color get()
+			{
+				if isNotNULL(inherited)
+					return inherited->Color;
+
 				return pColor;
 			}
-			void set(Drawing::Color value) {
+			void set(Drawing::Color value)
+			{
 				DestroyInheritance();
 				pColor = value;
 			}
 		}
-		property FontEffect Effect {
-			FontEffect get() {
-				if isNotNULL(inherited) return inherited->Effect;
+		property FontEffect Effect
+		{
+			FontEffect get()
+			{
+				if isNotNULL(inherited)
+					return inherited->Effect;
+
 				return pEffect;
 			}
-			void set(FontEffect value) {
+			void set(FontEffect value)
+			{
 				DestroyInheritance();
 				pEffect = value;
 			}
 		}
-		property int EffectSize {
-			int get() {
-				if isNotNULL(inherited) return inherited->EffectSize;
+		property int EffectSize
+		{
+			int get()
+			{
+				if isNotNULL(inherited)
+					return inherited->EffectSize;
+
 				return pEffectSize;
 			}
-			void set(int value) {
+			void set(int value)
+			{
 				DestroyInheritance();
 				pEffectSize = value;
 			}
 		}
-		property Drawing::Color EffectColor {
-			Drawing::Color get() {
-				if isNotNULL(inherited) return inherited->EffectColor;
+		property Drawing::Color EffectColor
+		{
+			Drawing::Color get()
+			{
+				if isNotNULL(inherited)
+					return inherited->EffectColor;
+
 				return pEffectColor;
 			}
-			void set(Drawing::Color value) {
+			void set(Drawing::Color value)
+			{
 				DestroyInheritance();
 				pEffectColor = value;
 			}
@@ -175,5 +188,4 @@ namespace GTA {
 		float GetLineHeight(FontScaling Scaling); //pFont.SizeInPoints;
 
 	};
-
 }

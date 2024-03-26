@@ -237,8 +237,6 @@ namespace GTA
 			int b = IVSDKDotNet::Native::Natives::GET_FIRST_BLIP_INFO_ID(bt);
 			while (IVSDKDotNet::Native::Natives::DOES_BLIP_EXIST(b))
 			{
-				WHILE_LOG("Game::GetWaypoint");
-
 				//if (Scripting::DoesBlipExist(b)) {
 				if (IVSDKDotNet::Native::Natives::GET_BLIP_SPRITE(b) == 8)
 				{ //BLIP_WAYPOINT

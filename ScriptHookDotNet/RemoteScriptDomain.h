@@ -26,14 +26,8 @@
 namespace GTA
 {
 
-	using namespace System;
-	using namespace System::Reflection;
-
-	/// <summary>
-	/// Factory class to create objects exposing IRemoteInterface
-	/// </summary>
 	CLASS_ATTRIBUTES
-	private ref class RemoteScriptDomain sealed : public MarshalByRefObject
+	private ref class RemoteScriptDomain
 	{
 	public:
 		RemoteScriptDomain();
@@ -45,16 +39,8 @@ namespace GTA
 			}
 		}
 
-		virtual System::Object^ InitializeLifetimeService() override {
-			return nullptr;
-		}
-
 	private:
-
-		GTA::Graphics^ pGraphics;
 		GTA::Forms::FormHost^ pFormHost;
-
-		int pOpenFormsCount;
 
 	internal:
 		property GTA::Script^ CurrentScript

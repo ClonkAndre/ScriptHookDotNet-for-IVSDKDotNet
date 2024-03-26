@@ -25,6 +25,20 @@
 
 namespace GTA
 {
+	public value class ScriptAction
+	{
+	public:
+		ScriptActionID ID;
+		Action^ Act;
+
+	public:
+		ScriptAction(ScriptActionID id, Action^ a)
+		{
+			ID = id;
+			Act = a;
+		}
+	};
+
 	public ref class Script abstract
 	{
 	private:
@@ -145,9 +159,10 @@ namespace GTA
 		void UnbindScriptCommand(String^ Command);
 		void UnbindPhoneNumber(String^ PhoneNumber);
 
-		void SendScriptCommand(GTA::Script^ TargetScript, String^ Command, ... array<System::Object^>^ Parameter);
-		void SendScriptCommand(String^ TargetScriptGUID, String^ Command, ... array<System::Object^>^ Parameter);
 		void SendScriptCommand(Guid TargetScriptGUID, String^ Command, ... array<System::Object^>^ Parameter);
+		void SendScriptCommand(String^ TargetScriptGUID, String^ Command, ... array<System::Object^>^ Parameter);
+		void SendScriptCommand(GTA::Script^ TargetScript, String^ Command, ... array<System::Object^>^ Parameter);
+		
 		bool isScriptRunning(String^ GUID);
 		bool isScriptRunning(Guid GUID);
 
@@ -221,16 +236,23 @@ namespace GTA
 		{
 			String^ get() { return System::IO::Path::GetFileName(Filename) + ":" + Name; }
 		}
-	
-		void Abort();
+
+		void Abort(bool calledFromManager); // Only the IV-SDK .NET Manager will call this
+		void Abort(); // Only scripts will call this
 
 		virtual System::String^ ToString() override;
 
-		// Stuff that was originally not public
-	public:
+	public: // Stuff that was originally not public
 		List<BoundKeyItem>^ BoundKeys;
 		List<BoundScriptCommandItem>^ ScriptCommands;
 		List<BoundCommandItem>^ ConsoleCommands;
+		Queue<ScriptAction>^ ActionQueue;
+		List<GTA::base::iD3DObject^>^ D3D3ObjectList;
+
+		Graphics^ GFX;
+
+		bool KeyDownActionQueued;
+		bool KeyUpActionQueued;
 
 		void ProcessBoundKeys(WinForms::Keys Key);
 		void ProcessBoundScriptCommand(ScriptCommandEventArgs^ sceva);
@@ -240,6 +262,9 @@ namespace GTA
 		void DoPerFrameScriptDrawing();
 		void DoKeyDown(GTA::KeyEventArgs^ args);
 		void DoKeyUp(GTA::KeyEventArgs^ args);
+
+		void ScriptCommandReceived(GTA::ScriptCommandEventArgs^ args);
+		void ConsoleCommandReceived(String^ cmd, array<String^>^ args);
 
 	};
 

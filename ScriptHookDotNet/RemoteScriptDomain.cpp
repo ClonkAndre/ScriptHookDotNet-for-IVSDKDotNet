@@ -24,9 +24,6 @@
 
 #include "RemoteScriptDomain.h"
 
-#include "ContentCache.h"
-#include "Game.h"
-#include "Graphics.h"
 #include "Script.h"
 #include "fFormHost.h"
 #include "fMouse.h"
@@ -36,11 +33,8 @@
 namespace GTA
 {
 
-	// PRIVATE:
-
 	RemoteScriptDomain::RemoteScriptDomain()
 	{
-		pGraphics = gcnew GTA::Graphics();
 		pFormHost = gcnew GTA::Forms::FormHost(nullptr);
 	}
 

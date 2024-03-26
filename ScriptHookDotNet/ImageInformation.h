@@ -38,7 +38,8 @@ namespace GTA {
 		CLASS_ATTRIBUTES
 		[Serializable]
 		[System::Runtime::InteropServices::StructLayout( System::Runtime::InteropServices::LayoutKind::Sequential )]
-		private value class ImageInformation : System::IEquatable<ImageInformation>	{
+		private value class ImageInformation : System::IEquatable<ImageInformation>
+		{
 		private:
 			static ImageInformation FromMemory_Internal( const void* data, UINT size );
 

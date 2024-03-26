@@ -38,62 +38,35 @@ namespace GTA {
 
 	using namespace System;
 
-	//#pragma unmanaged
-
-	//#pragma managed
-
-	private ref class Direct3D sealed {
-
+	private ref class Direct3D sealed
+	{
 	private:
-		Direct3D() {}
-
-		//static u32 devicePtr = 0;
-		//static GTA::Direct3D9::Device^ pDevice;
-		static IDirect3DDevice9* cDevice = NULL;
-		//static ID3DXSprite* sprite = NULL;
+		static property IDirect3DDevice9* cDevice
+		{
+			IDirect3DDevice9* get()
+			{
+				return (IDirect3DDevice9*)IVSDKDotNet::RAGE::GetDirect3DDevice9().ToPointer();
+			}
+		}
 		static bool bDrawing = false;
 		static bool bResettedOnce = false;
 
 		static System::Collections::Generic::List<GTA::base::iD3DObject^>^ ObjectList = gcnew System::Collections::Generic::List<GTA::base::iD3DObject^>();
 
-		//static Direct3D();
-
-		~Direct3D()
-		{
-			cDevice = 0;
-		}
-
-		//static void Direct3D::CreateSprite();
-		//static void Direct3D::BeginSprite(int flags);
-		//static void Direct3D::EndSprite();
-
+	private:
 		static void ReleaseFont(GTA::Font^ Font);
 		static void ReleaseTexture(GTA::Texture^ Texture);
 
 	internal:
-		static void CheckDevice(IDirect3DDevice9 *device, bool force);
-		static void OnDeviceCreated();
-		static void OnDeviceLost();
-		static void OnRender();
-
-		static void InstallHook();
-		static void RemoveHook();
-		static void ForceDeviceRelease();
-		static void ForceDeviceReset();
-
-		//static void Release(int index);
 		static void Release(GTA::base::iD3DObject^ D3DObject);
-		static void ReleaseAll(bool permanent);
 
 	public:
-		//static property GTA::Direct3D9::Device^ Device {
-		//	GTA::Direct3D9::Device^ get() { return pDevice;	}
-		//}
-		static property bool isDrawing {
-			bool get() { return bDrawing;	}
+		static property bool isDrawing
+		{
+			bool get() { return bDrawing; }
 		}
-
-		static property GTA::Viewport Viewport {
+		static property GTA::Viewport Viewport
+		{
 			GTA::Viewport get();
 		}
 
@@ -116,13 +89,8 @@ namespace GTA {
 
 		static void DrawSprite(GTA::Texture^ Texture, Vector3 CornerTL, Vector3 CornerTR, Vector3 CornerBL, Vector3 CornerBR, int ColorTL, int ColorTR, int ColorBL, int ColorBR);
 		static void DrawSprite(GTA::Texture^ Texture, Drawing::RectangleF rect, int Color);
-		//static void DrawSprite(GTA::Texture^ Texture, float x, float y, float width, float height, float Rotation, int Color);
 
-		static void DrawMouseArrow(int x, int y, int size, int color);
-		static void DrawMouseArrow(int x, int y, int size, int color, int borderColor);
-
-		static void DrawString(String^ Text, Drawing::Rectangle area, TextAlignment alignment, int Color, int FontID);
-		//static void DrawString(String^ Text, int X, int Y, int Color, int FontPtr);
+		static void DrawString(String^ Text, Drawing::Rectangle area, TextAlignment alignment, Drawing::Color color, int FontID);
 
 		/// <summary>
 		/// Adds a new Direct3D object to the ObjectCache and returns the ID.
@@ -138,7 +106,6 @@ namespace GTA {
 		/// Creates a new Direct3D Font and returns the pointer. LOCAL ONLY!
 		/// </summary>
 		static int NewTextureInternal(array<Byte>^ data, [Out] ImageInformation% imageInformatio);
-
 
 	};
 

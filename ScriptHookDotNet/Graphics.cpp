@@ -20,6 +20,8 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #pragma once
 #include "stdafx.h"
 
@@ -33,94 +35,116 @@
 
 #define DrawText DrawText
 
-namespace GTA {
+namespace GTA
+{
 
-	Graphics::Graphics() {
+	// - - - Constructor - - -
+	Graphics::Graphics()
+	{
 		pDefaultFont = gcnew Font();
+		InitFrame();
+		InitScript();
 	}
 
+	// - - - Properties, Methods and Functions - - -
 	void Graphics::InitFrame()
 	{
 		f32 ft = 0.0f;
 		IVSDKDotNet::Native::Natives::GET_FRAME_TIME(ft);
 		pFrameTime = ft;
-		//pLineTex = (gcnew TexturePack("network", true))->GetTexture("MAPCURSOR1"); //MAPCURSOR1
 	}
-	void Graphics::InitScript() {
-		//pLastFont = nullptr;
+	void Graphics::InitScript()
+	{
 		pScaling = FontScaling::Pixel;
 	}
 
-
-	void Graphics::DrawText(String^ Text, float X, float Y, Drawing::Color Color, GTA::Font^ Font) {
+	void Graphics::DrawText(String^ Text, float X, float Y, Drawing::Color Color, GTA::Font^ Font)
+	{
 		DrawText(Text, Drawing::RectangleF(X, Y, 0.0f, 0.0f), TextAlignment::NoClip, Color, Font);
 	}
-	void Graphics::DrawText(String^ Text, float X, float Y, GTA::Font^ Font) {
+	void Graphics::DrawText(String^ Text, float X, float Y, GTA::Font^ Font)
+	{
 		DrawText(Text, X, Y, Font->Color, Font);
 	}
-	void Graphics::DrawText(String^ Text, float X, float Y, Drawing::Color Color) {
+	void Graphics::DrawText(String^ Text, float X, float Y, Drawing::Color Color)
+	{
 		DrawText(Text, X, Y, Color, pDefaultFont);
 	}
-	void Graphics::DrawText(String^ Text, float X, float Y) {
+	void Graphics::DrawText(String^ Text, float X, float Y)
+	{
 		DrawText(Text, X, Y, pDefaultFont->Color, pDefaultFont);
 	}
 
-	Drawing::Rectangle ShiftRect(Drawing::Rectangle rect, int shiftX, int shiftY) {
+	Drawing::Rectangle ShiftRect(Drawing::Rectangle rect, int shiftX, int shiftY)
+	{
 		return Drawing::Rectangle(rect.X+shiftX, rect.Y+shiftY, rect.Width, rect.Height);
 	}
 
-	void Graphics::DrawText(String^ Text, Drawing::RectangleF Area, TextAlignment Alignment, Drawing::Color Color, GTA::Font^ Font) {
+	void Graphics::DrawText(String^ Text, Drawing::RectangleF Area, TextAlignment Alignment, Drawing::Color Color, GTA::Font^ Font)
+	{
 		int FontID = Font->GetD3DObjectID(true);
-		if (FontID < 0) return;
+
+		if (FontID < 0)
+			return;
 
 		Drawing::Rectangle pArea = ConvertToPixel(Area);
 
-		if (Font->Effect != FontEffect::None) {
-			int eCol = Font->EffectColor.ToArgb();
+		if (Font->Effect != FontEffect::None)
+		{
+			//int eCol = Font->EffectColor.ToArgb();
 			int eSiz = Font->EffectSize;
-			if ( (Font->Effect == FontEffect::Shadow) || (Font->Effect == FontEffect::Edge) ) {
-				Direct3D::DrawString(Text, ShiftRect(pArea,-eSiz,+eSiz), Alignment, eCol, FontID);
+			if ( (Font->Effect == FontEffect::Shadow) || (Font->Effect == FontEffect::Edge) )
+			{
+				Direct3D::DrawString(Text, ShiftRect(pArea,-eSiz,+eSiz), Alignment, Color, FontID);
 			}
-			if (Font->Effect == FontEffect::Edge) {
-				Direct3D::DrawString(Text, ShiftRect(pArea,-eSiz,-eSiz), Alignment, eCol, FontID);
-				Direct3D::DrawString(Text, ShiftRect(pArea,+eSiz,-eSiz), Alignment, eCol, FontID);
-				Direct3D::DrawString(Text, ShiftRect(pArea,+eSiz,+eSiz), Alignment, eCol, FontID);
+			if (Font->Effect == FontEffect::Edge)
+			{
+				Direct3D::DrawString(Text, ShiftRect(pArea,-eSiz,-eSiz), Alignment, Color, FontID);
+				Direct3D::DrawString(Text, ShiftRect(pArea,+eSiz,-eSiz), Alignment, Color, FontID);
+				Direct3D::DrawString(Text, ShiftRect(pArea,+eSiz,+eSiz), Alignment, Color, FontID);
 			}
 		}
 
-		Direct3D::DrawString(Text, pArea, Alignment, Color.ToArgb(), FontID);
+		// Color.ToArgb()
+		Direct3D::DrawString(Text, pArea, Alignment, Color, FontID);
 	}
-	void Graphics::DrawText(String^ Text, Drawing::RectangleF Area, TextAlignment Alignment, GTA::Font^ Font) {
+	void Graphics::DrawText(String^ Text, Drawing::RectangleF Area, TextAlignment Alignment, GTA::Font^ Font)
+	{
 		DrawText(Text, Area, Alignment, Font->Color, Font);
 	}
-	void Graphics::DrawText(String^ Text, Drawing::RectangleF Area, TextAlignment Alignment, Drawing::Color Color) {
+	void Graphics::DrawText(String^ Text, Drawing::RectangleF Area, TextAlignment Alignment, Drawing::Color Color)
+	{
 		DrawText(Text, Area, Alignment, Color, pDefaultFont);
 	}
-	void Graphics::DrawText(String^ Text, Drawing::RectangleF Area, TextAlignment Alignment) {
+	void Graphics::DrawText(String^ Text, Drawing::RectangleF Area, TextAlignment Alignment)
+	{
 		DrawText(Text, Area, Alignment, pDefaultFont->Color, pDefaultFont);
 	}
-	void Graphics::DrawText(String^ Text, Drawing::RectangleF Area) {
+	void Graphics::DrawText(String^ Text, Drawing::RectangleF Area)
+	{
 		DrawText(Text, Area, TextAlignment::WordBreak, pDefaultFont->Color, pDefaultFont);
 	}
 
-
-	void Graphics::DrawRectangle(Drawing::RectangleF rect, Drawing::Color Color) {
+	void Graphics::DrawRectangle(Drawing::RectangleF rect, Drawing::Color Color)
+	{
 		Direct3D::DrawBoxFilled(ConvertToPixelF(rect), Color.ToArgb());
 	}
-	void Graphics::DrawRectangle(float CenterX, float CenterY, float Width, float Height, Drawing::Color Color) {
+	void Graphics::DrawRectangle(float CenterX, float CenterY, float Width, float Height, Drawing::Color Color)
+	{
 		DrawRectangle(Drawing::RectangleF(CenterX - Width*0.5f, CenterY - Height*0.5f, Width, Height), Color);
 	}
 
-
-	void Graphics::DrawLine(float X1, float Y1, float X2, float Y2, float Width, Drawing::Color Color) {
+	void Graphics::DrawLine(float X1, float Y1, float X2, float Y2, float Width, Drawing::Color Color)
+	{
 		Direct3D::DrawLine(ToPixelX(X1), ToPixelY(Y1), ToPixelX(X2), ToPixelY(Y2), ToPixelX(Width), Color.ToArgb());
 	}
-	void Graphics::DrawLine(Drawing::PointF Point1, Drawing::PointF Point2, float Width, Drawing::Color Color) {
+	void Graphics::DrawLine(Drawing::PointF Point1, Drawing::PointF Point2, float Width, Drawing::Color Color)
+	{
 		DrawLine(Point1.X, Point1.Y, Point2.X, Point2.Y, Width, Color);
 	}
 
-
-	void Graphics::DrawSprite(GTA::Texture^ Texture, GTA::Matrix Matrix, Drawing::Color Color) {
+	void Graphics::DrawSprite(GTA::Texture^ Texture, GTA::Matrix Matrix, Drawing::Color Color)
+	{
 		int color = Color.ToArgb();
 		Vector3 posTL = Vector3::TransformCoordinate(Vector3(0.0f, 0.0f, 0.0f), Matrix);
 		Vector3 posTR = Vector3::TransformCoordinate(Vector3(1.0f, 0.0f, 0.0f), Matrix);
@@ -132,23 +156,27 @@ namespace GTA {
 		DrawSprite(Texture, Matrix, Drawing::Color::White);
 	}
 
-	void Graphics::DrawSprite(GTA::Texture^ Texture, Drawing::RectangleF rect, Drawing::Color Color) {
+	void Graphics::DrawSprite(GTA::Texture^ Texture, Drawing::RectangleF rect, Drawing::Color Color)
+	{
 		Direct3D::DrawSprite(Texture, ConvertToPixelF(rect), Color.ToArgb());
 	}
-	void Graphics::DrawSprite(GTA::Texture^ Texture, Drawing::RectangleF rect) {
+	void Graphics::DrawSprite(GTA::Texture^ Texture, Drawing::RectangleF rect)
+	{
 		DrawSprite(Texture, rect, Drawing::Color::White);
 	}
 
-	void Graphics::DrawSprite(GTA::Texture^ Texture, float CenterX, float CenterY, float Width, float Height, float Rotation, Drawing::Color Color) {
+	void Graphics::DrawSprite(GTA::Texture^ Texture, float CenterX, float CenterY, float Width, float Height, float Rotation, Drawing::Color Color)
+	{
 		Matrix matrix = Matrix::Identity * Matrix::Translation(-0.5f, -0.5f, 0.0f) * Matrix::Scaling(Width, Height, 1.0f) * Matrix::RotationZ(Rotation) * Matrix::Translation(CenterX, CenterY, 0.0f);
 		DrawSprite(Texture, matrix, Color);
 	}
-	void Graphics::DrawSprite(GTA::Texture^ Texture, float CenterX, float CenterY, float Width, float Height, float Rotation) {
+	void Graphics::DrawSprite(GTA::Texture^ Texture, float CenterX, float CenterY, float Width, float Height, float Rotation)
+	{
 		DrawSprite(Texture, CenterX, CenterY, Width, Height, Rotation, Drawing::Color::White);
 	}
 
-
-	Drawing::RectangleF Graphics::GetRadarRectangle(FontScaling Scaling) {
+	Drawing::RectangleF Graphics::GetRadarRectangle(FontScaling Scaling)
+	{
 		float w = float(Game::Resolution.Width);
 		float h = float(Game::Resolution.Height);
 		float pixel = System::Math::Min(w * 0.156f, h * 0.2f);
@@ -157,6 +185,7 @@ namespace GTA {
 		rect.Width = ConvertX(pixel, FontScaling::Pixel, Scaling);
 		rect.Height = ConvertY(pixel, FontScaling::Pixel, Scaling);
 		rect.X = rect.Width * 0.45f;
+
 		if (Game::Resolution.Width >= Game::Resolution.Height)
 			rect.Y = ConvertY(0.75f, FontScaling::ScreenUnits, Scaling);
 		else
@@ -166,151 +195,159 @@ namespace GTA {
 		return rect;
 	}
 
-
-
-	//Vector3 Graphics::TransformFromObjectToScreen(Vector3 PositionInObject, Matrix ObjectMatrix) {
-	//	return Direct3D::TransformFromObjectToScreen(PositionInObject, ObjectMatrix);
-	//}
-	//Vector3 Graphics::TransformFromWorldToScreen(Matrix PositionInWorld) {
-	//	return Direct3D::TransformFromObjectToScreen(Vector3(), PositionInWorld);
-	//}
-	//Vector3 Graphics::TransformFromWorldToScreen(Vector3 PositionInWorld) {
-	//	return Direct3D::TransformFromObjectToScreen(PositionInWorld, Matrix::Identity);
-	//}
-
-
-	float Graphics::ConvertUnitsToPixelX(float UnitsX) {
+	float Graphics::ConvertUnitsToPixelX(float UnitsX)
+	{
 		return (UnitsX * float(Game::Resolution.Width));
 	}
-	float Graphics::ConvertUnitsToPixelY(float UnitsY) {
+	float Graphics::ConvertUnitsToPixelY(float UnitsY)
+	{
 		return (UnitsY * float(Game::Resolution.Height));
 	}
-	//Drawing::Point Graphics::ConvertUnitsToPixel(Drawing::PointF Units) {
-	//	Drawing::Point res;
-	//	res.X = ConvertUnitsToPixelX(Units.X);
-	//	res.Y = ConvertUnitsToPixelY(Units.Y);
-	//	return res;
-	//}
 
-	float Graphics::ConvertPixelToUnitsX(float PixelX) {
+	float Graphics::ConvertPixelToUnitsX(float PixelX)
+	{
 		return (PixelX / float(Game::Resolution.Width));
 	}
-	float Graphics::ConvertPixelToUnitsY(float PixelY) {
+	float Graphics::ConvertPixelToUnitsY(float PixelY)
+	{
 		return (PixelY / float(Game::Resolution.Height));
 	}
-	//Drawing::PointF Graphics::ConvertPixelToUnits(Drawing::Point Pixel) {
-	//	Drawing::PointF res;
-	//	res.X = ConvertPixelToUnitsX(Pixel.X);
-	//	res.Y = ConvertPixelToUnitsY(Pixel.Y);
-	//	return res;
-	//}
 
-	float Graphics::ConvertFontToUnits(float FontSize) {
+	float Graphics::ConvertFontToUnits(float FontSize)
+	{
 		return (FontSize * 0.05f);
 	}
-	float Graphics::ConvertFontToPixelX(float FontSize) {
+	float Graphics::ConvertFontToPixelX(float FontSize)
+	{
 		return ConvertUnitsToPixelX(ConvertFontToUnits(FontSize));
 	}
-	float Graphics::ConvertFontToPixelY(float FontSize) {
+	float Graphics::ConvertFontToPixelY(float FontSize)
+	{
 		return ConvertUnitsToPixelY(ConvertFontToUnits(FontSize));
 	}
 
-	float Graphics::ConvertUnitsToFont(float Units) {
+	float Graphics::ConvertUnitsToFont(float Units)
+	{
 		return (Units / 0.05f);
 	}
-	float Graphics::ConvertPixelToFontX(float Pixel) {
+	float Graphics::ConvertPixelToFontX(float Pixel)
+	{
 		return ConvertUnitsToFont(ConvertPixelToUnitsX(Pixel));
 	}
-	float Graphics::ConvertPixelToFontY(float Pixel) {
+	float Graphics::ConvertPixelToFontY(float Pixel)
+	{
 		return ConvertUnitsToFont(ConvertPixelToUnitsY(Pixel));
 	}
 
-	float Graphics::ConvertX(float value, FontScaling SourceScaling, FontScaling TargetScaling) {
-		if (SourceScaling == TargetScaling) return value;
+	float Graphics::ConvertX(float value, FontScaling SourceScaling, FontScaling TargetScaling)
+	{
+		if (SourceScaling == TargetScaling)
+			return value;
 
-		switch (SourceScaling) {
+		switch (SourceScaling)
+		{
+			case FontScaling::ScreenUnits:
+				switch (TargetScaling)
+				{
+					case FontScaling::FontSize:	return Graphics::ConvertUnitsToFont(value);
+					case FontScaling::Pixel:	return Graphics::ConvertUnitsToPixelX(value);
+					default:					return value;
+				}
 
-			case FontScaling::ScreenUnits: switch (TargetScaling) {
-				case FontScaling::FontSize:	return Graphics::ConvertUnitsToFont(value);
-				case FontScaling::Pixel:		return Graphics::ConvertUnitsToPixelX(value);
-				default:								return value;
-			}
+			case FontScaling::Pixel:
+				switch (TargetScaling)
+				{
+					case FontScaling::FontSize:		return Graphics::ConvertPixelToFontX(value);
+					case FontScaling::ScreenUnits:	return Graphics::ConvertPixelToUnitsX(value);
+					default:						return value;
+				}
 
-			case FontScaling::Pixel: switch (TargetScaling) {
-				case FontScaling::FontSize:		return Graphics::ConvertPixelToFontX(value);
-				case FontScaling::ScreenUnits:	return Graphics::ConvertPixelToUnitsX(value);
-				default:									return value;
-			}
-
-			default:	switch (TargetScaling) { // FontSize
-				case FontScaling::ScreenUnits:	return Graphics::ConvertFontToUnits(value);
-				case FontScaling::Pixel:			return Graphics::ConvertFontToPixelX(value);
-				default:									return value;
-			}
-
+			default:
+				switch (TargetScaling) // FontSize
+				{
+					case FontScaling::ScreenUnits:	return Graphics::ConvertFontToUnits(value);
+					case FontScaling::Pixel:		return Graphics::ConvertFontToPixelX(value);
+					default:						return value;
+				}
 		}
 	}
-	float Graphics::ConvertY(float value, FontScaling SourceScaling, FontScaling TargetScaling) {
-		if (SourceScaling == TargetScaling) return value;
+	float Graphics::ConvertY(float value, FontScaling SourceScaling, FontScaling TargetScaling)
+	{
+		if (SourceScaling == TargetScaling)
+			return value;
 
-		switch (SourceScaling) {
+		switch (SourceScaling)
+		{
 
-			case FontScaling::ScreenUnits: switch (TargetScaling) {
-				case FontScaling::FontSize:	return Graphics::ConvertUnitsToFont(value);
-				case FontScaling::Pixel:		return Graphics::ConvertUnitsToPixelY(value);
-				default:								return value;
-			}
+			case FontScaling::ScreenUnits:
+				switch (TargetScaling)
+				{
+					case FontScaling::FontSize:	return Graphics::ConvertUnitsToFont(value);
+					case FontScaling::Pixel:	return Graphics::ConvertUnitsToPixelY(value);
+					default:					return value;
+				}
 
-			case FontScaling::Pixel: switch (TargetScaling) {
-				case FontScaling::FontSize:		return Graphics::ConvertPixelToFontY(value);
-				case FontScaling::ScreenUnits:	return Graphics::ConvertPixelToUnitsY(value);
-				default:									return value;
-			}
+			case FontScaling::Pixel:
+				switch (TargetScaling)
+				{
+					case FontScaling::FontSize:		return Graphics::ConvertPixelToFontY(value);
+					case FontScaling::ScreenUnits:	return Graphics::ConvertPixelToUnitsY(value);
+					default:						return value;
+				}
 
-			default:	switch (TargetScaling) { // FontSize
-				case FontScaling::ScreenUnits:	return Graphics::ConvertFontToUnits(value);
-				case FontScaling::Pixel:			return Graphics::ConvertFontToPixelY(value);
-				default:									return value;
-			}
-
+			default:
+				switch (TargetScaling) // FontSize
+				{
+					case FontScaling::ScreenUnits:	return Graphics::ConvertFontToUnits(value);
+					case FontScaling::Pixel:		return Graphics::ConvertFontToPixelY(value);
+					default:						return value;
+				}
 		}
 	}
 
-	float Graphics::ToPixelX(float value) {
+	float Graphics::ToPixelX(float value)
+	{
 		return ConvertX(value, pScaling, FontScaling::Pixel);
 	}
-	float Graphics::ToPixelY(float value) {
+	float Graphics::ToPixelY(float value)
+	{
 		return ConvertY(value, pScaling, FontScaling::Pixel);
 	}
 
-	Drawing::RectangleF Graphics::Convert(Drawing::RectangleF rect, FontScaling SourceScaling, FontScaling TargetScaling) {
+	Drawing::RectangleF Graphics::Convert(Drawing::RectangleF rect, FontScaling SourceScaling, FontScaling TargetScaling)
+	{
 		return Drawing::RectangleF(
 			ConvertX(rect.Left,   SourceScaling, TargetScaling), 
 			ConvertY(rect.Top,    SourceScaling, TargetScaling),
 			ConvertX(rect.Width,  SourceScaling, TargetScaling),
 			ConvertY(rect.Height, SourceScaling, TargetScaling));
 	}
-	Drawing::Rectangle Graphics::ConvertToPixel(Drawing::RectangleF rect) {
+	Drawing::Rectangle Graphics::ConvertToPixel(Drawing::RectangleF rect)
+	{
 		return Drawing::Rectangle(
 			(int)ConvertX(rect.Left,   pScaling, FontScaling::Pixel), 
 			(int)ConvertY(rect.Top,    pScaling, FontScaling::Pixel),
 			(int)ConvertX(rect.Width,  pScaling, FontScaling::Pixel),
 			(int)ConvertY(rect.Height, pScaling, FontScaling::Pixel));
 	}
-	Drawing::RectangleF Graphics::ConvertToPixelF(Drawing::RectangleF rect) {
+	Drawing::RectangleF Graphics::ConvertToPixelF(Drawing::RectangleF rect)
+	{
 		return Drawing::RectangleF(
 			ConvertX(rect.Left,   pScaling, FontScaling::Pixel), 
 			ConvertY(rect.Top,    pScaling, FontScaling::Pixel),
 			ConvertX(rect.Width,  pScaling, FontScaling::Pixel),
 			ConvertY(rect.Height, pScaling, FontScaling::Pixel));
 	}
-	Vector3 Graphics::ConvertToPixel(Vector3 pos) {
+	Vector3 Graphics::ConvertToPixel(Vector3 pos)
+	{
 		return Vector3(ConvertX(pos.X, pScaling, FontScaling::Pixel), ConvertY(pos.Y, pScaling, FontScaling::Pixel), pos.Z);
 	}
-	Drawing::PointF Graphics::Convert(Drawing::PointF pt, FontScaling SourceScaling, FontScaling TargetScaling) {
+	Drawing::PointF Graphics::Convert(Drawing::PointF pt, FontScaling SourceScaling, FontScaling TargetScaling)
+	{
 		return Drawing::PointF( ConvertX(pt.X, SourceScaling, TargetScaling), ConvertY(pt.Y, SourceScaling, TargetScaling) );
 	}
-	Drawing::SizeF Graphics::Convert(Drawing::SizeF sz, FontScaling SourceScaling, FontScaling TargetScaling) {
+	Drawing::SizeF Graphics::Convert(Drawing::SizeF sz, FontScaling SourceScaling, FontScaling TargetScaling)
+	{
 		return Drawing::SizeF( ConvertX(sz.Width, SourceScaling, TargetScaling), ConvertY(sz.Height, SourceScaling, TargetScaling) );
 	}
 

@@ -82,10 +82,6 @@ namespace GTA
 				return "UNKNOWN";
 			}
 
-			void Set(vtype type, Object^ value);
-			void SetTargetType(vtype type);
-			void SetTargetValue(Object^ value);
-
 		internal:
 			Parameter(System::Type^ type) { }
 
@@ -99,6 +95,7 @@ namespace GTA
 		public:
 			~Parameter() { }
 
+			Parameter(vtype type, System::Object^ value);
 			Parameter(System::Object^ value);
 			Parameter(Parameter^ value);
 			Parameter(GTA::Camera^ value);
@@ -114,6 +111,10 @@ namespace GTA
 			Parameter(bool value);
 			Parameter(float value);
 			Parameter(int value);
+
+			void Set(vtype type, Object^ value);
+			void SetTargetType(vtype type);
+			void SetTargetValue(Object^ value);
 
 			void SetValue(System::Object^ value);
 			void SetValue(Parameter^ value);
@@ -136,6 +137,10 @@ namespace GTA
 				vtype get()
 				{
 					return m_eType;
+				}
+				void set(vtype value)
+				{
+					m_eType = value;
 				}
 			}
 			property System::Object^ Value

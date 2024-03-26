@@ -87,27 +87,18 @@ namespace GTA
 				return vtype::var_void;
 		}
 
-		void Parameter::Set(vtype type, Object^ value)
-		{
-			m_eType = type;
-			m_pValue = value;
-		}
-		void Parameter::SetTargetType(vtype type)
-		{
-			m_eType = type;
-		}
-		void Parameter::SetTargetValue(Object^ value)
-		{
-			m_pValue = value;
-		}
-
-		//internal:
+		// internal:
 		bool Parameter::isPointer::get()
 		{
 			return false;
 		}
 
-		//public:
+		// public:
+		Parameter::Parameter(vtype type, System::Object^ value)
+		{
+			TargetType = type;
+			Value = value;
+		}
 		Parameter::Parameter(int value)
 		{
 			SetValue(value);
@@ -167,6 +158,20 @@ namespace GTA
 		Parameter::Parameter(System::Object^ value)
 		{
 			SetValue(value);
+		}
+
+		void Parameter::Set(vtype type, Object^ value)
+		{
+			m_eType = type;
+			m_pValue = value;
+		}
+		void Parameter::SetTargetType(vtype type)
+		{
+			m_eType = type;
+		}
+		void Parameter::SetTargetValue(Object^ value)
+		{
+			m_pValue = value;
 		}
 
 		void Parameter::SetValue(int value)
@@ -337,13 +342,13 @@ namespace GTA
 		// ================== POINTER ==================
 		// =============================================
 
-		//internal:
+		// internal:
 		bool Pointer::isPointer::get()
 		{
 			return true;
 		}
 
-		//public:
+		// public:
 		Pointer::Pointer(System::Type^ type)
 		{
 			SetTargetType(Parameter::GetType(type));
@@ -448,31 +453,44 @@ namespace GTA
 
 		Pointer::operator int(Pointer^ source)
 		{
-			//if (source->pType == vtype::var_int)   return (int)source->Value;
-			//if (source->pType == vtype::var_float) return (int)(float)source->Value;
-			//if (source->pType == vtype::var_bool)  return (((bool)source->Value) ? 1 : 0);
-			//throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->pType) + " to integer");
+			if (source->TargetType == vtype::var_int)
+				return Convert::ToInt32(source->Value);
+			if (source->TargetType == vtype::var_float)
+				return (int)Convert::ToSingle(source->Value);
+			if (source->TargetType == vtype::var_bool)
+				return Convert::ToBoolean(source->Value) ? 1 : 0;
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to integer");
 			return 0;
 		}
 		Pointer::operator float(Pointer^ source)
 		{
-			//if (source->pType == vtype::var_float) return (float)source->Value;
-			//if (source->pType == vtype::var_int)   return (float)(int)source->Value;
-			//throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->pType) + " to float");
+			if (source->TargetType == vtype::var_float)
+				return Convert::ToSingle(source->Value);
+			if (source->TargetType == vtype::var_int)
+				return (float)Convert::ToInt32(source->Value);
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to float");
 			return 0.0f;
 		}
 		Pointer::operator double(Pointer^ source)
 		{
-			//if (source->pType == vtype::var_float) return (double)(float)source->Value;
-			//if (source->pType == vtype::var_int)   return (double)(int)source->Value;
-			//throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->pType) + " to float");
+			if (source->TargetType == vtype::var_float)
+				return (double)Convert::ToSingle(source->Value);
+			if (source->TargetType == vtype::var_int)
+				return (double)Convert::ToInt32(source->Value);
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to float");
 			return 0.0;
 		}
 		Pointer::operator bool(Pointer^ source)
 		{
-			//if (source->pType == vtype::var_bool) return (bool)source->Value;
-			//if (source->pType == vtype::var_int)  return (((int)source->Value) != 0);
-			//throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->pType) + " to bool");
+			if (source->TargetType == vtype::var_bool)
+				return Convert::ToBoolean(source->Value);
+			if (source->TargetType == vtype::var_int)
+				return Convert::ToInt32(source->Value) != 0;
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to bool");
 			return 0;
 		}
 		Pointer::operator String ^ (Pointer^ source)
@@ -486,63 +504,152 @@ namespace GTA
 		}
 		Pointer::operator GTA::Ped ^ (Pointer^ source)
 		{
-			//if (source->pType == vtype::var_ped) return (GTA::Ped^)source->Value;
-			//throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->pType) + " to Ped");
+			//if (source->TargetType == vtype::var_ped)
+			//	return safe_cast<GTA::Ped^>(source->Value);
+
+			if (source->TargetType == vtype::var_ped)
+			{
+				if (!source->Value)
+					return nullptr;
+
+				if (source->Value->GetType() == System::Int32::typeid)
+					return gcnew GTA::Ped(Convert::ToInt32(source->Value));
+			}
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to Ped");
 			return nullptr;
 		}
 		Pointer::operator GTA::Vehicle ^ (Pointer^ source)
 		{
-			//if (source->pType == vtype::var_vehicle) return (GTA::Vehicle^)source->Value;
-			//throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->pType) + " to Vehicle");
+			//if (source->TargetType == vtype::var_vehicle)
+			//	return safe_cast<GTA::Vehicle^>(source->Value);
+
+			if (source->TargetType == vtype::var_vehicle)
+			{
+				if (!source->Value)
+					return nullptr;
+
+				if (source->Value->GetType() == System::Int32::typeid)
+					return gcnew GTA::Vehicle(Convert::ToInt32(source->Value));
+			}
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to Vehicle");
 			return nullptr;
 		}
 		Pointer::operator GTA::Model(Pointer^ source)
 		{
-			//if (source->pType == vtype::var_model) return (GTA::Model)source->Value;
-			//throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->pType) + " to Model");
+			//if (source->TargetType == vtype::var_model)
+			//	return safe_cast<GTA::Model>(source->Value);
+
+			if (source->TargetType == vtype::var_model)
+			{
+				if (!source->Value)
+					return nullptr;
+
+				if (source->Value->GetType() == System::Int32::typeid)
+					return GTA::Model(Convert::ToInt32(source->Value));
+			}
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to Model");
 			return nullptr;
 		}
 		Pointer::operator GTA::Group ^ (Pointer^ source)
 		{
-			//if (source->pType == vtype::var_group) return (GTA::Group^)source->Value;
-			//throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->pType) + " to Group");
+			//if (source->TargetType == vtype::var_group)
+			//	return safe_cast<GTA::Group^>(source->Value);
+
+			if (source->TargetType == vtype::var_group)
+			{
+				if (!source->Value)
+					return nullptr;
+
+				if (source->Value->GetType() == System::Int32::typeid)
+					return gcnew GTA::Group(Convert::ToInt32(source->Value));
+			}
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to Group");
 			return nullptr;
 		}
 		Pointer::operator GTA::Object ^ (Pointer^ source)
 		{
-			//if (source->pType == vtype::var_object) return (GTA::Object^)source->Value;
-			//throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->pType) + " to Object");
+			//if (source->TargetType == vtype::var_object)
+			//	return safe_cast<GTA::Object^>(source->Value);
+
+			if (source->TargetType == vtype::var_object)
+			{
+				if (!source->Value)
+					return nullptr;
+
+				if (source->Value->GetType() == System::Int32::typeid)
+					return gcnew GTA::Object(Convert::ToInt32(source->Value));
+			}
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to Object");
 			return nullptr;
 		}
 		Pointer::operator GTA::Pickup ^ (Pointer^ source)
 		{
-			//if (source->pType == vtype::var_pickup) return (GTA::Pickup^)source->Value;
-			//throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->pType) + " to Pickup");
+			//if (source->TargetType == vtype::var_pickup)
+			//	return safe_cast<GTA::Pickup^>(source->Value);
+
+			if (source->TargetType == vtype::var_pickup)
+			{
+				if (!source->Value)
+					return nullptr;
+
+				if (source->Value->GetType() == System::Int32::typeid)
+					return gcnew GTA::Pickup(Convert::ToInt32(source->Value));
+			}
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to Pickup");
 			return nullptr;
 		}
 		Pointer::operator GTA::Blip ^ (Pointer^ source)
 		{
-			//if (source->pType == vtype::var_blip) return (GTA::Blip^)source->Value;
-			//throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->pType) + " to Blip");
+			//if (source->TargetType == vtype::var_blip)
+			//	return safe_cast<GTA::Blip^>(source->Value);
+
+			if (source->TargetType == vtype::var_blip)
+			{
+				if (!source->Value)
+					return nullptr;
+
+				if (source->Value->GetType() == System::Int32::typeid)
+					return gcnew GTA::Blip(Convert::ToInt32(source->Value));
+			}
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to Blip");
 			return nullptr;
 		}
 		Pointer::operator GTA::Camera ^ (Pointer^ source)
 		{
-			//if (source->pType == vtype::var_camera) return (GTA::Camera^)source->Value;
-			//throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->pType) + " to Camera");
+			//if (source->TargetType == vtype::var_camera)
+			//	return safe_cast<GTA::Camera^>(source->Value);
+
+			if (source->TargetType == vtype::var_camera)
+			{
+				if (!source->Value)
+					return nullptr;
+
+				if (source->Value->GetType() == System::Int32::typeid)
+					return gcnew GTA::Camera(Convert::ToInt32(source->Value));
+			}
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to Camera");
 			return nullptr;
 		}
 		Pointer::operator GTA::Vector3(Pointer^ source)
 		{
-			//if (source->pType == vtype::var_vector3) return (GTA::Vector3)source->Value;
-			//throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->pType) + " to Vector3");
+			if (source->TargetType == vtype::var_vector3)
+				return safe_cast<GTA::Vector3>(source->Value);
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to Vector3");
 			return Vector3();
 		}
 
 		Parameter^ Pointer::ToInputParameter()
 		{
-			NotImplementedYet("Pointer::ToInputParameter");
-			return nullptr;
+			return gcnew Parameter(TargetType, Value);
 		}
 
 	}

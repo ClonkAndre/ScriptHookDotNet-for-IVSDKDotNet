@@ -54,79 +54,65 @@ namespace GTA
 	GTA::Vector3 Blip::Position::get()
 	{
 		NON_EXISTING_CHECK(V3_NaN);
-		u32 id;
-		f32 x, y, z;
 
 		switch (Type)
 		{
 			case BlipType::Vehicle:
-				id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_CAR_INDEX(pHandle);
+			{
+				i32 id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_CAR_INDEX(pHandle);
+				f32 x, y, z;
 
 				if (!IVSDKDotNet::Native::Natives::DOES_VEHICLE_EXIST(id))
-					return Vector3();
+					return GTA::Vector3();
 
 				IVSDKDotNet::Native::Natives::GET_CAR_COORDINATES(id, x, y, z);
 				return GTA::Vector3(x, y, z);
-
+			}
 			case BlipType::Ped:
-				id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_PED_INDEX(pHandle);
+			{
+				i32 id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_PED_INDEX(pHandle);
+				f32 x, y, z;
 
 				if (!IVSDKDotNet::Native::Natives::DOES_CHAR_EXIST(id))
-					return Vector3();
+					return GTA::Vector3();
 
 				IVSDKDotNet::Native::Natives::GET_CHAR_COORDINATES(id, x, y, z);
 				return GTA::Vector3(x, y, z);
-
+			}
 			case BlipType::Object:
-				id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_OBJECT_INDEX(pHandle);
+			{
+				i32 id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_OBJECT_INDEX(pHandle);
+				f32 x, y, z;
 
 				if (!IVSDKDotNet::Native::Natives::DOES_OBJECT_EXIST(id))
-					return Vector3();
+					return GTA::Vector3();
 
 				IVSDKDotNet::Native::Natives::GET_OBJECT_COORDINATES(id, x, y, z);
 				return GTA::Vector3(x, y, z);
-
+			}
 			case BlipType::Coordinate:
 			case BlipType::Contact:
+			{
 				if (!IVSDKDotNet::Native::Natives::DOES_BLIP_EXIST(pHandle))
-					return Vector3();
+					return GTA::Vector3();
 
-				// TODO
-				//return unmanaged::MemoryAccess::GetPositionOfBlip(pHandle);
-				return Vector3();
+				System::Numerics::Vector3 pos;
+				IVSDKDotNet::Native::Natives::GET_BLIP_COORDS(pHandle, pos);
 
-				//Scripting::Vector3 v;
-				//Scripting::VECTOR4 v;
-				//v.x=0.0f; v.y=0.0f; v.z=0.0f; v.w=0.0f;
-				//Scripting::GetBlipCoords(pHandle,&v);
-				//return GTA::Vector3(v.x,v.y,v.z);
-				//GTA::Vector3 v = GTA::Vector3();
-				//Scripting::GetBlipCoords((int)pHandle,&v);
-				//return v;
-
-				//Scripting::Vector3 v = NativeContext2::Invoke<Scripting::Vector3>("GET_BLIP_INFO_ID_POSITION", pHandle); //Scripting::GetBlipInfoIdPosition(pHandle);
-				//Scripting::Vector3 v; // = Scripting::Vector3();
-				//Scripting::Vector3 v = Scripting::GetBlipInfoIdPosition2(pHandle);
-				//return GTA::Vector3(val,val,val);
-				//float ary[3];
-				//Scripting::GetBlipCoords(pHandle,v);
-				//return GTA::Vector3(v->X,v->Y,v->Z);
-				//Scripting::GetBlipInfoIdPosition(pHandle,&v);
-				//return Vector3(v.X,v.Y,v.Z);
-				////return GTA::Vector3(ary[0],ary[1],ary[2]);
-
-				//Scripting::GetBlipCoords(pHandle,&x,&y,&z);
-				//Scripting::GetBlipInfoIdPosition(pHandle,&x,&y,&z);
-				//return GTA::Vector3(x,y,z);
+				return Vector3ToGTAVector3(pos);
+			}
 
 			case BlipType::Pickup:
-				id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_PICKUP_INDEX(pHandle);
+			{
+				i32 id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_PICKUP_INDEX(pHandle);
+				f32 x, y, z;
 
 				if (!IVSDKDotNet::Native::Natives::DOES_PICKUP_EXIST(id))
-					return Vector3();
+					return GTA::Vector3();
 
 				IVSDKDotNet::Native::Natives::GET_PICKUP_COORDINATES(id, x, y, z);
 				return GTA::Vector3(x, y, z);
+			}
 		}
 
 		return GTA::Vector3();
@@ -139,41 +125,45 @@ namespace GTA
 	base::Object^ Blip::GetAttachedItem()
 	{
 		NON_EXISTING_CHECK(nullptr);
-		u32 id;
 
 		switch (Type)
 		{
 			case BlipType::Vehicle:
-				id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_CAR_INDEX(pHandle);
+			{
+				i32 id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_CAR_INDEX(pHandle);
 
 				if (!IVSDKDotNet::Native::Natives::DOES_VEHICLE_EXIST(id))
 					return nullptr;
 
 				return ContentCache::GetVehicle(id);
-
+			}
 			case BlipType::Ped:
-				id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_PED_INDEX(pHandle);
+			{
+				i32 id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_PED_INDEX(pHandle);
 
 				if (!IVSDKDotNet::Native::Natives::DOES_CHAR_EXIST(id))
 					return nullptr;
 
 				return ContentCache::GetPed(id);
-
+			}
 			case BlipType::Object:
-				id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_OBJECT_INDEX(pHandle);
+			{
+				i32 id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_OBJECT_INDEX(pHandle);
 
 				if (!IVSDKDotNet::Native::Natives::DOES_OBJECT_EXIST(id))
 					return nullptr;
 
 				return ContentCache::GetObject(id);
-
+			}
 			case BlipType::Pickup:
-				id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_PICKUP_INDEX(pHandle);
+			{
+				i32 id = IVSDKDotNet::Native::Natives::GET_BLIP_INFO_ID_PICKUP_INDEX(pHandle);
 
 				if (!IVSDKDotNet::Native::Natives::DOES_PICKUP_EXIST(id))
 					return nullptr;
 
 				return ContentCache::GetPickup(id);
+			}
 		}
 
 		return nullptr;
@@ -379,8 +369,6 @@ namespace GTA
 		int b = IVSDKDotNet::Native::Natives::GET_FIRST_BLIP_INFO_ID(t);
 		while (b != 0)
 		{
-			WHILE_LOG("Blip::GetAllBlipsOfType");
-
 			if (IVSDKDotNet::Native::Natives::DOES_BLIP_EXIST(b))
 				res->Add(ContentCache::GetBlip(b, false));
 
