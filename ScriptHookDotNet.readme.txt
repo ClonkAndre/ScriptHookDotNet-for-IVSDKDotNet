@@ -1,0 +1,85 @@
+A modified version of ScriptHookDotNet that makes scripts created for ScriptHookDotNet compatible with IV-SDK .NET!
+No more rain bug!
+
+Based on the original ScriptHookDotNet (v1.7.1.7b) source code from HazardX.
+
+Classes Vector2, Vector3, Vector4, Quaternion and Matrix based on source code from SlimDX ( www.slimdx.org )
+
+
+1. Disclaimer
+-------------
+
+This software is provided 'as-is', without any explicit or implied
+warranty. The author(s) cannot be held accountable for any damage
+that might be caused by this software or any of it's components.
+
+
+2. Requirements
+---------------
+
+- IV-SDK .NET Version 1.2 or above
+https://gtaforums.com/topic/986510-iv-sdk-net
+
+IV-SDK .NET has additional requirements. So make sure you read through them aswell.
+
+
+3. Installation
+---------------
+
+FIRST OF ALL: You need IV-SDK .NET version 1.2 or above!
+
+- You already have ScriptHookDotNet?
+First you should make sure that you REMOVE the already installed "ScriptHookDotNet.asi" AND "ScriptHookDotNet.dll" file!
+After you've done this, you can copy the new ScriptHookDotNet.dll into your main directory of GTA IV.
+The scripts that you got installed should now use the modified ScriptHookDotNet.dll and run through IV-SDK .NET.
+
+- First time installing ScriptHookDotNet?
+Well then you just have to copy the "ScriptHookDotNet.dll" into your main directory of GTA IV!
+If you also want to start install scripts you should also create a new folder in your main directory called "scripts"
+
+
+4. Script Installation
+----------------------
+
+Scripts for ScriptHookDotNet have to be copied into the "scripts" folder inside the main directory of GTA IV.
+You may have to create the folder if it is not there.
+
+ScriptHookDotNet scripts may have one of the following file formats:
+ *.net      - for compiled scripts in any .NET language
+ *.net.dll  - for compiled scripts in any .NET language
+
+WARNING: Plain script files like *.vb or *.cs will not be supported!
+
+
+5. Deinstallation
+-----------------
+
+To remove IV-SDK .NET, you will have to delete the "IVSDKDotNet.asi", "IVSDKDotNetWrapper.dll" and the "IVSDKDotNet" folder inside your main directory of GTA IV.
+
+Scripts contained in the "scripts" folder can remain there
+if you wish to keep them. They wont run or interfere with the
+game when "IVSDKDotNet.asi" is deleted.
+
+
+6. Known Issues
+---------------
+
+Not all script functions have been tested. Some of them may not work as desired or may even lead to crashes!
+If you experience any crashes or got any script errors from your ScriptHookDotNet scripts, then please report them here: https://github.com/ClonkAndre/ScriptHookDotNet-for-IVSDKDotNet/issues
+
+For more information on any known issues, check out the project page on GitHub: https://github.com/ClonkAndre/ScriptHookDotNet-for-IVSDKDotNet
+
+
+7. Infos for Webmasters     <- ** MIGHT REMOVE OR CHANGE THIS SECTION **
+------------------------
+
+Feel free to add this plugin as a download to your site
+as long as you give proper credit. However, as long as
+it is technically possible, please DON'T upload it to
+other webservers. Best way would be to link to a
+official release thread or at least direct-link my
+download from your page to assure that people always
+get the latest version! 
+
+Official Release Thread:
+...
