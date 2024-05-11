@@ -52,7 +52,7 @@ namespace GTA
 		{
 			OBJECT_NON_EXISTING_CHECK(ped, gcnew array<int>(0));
 			array<int>^ ammo = gcnew array<int>(19);
-			u32 amount;
+			int amount;
 			ammo[0] = 0;
 			for (int i = 1; i < 19; i++)
 			{
@@ -63,7 +63,7 @@ namespace GTA
 					if (i > 3)
 						IVSDKDotNet::Native::Natives::GET_AMMO_IN_CHAR_WEAPON(ped->Handle, i, amount);
 
-					ammo[i] = (int)amount;
+					ammo[i] = amount;
 				}
 				else
 				{
@@ -92,7 +92,7 @@ namespace GTA
 		GTA::Weapon WeaponCollection::CurrentType::get()
 		{
 			OBJECT_NON_EXISTING_CHECK(ped, GTA::Weapon::None);
-			u32 w;
+			int w;
 			IVSDKDotNet::Native::Natives::GET_CURRENT_CHAR_WEAPON(ped->Handle, w);
 			return (GTA::Weapon)w;
 		}
@@ -119,9 +119,9 @@ namespace GTA
 				return Unarmed;
 
 			OBJECT_NON_EXISTING_CHECK(ped, Unarmed);
-			u32 w;
-			u32 p4, p5;
-			IVSDKDotNet::Native::Natives::GET_CHAR_WEAPON_IN_SLOT(ped->Handle, (u32)WeaponSlot, w, p4, p5);
+			int w;
+			int p4, p5;
+			IVSDKDotNet::Native::Natives::GET_CHAR_WEAPON_IN_SLOT(ped->Handle, (int)WeaponSlot, w, p4, p5);
 
 			if (int(w) <= 0)
 				return FromType(GTA::Weapon::None);
@@ -143,7 +143,7 @@ namespace GTA
 		WeaponCollection::operator GTA::Weapon(WeaponCollection^ source)
 		{
 			OBJECT_NON_EXISTING_CHECK(source->ped, GTA::Weapon::None);
-			u32 w;
+			int w;
 			IVSDKDotNet::Native::Natives::GET_CURRENT_CHAR_WEAPON(source->ped->Handle, w);
 			return (GTA::Weapon)w;
 		}

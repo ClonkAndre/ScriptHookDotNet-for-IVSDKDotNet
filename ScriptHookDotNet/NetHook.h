@@ -29,38 +29,37 @@ namespace GTA
 	CLASS_ATTRIBUTES
 	private ref class NetHook sealed
 	{
-	public:
-		static NetHook();
-
 	private:
-		NetHook() { }
-
 		static bool bPrimary = false;
 
 		static GTA::Forms::FormHost^ pFormHost;
 		static GTA::base::Mouse^ pMouse;
 
 	public:
-		static property GTA::Forms::FormHost^ FormHost {
-			GTA::Forms::FormHost^ get() {
-				return pFormHost;
-			}
-		}
+		//static property GTA::Forms::FormHost^ FormHost {
+		//	GTA::Forms::FormHost^ get() {
+		//		return pFormHost;
+		//	}
+		//}
 		static property GTA::base::Mouse^ Mouse {
 			GTA::base::Mouse^ get() {
 				return pMouse;
 			}
 		}
-		static property bool isPrimary {
-			bool get() {
-				return bPrimary;
-			}
-		}
+		//static property bool isPrimary {
+		//	bool get() {
+		//		return bPrimary;
+		//	}
+		//}
 		static property bool isScriptDomain {
 			bool get() {
 				return !bPrimary;
 			}
 		}
+
+		static void VerboseLog(String^ Text);
+		static void VerboseLog(String^ Text, Exception^ ex);
+		static void VerboseLog(Exception^ ex);
 
 		static void Log(String^ Text);
 		static void Log(String^ Text, Exception^ ex);

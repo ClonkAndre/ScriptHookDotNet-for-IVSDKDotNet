@@ -23,25 +23,26 @@
 // IV-SDK .NET translation layer by ItsClonkAndre
 
 #pragma once
+
 #include "stdafx.h"
 
 #include "Graphics.h"
 
 #include "D3D_Device.h"
-#include "Font.h"
+#include "Texture.h"
 #include "Game.h"
+#include "Font.h"
 
 #pragma managed
-
-#define DrawText DrawText
 
 namespace GTA
 {
 
 	// - - - Constructor - - -
-	Graphics::Graphics()
+	Graphics::Graphics(IVSDKDotNet::ImGuiIV_DrawingContext ctx)
 	{
-		pDefaultFont = gcnew Font();
+		pImGuiDrawingContext = ctx;
+		pDefaultFont = gcnew Font(); // Create default font for this scripts graphics object
 		InitFrame();
 		InitScript();
 	}
@@ -60,7 +61,8 @@ namespace GTA
 
 	void Graphics::DrawText(String^ Text, float X, float Y, Drawing::Color Color, GTA::Font^ Font)
 	{
-		DrawText(Text, Drawing::RectangleF(X, Y, 0.0f, 0.0f), TextAlignment::NoClip, Color, Font);
+		IntPtr font = IntPtr(Font->GetInternalPointer(true));
+		pImGuiDrawingContext.AddText(font, System::Numerics::Vector2(X, Y), Color, Text);
 	}
 	void Graphics::DrawText(String^ Text, float X, float Y, GTA::Font^ Font)
 	{
@@ -75,38 +77,28 @@ namespace GTA
 		DrawText(Text, X, Y, pDefaultFont->Color, pDefaultFont);
 	}
 
-	Drawing::Rectangle ShiftRect(Drawing::Rectangle rect, int shiftX, int shiftY)
-	{
-		return Drawing::Rectangle(rect.X+shiftX, rect.Y+shiftY, rect.Width, rect.Height);
-	}
-
 	void Graphics::DrawText(String^ Text, Drawing::RectangleF Area, TextAlignment Alignment, Drawing::Color Color, GTA::Font^ Font)
 	{
-		int FontID = Font->GetD3DObjectID(true);
+		IntPtr font = IntPtr(Font->GetInternalPointer(true));
 
-		if (FontID < 0)
-			return;
+		Drawing::RectangleF pArea = ConvertToPixelF(Area);
 
-		Drawing::Rectangle pArea = ConvertToPixel(Area);
+		Drawing::Color eCol = Font->EffectColor;
+		int eSiz = Font->EffectSize;
 
-		if (Font->Effect != FontEffect::None)
+		switch (Font->Effect)
 		{
-			//int eCol = Font->EffectColor.ToArgb();
-			int eSiz = Font->EffectSize;
-			if ( (Font->Effect == FontEffect::Shadow) || (Font->Effect == FontEffect::Edge) )
-			{
-				Direct3D::DrawString(Text, ShiftRect(pArea,-eSiz,+eSiz), Alignment, Color, FontID);
-			}
-			if (Font->Effect == FontEffect::Edge)
-			{
-				Direct3D::DrawString(Text, ShiftRect(pArea,-eSiz,-eSiz), Alignment, Color, FontID);
-				Direct3D::DrawString(Text, ShiftRect(pArea,+eSiz,-eSiz), Alignment, Color, FontID);
-				Direct3D::DrawString(Text, ShiftRect(pArea,+eSiz,+eSiz), Alignment, Color, FontID);
-			}
+			case FontEffect::Shadow:
+				pImGuiDrawingContext.AddText(font, System::Numerics::Vector2(pArea.X + eSiz, pArea.Y + eSiz), eCol, Text);
+				break;
+			case FontEffect::Edge:
+				pImGuiDrawingContext.AddText(font, System::Numerics::Vector2(pArea.X - eSiz, pArea.Y - eSiz), eCol, Text);
+				pImGuiDrawingContext.AddText(font, System::Numerics::Vector2(pArea.X + eSiz, pArea.Y - eSiz), eCol, Text);
+				pImGuiDrawingContext.AddText(font, System::Numerics::Vector2(pArea.X + eSiz, pArea.Y + eSiz), eCol, Text);
+				break;
 		}
 
-		// Color.ToArgb()
-		Direct3D::DrawString(Text, pArea, Alignment, Color, FontID);
+		pImGuiDrawingContext.AddText(font, System::Numerics::Vector2(pArea.X, pArea.Y), Color, Text);
 	}
 	void Graphics::DrawText(String^ Text, Drawing::RectangleF Area, TextAlignment Alignment, GTA::Font^ Font)
 	{
@@ -127,7 +119,7 @@ namespace GTA
 
 	void Graphics::DrawRectangle(Drawing::RectangleF rect, Drawing::Color Color)
 	{
-		Direct3D::DrawBoxFilled(ConvertToPixelF(rect), Color.ToArgb());
+		pImGuiDrawingContext.AddRectFilled(System::Numerics::Vector2(rect.Left, rect.Top), System::Numerics::Vector2(rect.Right, rect.Bottom), Color, 0.0F, IVSDKDotNet::Enums::eImDrawFlags::None);
 	}
 	void Graphics::DrawRectangle(float CenterX, float CenterY, float Width, float Height, Drawing::Color Color)
 	{
@@ -136,7 +128,7 @@ namespace GTA
 
 	void Graphics::DrawLine(float X1, float Y1, float X2, float Y2, float Width, Drawing::Color Color)
 	{
-		Direct3D::DrawLine(ToPixelX(X1), ToPixelY(Y1), ToPixelX(X2), ToPixelY(Y2), ToPixelX(Width), Color.ToArgb());
+		pImGuiDrawingContext.AddLine(System::Numerics::Vector2(X1, Y1), System::Numerics::Vector2(X2, Y2), Color, Width);
 	}
 	void Graphics::DrawLine(Drawing::PointF Point1, Drawing::PointF Point2, float Width, Drawing::Color Color)
 	{
@@ -145,20 +137,32 @@ namespace GTA
 
 	void Graphics::DrawSprite(GTA::Texture^ Texture, GTA::Matrix Matrix, Drawing::Color Color)
 	{
-		int color = Color.ToArgb();
-		Vector3 posTL = Vector3::TransformCoordinate(Vector3(0.0f, 0.0f, 0.0f), Matrix);
-		Vector3 posTR = Vector3::TransformCoordinate(Vector3(1.0f, 0.0f, 0.0f), Matrix);
-		Vector3 posBL = Vector3::TransformCoordinate(Vector3(0.0f, 1.0f, 0.0f), Matrix);
-		Vector3 posBR = Vector3::TransformCoordinate(Vector3(1.0f, 1.0f, 0.0f), Matrix);
-		Direct3D::DrawSprite(Texture, ConvertToPixel(posTL), ConvertToPixel(posTR), ConvertToPixel(posBL), ConvertToPixel(posBR), color, color, color, color);
+		Vector2 posTL = Vector2::TransformCoordinate(Vector2(0.0f, 0.0f), Matrix);
+		Vector2 posTR = Vector2::TransformCoordinate(Vector2(1.0f, 0.0f), Matrix);
+		Vector2 posBR = Vector2::TransformCoordinate(Vector2(1.0f, 1.0f), Matrix);
+		Vector2 posBL = Vector2::TransformCoordinate(Vector2(0.0f, 1.0f), Matrix);
+
+		IntPtr txt = IntPtr(Texture->GetInternalPointer(true));
+
+		pImGuiDrawingContext.AddImageQuad(txt,
+			GTAVector2ToVector2(posTL),
+			GTAVector2ToVector2(posTR),
+			GTAVector2ToVector2(posBR),
+			GTAVector2ToVector2(posBL),
+			System::Numerics::Vector2(0.0F, 0.0F),
+			System::Numerics::Vector2(1.0F, 0.0F),
+			System::Numerics::Vector2(1.0F, 1.0F),
+			System::Numerics::Vector2(0.0F, 1.0F),
+			Color);
 	}
-	void Graphics::DrawSprite(GTA::Texture^ Texture, GTA::Matrix Matrix) {
+	void Graphics::DrawSprite(GTA::Texture^ Texture, GTA::Matrix Matrix)
+	{
 		DrawSprite(Texture, Matrix, Drawing::Color::White);
 	}
 
 	void Graphics::DrawSprite(GTA::Texture^ Texture, Drawing::RectangleF rect, Drawing::Color Color)
 	{
-		Direct3D::DrawSprite(Texture, ConvertToPixelF(rect), Color.ToArgb());
+		pImGuiDrawingContext.AddImage(IntPtr(Texture->GetInternalPointer(true)), rect, Color);
 	}
 	void Graphics::DrawSprite(GTA::Texture^ Texture, Drawing::RectangleF rect)
 	{
@@ -175,6 +179,15 @@ namespace GTA
 		DrawSprite(Texture, CenterX, CenterY, Width, Height, Rotation, Drawing::Color::White);
 	}
 
+	// Helper
+	Drawing::Rectangle ShiftRect(Drawing::Rectangle rect, int shiftX, int shiftY)
+	{
+		return Drawing::Rectangle(rect.X + shiftX, rect.Y + shiftY, rect.Width, rect.Height);
+	}
+	Drawing::RectangleF ShiftRectF(Drawing::RectangleF rect, int shiftX, int shiftY)
+	{
+		return Drawing::RectangleF(rect.X + shiftX, rect.Y + shiftY, rect.Width, rect.Height);
+	}
 	Drawing::RectangleF Graphics::GetRadarRectangle(FontScaling Scaling)
 	{
 		float w = float(Game::Resolution.Width);
@@ -341,6 +354,10 @@ namespace GTA
 	Vector3 Graphics::ConvertToPixel(Vector3 pos)
 	{
 		return Vector3(ConvertX(pos.X, pScaling, FontScaling::Pixel), ConvertY(pos.Y, pScaling, FontScaling::Pixel), pos.Z);
+	}
+	Vector2 Graphics::ConvertToPixel(Vector2 pos)
+	{
+		return Vector2(ConvertX(pos.X, pScaling, FontScaling::Pixel), ConvertY(pos.Y, pScaling, FontScaling::Pixel));
 	}
 	Drawing::PointF Graphics::Convert(Drawing::PointF pt, FontScaling SourceScaling, FontScaling TargetScaling)
 	{

@@ -37,6 +37,15 @@ namespace GTA
 		KeyUp,
 		ConsoleCommand
 	};
+	public enum class ScriptEvent
+	{
+		ctor,
+		Tick,
+		MouseDown,
+		MouseUp,
+		ScriptCommand,
+		PerFrameDrawing
+	};
 
 	[FlagsAttribute]
 	public enum class AnimationFlags

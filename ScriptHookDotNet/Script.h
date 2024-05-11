@@ -247,7 +247,7 @@ namespace GTA
 		List<BoundScriptCommandItem>^ ScriptCommands;
 		List<BoundCommandItem>^ ConsoleCommands;
 		Queue<ScriptAction>^ ActionQueue;
-		List<GTA::base::iD3DObject^>^ D3D3ObjectList;
+		List<IntPtr>^ Textures;
 
 		Graphics^ GFX;
 
@@ -258,7 +258,7 @@ namespace GTA
 		void ProcessBoundScriptCommand(ScriptCommandEventArgs^ sceva);
 
 		void DoTick();
-		void DoPerFrameDrawing(GTA::GraphicsEventArgs^ Graphics);
+		void DoPerFrameDrawing(IVSDKDotNet::ImGuiIV_DrawingContext ctx);
 		void DoPerFrameScriptDrawing();
 		void DoKeyDown(GTA::KeyEventArgs^ args);
 		void DoKeyUp(GTA::KeyEventArgs^ args);

@@ -20,6 +20,8 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "Texture.h"
@@ -39,68 +41,51 @@ namespace GTA
 			throw gcnew Exception("ImageData for Texture is empty!");
 
 		data = ImageData;
-		//if (!NetHook::isPrimary) GetD3DObjectID(true);
 	}
-
 	Texture::~Texture()
 	{ // Dispose
-		//Unload(true); DO NOT unload it here! unload does not work in the remote script domain!
 		this->!Texture();
 	}
 	Texture::!Texture()
 	{ // Finalize
-		//Unload(true);
+
 	}
 
 	void Texture::InitValues()
 	{
-		pInternalPointer = 0;
-		pD3DObjectID = -1;
+		pInternalPointer = IntPtr::Zero;
 	}
 
 	void Texture::Unload(bool permanent)
 	{
-		if (pInternalPointer != 0)
+		if (pInternalPointer != IntPtr::Zero)
 		{
-			Direct3D::Release(this);
-			pInternalPointer = 0;
-		}
-		if (permanent)
-		{
-			pD3DObjectID = -1;
+			Direct3D::ReleaseTexture(this);
+			pInternalPointer = IntPtr::Zero;
 		}
 	}
 	void Texture::Reload()
 	{
-		Unload(false);
-		try
-		{
-			if ( isNULL(data) || (data->Length == 0) )
-				throw gcnew Exception("No image data!"); //return;
+		//Unload(false);
 
-			pInternalPointer = Direct3D::NewTextureInternal(data, pImageInformation);
-		} catchErrors("Texture.GetInternalPointer: Error while creating new texture", pInternalPointer = 0; )
+		if (isNULL(data) || data->Length == 0)
+			throw gcnew Exception("No image data!");
+
+		int textureWidth;
+		int textureHeight;
+		pInternalPointer = Direct3D::NewTextureInternal(data, textureWidth, textureHeight);
 	}
 
 	int Texture::GetInternalPointer(bool retrieveNew)
 	{
-		if ( (pInternalPointer == 0) && (retrieveNew) )
+		if (pInternalPointer == IntPtr::Zero && retrieveNew)
 			Reload();
 
-		return pInternalPointer;
+		return pInternalPointer.ToInt32();
 	}
-
 	int Texture::GetD3DObjectID(bool retrieveNew)
 	{
-		if ((pD3DObjectID < 0) && retrieveNew)
-		{
-			try
-			{
-				pD3DObjectID = Direct3D::AddNewObject(this);
-			} catchErrors("Texture.GetD3DObjectID: Error while creating new texture", pD3DObjectID = -1; )
-		}
-
-		return pD3DObjectID;
+		return -1;
 	}
 
 }

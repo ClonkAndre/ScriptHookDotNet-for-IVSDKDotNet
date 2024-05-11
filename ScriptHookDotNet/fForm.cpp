@@ -60,7 +60,7 @@ namespace Forms {
 
 		Name = this->GetType()->Name;
 
-		if (NetHook::isScriptDomain) pScript = RemoteScriptDomain::Instance->CurrentScript;
+		if (NetHook::isScriptDomain) pScript = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
 	}
 	
 	void Form::TitleSize::set(int value) {
@@ -126,13 +126,14 @@ namespace Forms {
 	}
 
 	FormHost^ Form::GetFormHost() {
-		if (NetHook::isPrimary) {
-			return NetHook::FormHost;
-		} else {
-			GTA::Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
-			if isNULL(scr) return nullptr;
-			return scr->FormHost;
-		}
+		//if (NetHook::isPrimary) {
+		//	return NetHook::FormHost;
+		//} else {
+		//	GTA::Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
+		//	if isNULL(scr) return nullptr;
+		//	return scr->FormHost;
+		//}
+		return nullptr;
 	}
 
 	void Form::OnVisibleChanged(EventArgs^ e) {
@@ -227,7 +228,7 @@ namespace Forms {
 		fh->SetModalForm(this);
 
 		try {
-			GTA::Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
+			GTA::Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
 			if isNULL(scr) return Windows::Forms::DialogResult::None;
 			while (Visible) {
 				//GTA::Game::WaitInCurrentScript(0);

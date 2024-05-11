@@ -43,12 +43,7 @@ namespace GTA
 			}
 
 		internal:
-
 			ScriptChild();
-
-
-		public:
-
 		};
 	}
 }

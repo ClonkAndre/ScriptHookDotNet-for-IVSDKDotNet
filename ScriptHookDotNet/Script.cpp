@@ -42,8 +42,8 @@ namespace GTA
 	// - - - Constructor - - -
 	Script::Script()
 	{
-		// Set the current script to this script
-		IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_SetCurrentScript(this);
+		// Set the current constructing script to this script
+		IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_SetCurrentScript((int)ScriptEvent::ctor, this);
 
 		BlockWait = true;
 		bWaiting = false;
@@ -69,7 +69,7 @@ namespace GTA
 		ScriptCommands = gcnew List<BoundScriptCommandItem>();
 		ConsoleCommands = gcnew List<BoundCommandItem>();
 		ActionQueue = gcnew Queue<ScriptAction>();
-		D3D3ObjectList = gcnew List<GTA::base::iD3DObject^>();
+		Textures = gcnew List<IntPtr>();
 
 		// Settings
 		pSettings = gcnew SettingsFile(pFullPath + ".ini");
@@ -77,7 +77,6 @@ namespace GTA
 
 		// Other
 		FormHost = gcnew GTA::Forms::FormHost(this);
-		GFX = gcnew Graphics();
 
 		BlockWait = false;
 	}
@@ -170,7 +169,7 @@ namespace GTA
 	{
 		if (BlockWait)
 		{
-			throw gcnew System::InvalidOperationException("Illegal call to Wait()!");
+			//throw gcnew System::InvalidOperationException("Illegal call to Wait()!");
 			return;
 		}
 
@@ -377,7 +376,7 @@ namespace GTA
 
 		BlockWait = true;
 	}
-	void Script::DoPerFrameDrawing(GTA::GraphicsEventArgs^ e)
+	void Script::DoPerFrameDrawing(IVSDKDotNet::ImGuiIV_DrawingContext ctx)
 	{
 		if (!bRunning)
 			return;
@@ -385,7 +384,10 @@ namespace GTA
 		bool bw = BlockWait;
 		BlockWait = true;
 
-		PerFrameDrawing(this, e);
+		if (!GFX)
+			GFX = gcnew Graphics(ctx);
+
+		PerFrameDrawing(this, gcnew GraphicsEventArgs(GFX));
 		FormHost->TriggerDragging();
 
 		BlockWait = bw;

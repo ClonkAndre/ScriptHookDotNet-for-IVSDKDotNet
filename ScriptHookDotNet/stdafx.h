@@ -28,15 +28,11 @@
 #include <string.h>
 #include <ctype.h>
 
-#include <d3d9.h>
-#include <d3dx9.h>
-#pragma comment(lib, "d3d9.lib")
-#pragma comment(lib, "d3dx9.lib")
+#include <msclr/marshal.h>
 
 #include <vcclr.h>
 
 #include "enums.h"
-#include "D3D_enums.h"
 #include "NmEnums.h"
 
 #include "include_defines.h"
@@ -50,7 +46,6 @@
 #include "sRoom.h"
 #include "dColorConverter.h"
 #include "sColorIndex.h"
-#include "ImageInformation.h"
 
 #include "interfaces.h"
 

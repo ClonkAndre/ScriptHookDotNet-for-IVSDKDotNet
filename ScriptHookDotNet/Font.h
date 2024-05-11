@@ -31,6 +31,7 @@ namespace GTA
 	{
 	private:
 		String^ pFontFamilyName;
+		String^ pFullPath;
 		float pHeight;
 		bool bBold;
 		bool bItalic;
@@ -42,9 +43,7 @@ namespace GTA
 
 		[NonSerialized]
 		Font^ inherited;
-		bool bChanged;
-		int pInternalPointer;
-		int pD3DObjectID;
+		IntPtr pInternalPointer;
 
 		void InitValues();
 
@@ -52,13 +51,16 @@ namespace GTA
 		!Font(); // Finalize
 
 	internal:
+		void RegisterFont();
+
+	public: // Was internal before
 		Font(Font^ inheritedFont);
 		void DestroyInheritance();
 		int GetInternalPointer(bool retrieveNew);
 		virtual int GetD3DObjectID(bool retrieveNew) = base::iD3DObject::GetD3DObjectID;
 		virtual void Unload(bool permanent) = base::iD3DObject::Unload;
 		virtual void Reload() = base::iD3DObject::Reload;
-	
+
 	public:
 		Font(Drawing::Font^ WindowsFont);
 		Font(Font^ BaseFont, float NewHeight, FontScaling NewScaling);
@@ -68,7 +70,7 @@ namespace GTA
 		Font(float Height, FontScaling Scaling);
 		Font();
 		~Font(); // Dispose
-
+		
 		property Drawing::Font^ WindowsFont 
 		{
 			Drawing::Font^ get();

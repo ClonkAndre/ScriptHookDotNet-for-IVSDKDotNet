@@ -25,7 +25,6 @@
 
 namespace GTA
 {
-
 	CLASS_ATTRIBUTES
 	private ref class RemoteScriptDomain
 	{
@@ -33,8 +32,10 @@ namespace GTA
 		RemoteScriptDomain();
 
 		static RemoteScriptDomain^ pInstance;
-		static property RemoteScriptDomain^ Instance {
-			RemoteScriptDomain^ get() {
+		static property RemoteScriptDomain^ Instance
+		{
+			RemoteScriptDomain^ get()
+			{
 				return pInstance;
 			}
 		}
@@ -43,20 +44,18 @@ namespace GTA
 		GTA::Forms::FormHost^ pFormHost;
 
 	internal:
-		property GTA::Script^ CurrentScript
+		property GTA::Forms::FormHost^ FormHost
 		{
-			GTA::Script^ get()
+			GTA::Forms::FormHost^ get()
 			{
-				return (GTA::Script^)IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_GetCurrentScript();
-			}
-		}
-		property GTA::Forms::FormHost^ FormHost {
-			GTA::Forms::FormHost^ get() {
 				return pFormHost;
 			}
 		}
 
+		static Script^ GetCurrentScript(ScriptEvent ofEvent)
+		{
+			return (Script^)IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_GetCurrentScript((int)ofEvent);
+		}
+
 	};  
-
 }
-

@@ -60,7 +60,7 @@ namespace GTA
 				return true;
 
 			OBJECT_NON_EXISTING_CHECK(pOwner, false);
-			return IVSDKDotNet::Native::Natives::HAS_CHAR_GOT_WEAPON(pOwner->Handle, (u32)pID);
+			return IVSDKDotNet::Native::Natives::HAS_CHAR_GOT_WEAPON(pOwner->Handle, (int)pID);
 		}
 
 		int Weapon::Ammo::get()
@@ -74,8 +74,8 @@ namespace GTA
 
 			if (isPresent)
 			{
-				u32 ammo = 0;
-				IVSDKDotNet::Native::Natives::GET_AMMO_IN_CHAR_WEAPON(pOwner->Handle, (u32)pID, ammo);
+				int ammo = 0;
+				IVSDKDotNet::Native::Natives::GET_AMMO_IN_CHAR_WEAPON(pOwner->Handle, (int)pID, ammo);
 				return ammo;
 			}
 
@@ -88,9 +88,9 @@ namespace GTA
 			OBJECT_NON_EXISTING_CHECK_NO_RETURN(pOwner);
 
 			if (isPresent)
-				IVSDKDotNet::Native::Natives::SET_CHAR_AMMO(pOwner->Handle, (u32)pID, value);
+				IVSDKDotNet::Native::Natives::SET_CHAR_AMMO(pOwner->Handle, (int)pID, value);
 			else
-				IVSDKDotNet::Native::Natives::GIVE_WEAPON_TO_CHAR(pOwner->Handle, (u32)pID, value, 0);
+				IVSDKDotNet::Native::Natives::GIVE_WEAPON_TO_CHAR(pOwner->Handle, (int)pID, value, 0);
 		}
 		int Weapon::AmmoInClip::get()
 		{
@@ -100,10 +100,10 @@ namespace GTA
 				return 1;
 
 			OBJECT_NON_EXISTING_CHECK(pOwner, 0);
-			if (IVSDKDotNet::Native::Natives::HAS_CHAR_GOT_WEAPON(pOwner->Handle, (u32)pID))
+			if (IVSDKDotNet::Native::Natives::HAS_CHAR_GOT_WEAPON(pOwner->Handle, (int)pID))
 			{
-				u32 ammo = 0;
-				IVSDKDotNet::Native::Natives::GET_AMMO_IN_CLIP(pOwner->Handle, (u32)pID, ammo);
+				int ammo = 0;
+				IVSDKDotNet::Native::Natives::GET_AMMO_IN_CLIP(pOwner->Handle, (int)pID, ammo);
 				return ammo;
 			}
 
@@ -115,9 +115,9 @@ namespace GTA
 				return;
 
 			OBJECT_NON_EXISTING_CHECK_NO_RETURN(pOwner);
-			if (!IVSDKDotNet::Native::Natives::HAS_CHAR_GOT_WEAPON(pOwner->Handle, (u32)pID))
+			if (!IVSDKDotNet::Native::Natives::HAS_CHAR_GOT_WEAPON(pOwner->Handle, (int)pID))
 			{
-				IVSDKDotNet::Native::Natives::GIVE_WEAPON_TO_CHAR(pOwner->Handle, (u32)pID, 1, 0);
+				IVSDKDotNet::Native::Natives::GIVE_WEAPON_TO_CHAR(pOwner->Handle, (int)pID, 1, 0);
 			}
 
 			IVSDKDotNet::Native::Natives::SET_AMMO_IN_CLIP(pOwner->Handle, (int)pID, value);
@@ -130,8 +130,8 @@ namespace GTA
 				return 1;
 
 			OBJECT_NON_EXISTING_CHECK(pOwner, 0);
-			u32 ammo = 0;
-			IVSDKDotNet::Native::Natives::GET_MAX_AMMO(pOwner->Handle, (u32)pID, ammo);
+			int ammo = 0;
+			IVSDKDotNet::Native::Natives::GET_MAX_AMMO(pOwner->Handle, (int)pID, ammo);
 			return ammo;
 		}
 		int Weapon::MaxAmmoInClip::get()
@@ -142,8 +142,8 @@ namespace GTA
 				return 1;
 
 			OBJECT_NON_EXISTING_CHECK(pOwner, 0);
-			u32 ammo = 0;
-			IVSDKDotNet::Native::Natives::GET_MAX_AMMO_IN_CLIP(pOwner->Handle, (u32)pID, ammo);
+			int ammo = 0;
+			IVSDKDotNet::Native::Natives::GET_MAX_AMMO_IN_CLIP(pOwner->Handle, (int)pID, ammo);
 			return ammo;
 		}
 
@@ -153,7 +153,7 @@ namespace GTA
 				return;
 			OBJECT_NON_EXISTING_CHECK_NO_RETURN(pOwner);
 
-			u32 w = (u32)pID;
+			int w = (int)pID;
 
 			if (!IVSDKDotNet::Native::Natives::HAS_CHAR_GOT_WEAPON(pOwner->Handle, w))
 				IVSDKDotNet::Native::Natives::GIVE_WEAPON_TO_CHAR(pOwner->Handle, w, 1, 0);
@@ -166,7 +166,7 @@ namespace GTA
 				return;
 
 			OBJECT_NON_EXISTING_CHECK_NO_RETURN(pOwner);
-			IVSDKDotNet::Native::Natives::REMOVE_WEAPON_FROM_CHAR(pOwner->Handle, (u32)pID);
+			IVSDKDotNet::Native::Natives::REMOVE_WEAPON_FROM_CHAR(pOwner->Handle, (int)pID);
 		}
 
 		Weapon::operator GTA::Weapon(Weapon^ source)

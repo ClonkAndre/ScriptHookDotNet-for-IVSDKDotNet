@@ -44,7 +44,7 @@ namespace base {
 		if (Global) {
 			return static_cast<T>(ContentCache::GetMetaData(pHandle,ValueName));
 		} else {
-			Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
+			Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
 			if (System::Object::ReferenceEquals(scr,nullptr)) return T();
 			return static_cast<T>(scr->GetMetaData(pHandle,ValueName));
 		}
@@ -52,7 +52,7 @@ namespace base {
 
 	generic<typename T>
 	T HandleObject::GetMetadata(System::String^ ValueName) {
-		Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
+		Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
 		if (!System::Object::ReferenceEquals(scr,nullptr)) {
 			if (scr->HasMetaData(pHandle,ValueName)) return static_cast<T>(scr->GetMetaData(pHandle,ValueName));
 		}
@@ -63,13 +63,13 @@ namespace base {
 		if (Global) {
 			return ContentCache::HasMetaData(pHandle,ValueName);
 		} else {
-			Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
+			Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
 			if (System::Object::ReferenceEquals(scr,nullptr)) return false;
 			return scr->HasMetaData(pHandle,ValueName);
 		}
 	}
 	bool HandleObject::HasMetadata(System::String^ ValueName) {
-		Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
+		Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
 		if (!System::Object::ReferenceEquals(scr,nullptr)) {
 			if (scr->HasMetaData(pHandle,ValueName)) return true;
 		}
@@ -81,7 +81,7 @@ namespace base {
 		if (Global) {
 			ContentCache::SetMetaData(pHandle,ValueName,(System::Object^)Value);
 		} else {
-			Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
+			Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
 			if (System::Object::ReferenceEquals(scr,nullptr)) return;
 			scr->SetMetaData(pHandle,ValueName,(System::Object^)Value);
 		}

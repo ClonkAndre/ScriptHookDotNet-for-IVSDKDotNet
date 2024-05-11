@@ -23,22 +23,16 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-
-	//value class ImageInformation;
-
+namespace GTA
+{
 	CLASS_ATTRIBUTES
 	[Serializable]
 	public ref class Texture sealed : public base::iD3DObject
 	{
 	private:
 		array<Byte>^ data;
-		
-		[NonSerialized]
-		ImageInformation pImageInformation; // only local
 
-		int pInternalPointer; // only local
-		int pD3DObjectID;
+		IntPtr pInternalPointer;
 
 		void InitValues();
 
@@ -56,5 +50,4 @@ namespace GTA {
 		~Texture(); // Dispose
 
 	};
-
 }

@@ -23,8 +23,6 @@
 #pragma once
 #pragma managed
 
-#define DrawText DrawText
-
 namespace GTA
 {
 	CLASS_ATTRIBUTES
@@ -34,9 +32,10 @@ namespace GTA
 		float pFrameTime;
 		static Font^ pDefaultFont;
 		FontScaling pScaling;
+		IVSDKDotNet::ImGuiIV_DrawingContext pImGuiDrawingContext;
 
 	internal:
-		Graphics();
+		Graphics(IVSDKDotNet::ImGuiIV_DrawingContext ctx);
 
 		void InitFrame();
 		void InitScript();
@@ -52,10 +51,10 @@ namespace GTA
 			void set(FontScaling value) { pScaling = value; }
 		}
 
-		void DrawText(String^ Text, float X, float Y, Drawing::Color Color, GTA::Font^ Font); 
-		void DrawText(String^ Text, float X, float Y, GTA::Font^ Font); 
-		void DrawText(String^ Text, float X, float Y, Drawing::Color Color); 
-		void DrawText(String^ Text, float X, float Y); 
+		void DrawText(String^ Text, float X, float Y, Drawing::Color Color, GTA::Font^ Font);
+		void DrawText(String^ Text, float X, float Y, GTA::Font^ Font);
+		void DrawText(String^ Text, float X, float Y, Drawing::Color Color);
+		void DrawText(String^ Text, float X, float Y);
 
 		void DrawText(String^ Text, Drawing::RectangleF Area, TextAlignment Alignment, Drawing::Color Color, GTA::Font^ Font);
 		void DrawText(String^ Text, Drawing::RectangleF Area, TextAlignment Alignment, GTA::Font^ Font);
@@ -108,6 +107,7 @@ namespace GTA
 		Drawing::Rectangle ConvertToPixel(Drawing::RectangleF rect);
 		Drawing::RectangleF ConvertToPixelF(Drawing::RectangleF rect);
 		Vector3 ConvertToPixel(Vector3 pos);
+		Vector2 ConvertToPixel(Vector2 pos);
 		float ToPixelX(float value);
 		float ToPixelY(float value);
 

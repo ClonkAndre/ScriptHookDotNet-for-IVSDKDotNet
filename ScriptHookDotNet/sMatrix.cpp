@@ -25,16 +25,15 @@
 * role in the GTA4 .Net ScriptHook. 2009-2011
 */
 
+#include "d3d9Includes.h"
 #include "stdafx.h"
 
 #include "sMatrix.h"
 
 #pragma managed
 
-namespace GTA {
-
-	using namespace System;
-	using namespace System::Globalization;
+namespace GTA
+{
 
 	D3DXMATRIX Matrix::ToD3DXMATRIX( Matrix matrix )
 	{
@@ -81,94 +80,6 @@ namespace GTA {
 
 		return result;
 	}
-
-	//float Matrix::default::get( int row, int column )
-	//{
-	//	if( row < 0 || row > 3 )
-	//		throw gcnew ArgumentOutOfRangeException( "row", "Rows and columns for matrices run from 0 to 3, inclusive." );
-
-	//	if( column < 0 || column > 3 )
-	//		throw gcnew ArgumentOutOfRangeException( "column", "Rows and columns for matrices run from 0 to 3, inclusive." );
-
-	//	int index = row * 4 + column;
-	//	switch( index )
-	//	{
-	//	case 0:  return M11;
-	//	case 1:  return M12;
-	//	case 2:  return M13;
-	//	case 3:  return M14;
-	//	case 4:  return M21;
-	//	case 5:  return M22;
-	//	case 6:  return M23;
-	//	case 7:  return M24;
-	//	case 8:  return M31;
-	//	case 9:  return M32;
-	//	case 10: return M33;
-	//	case 11: return M34;
-	//	case 12: return M41;
-	//	case 13: return M42;
-	//	case 14: return M43;
-	//	case 15: return M44;
-	//	}
-
-	//	return 0.0f;
-	//}
-	//
-	//void Matrix::default::set( int row, int column, float value ) 
-	//{
-	//	if( row < 0 || row > 3 )
-	//		throw gcnew ArgumentOutOfRangeException( "row", "Rows and columns for matrices run from 0 to 3, inclusive." );
-
-	//	if( column < 0 || column > 3 )
-	//		throw gcnew ArgumentOutOfRangeException( "column", "Rows and columns for matrices run from 0 to 3, inclusive." );
-
-	//	int index = row * 4 + column;
-	//	switch( index )
-	//	{
-	//	case 0:  M11 = value; break;
-	//	case 1:  M12 = value; break;
-	//	case 2:  M13 = value; break;
-	//	case 3:  M14 = value; break;
-	//	case 4:  M21 = value; break;
-	//	case 5:  M22 = value; break;
-	//	case 6:  M23 = value; break;
-	//	case 7:  M24 = value; break;
-	//	case 8:  M31 = value; break;
-	//	case 9:  M32 = value; break;
-	//	case 10: M33 = value; break;
-	//	case 11: M34 = value; break;
-	//	case 12: M41 = value; break;
-	//	case 13: M42 = value; break;
-	//	case 14: M43 = value; break;
-	//	case 15: M44 = value; break;
-	//	}
-	//}
-
-	//Vector4 Matrix::Rows::get( int row )
-	//{
-	//	return Vector4( default[row, 0], default[row, 1], default[row, 2], default[row, 3] );
-	//}
-
-	//void Matrix::Rows::set( int row, Vector4 value )
-	//{
-	//	default[row, 0] = value.X;
-	//	default[row, 1] = value.Y;
-	//	default[row, 2] = value.Z;
-	//	default[row, 3] = value.W;
-	//}
-
-	//Vector4 Matrix::Columns::get( int column )
-	//{
-	//	return Vector4( default[0, column], default[1, column], default[2, column], default[3, column] );
-	//}
-
-	//void Matrix::Columns::set( int column, Vector4 value )
-	//{
-	//	default[0, column] = value.X;
-	//	default[1, column] = value.Y;
-	//	default[2, column] = value.Z;
-	//	default[3, column] = value.W;
-	//}
 
 	Matrix Matrix::Identity::get()
 	{
@@ -766,63 +677,6 @@ namespace GTA {
 		return result;
 	}
 
-	//Matrix Matrix::Reflection( Plane plane )
-	//{
-	//	Matrix result;
-	//	plane.Normalize();
-	//	float x = plane.Normal.X;
-	//	float y = plane.Normal.Y;
-	//	float z = plane.Normal.Z;
-	//	float x2 = -2.0f * x;
-	//	float y2 = -2.0f * y;
-	//	float z2 = -2.0f * z;
-	//	result.M11 = (x2 * x) + 1.0f;
-	//	result.M12 = y2 * x;
-	//	result.M13 = z2 * x;
-	//	result.M14 = 0.0f;
-	//	result.M21 = x2 * y;
-	//	result.M22 = (y2 * y) + 1.0f;
-	//	result.M23 = z2 * y;
-	//	result.M24 = 0.0f;
-	//	result.M31 = x2 * z;
-	//	result.M32 = y2 * z;
-	//	result.M33 = (z2 * z) + 1.0f;
-	//	result.M34 = 0.0f;
-	//	result.M41 = x2 * plane.D;
-	//	result.M42 = y2 * plane.D;
-	//	result.M43 = z2 * plane.D;
-	//	result.M44 = 1.0f;
-	//	return result;
-	//}
-	//
-	//Matrix Matrix::Shadow( Vector4 light, Plane plane )
-	//{
-	//	Matrix result;
-	//	plane.Normalize();
-	//	float dot = ((plane.Normal.X * light.X) + (plane.Normal.Y * light.Y)) + (plane.Normal.Z * light.Z);
-	//	float x = -plane.Normal.X;
-	//	float y = -plane.Normal.Y;
-	//	float z = -plane.Normal.Z;
-	//	float d = -plane.D;
-	//	result.M11 = (x * light.X) + dot;
-	//	result.M21 = y * light.X;
-	//	result.M31 = z * light.X;
-	//	result.M41 = d * light.X;
-	//	result.M12 = x * light.Y;
-	//	result.M22 = (y * light.Y) + dot;
-	//	result.M32 = z * light.Y;
-	//	result.M42 = d * light.Y;
-	//	result.M13 = x * light.Z;
-	//	result.M23 = y * light.Z;
-	//	result.M33 = (z * light.Z) + dot;
-	//	result.M43 = d * light.Z;
-	//	result.M14 = 0.0f;
-	//	result.M24 = 0.0f;
-	//	result.M34 = 0.0f;
-	//	result.M44 = dot;
-	//	return result;
-	//}
-
 	Matrix Matrix::Invert( Matrix mat )
 	{
 		Matrix result;
@@ -1064,6 +918,5 @@ namespace GTA {
 				 value1.M31 == value2.M31 && value1.M32 == value2.M32 && value1.M33 == value2.M33 && value1.M34 == value2.M34 &&
 				 value1.M41 == value2.M41 && value1.M42 == value2.M42 && value1.M43 == value2.M43 && value1.M44 == value2.M44 );
 	}
-
 
 }

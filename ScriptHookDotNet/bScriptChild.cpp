@@ -37,9 +37,16 @@ namespace GTA
 
 		ScriptChild::ScriptChild()
 		{
-			pParent = RemoteScriptDomain::Instance->CurrentScript;
+			// Get the current constructing script and assume they created this object...
+			pParent = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::ctor);
 
-			if isNULL(pParent)
+			// If there is no current constructing script get the current ticking script and assume they created this object...
+			if (!pParent)
+				pParent = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
+
+			// This is all pretty shit.. need to find a better solution
+
+			if (!pParent)
 				throw gcnew Exception("Unable to determine the owning Script for this object!");
 		}
 

@@ -25,18 +25,15 @@
 * role in the GTA4 .Net ScriptHook. 2009-2011
 */
 
+#include "d3d9Includes.h"
 #include "stdafx.h"
 
 #include "sQuaternion.h"
 
 #pragma managed
 
-namespace GTA {
-
-	using namespace System;
-	using namespace System::Globalization;
-
-
+namespace GTA
+{
 
 	Quaternion::Quaternion(float x, float y, float z, float w) {
 		X = x;
@@ -44,7 +41,6 @@ namespace GTA {
 		Z = z;
 		W = w;
 	}
-
 	Quaternion::Quaternion( Vector3 value, float w )
 	{
 		X = value.X;
@@ -450,53 +446,6 @@ namespace GTA {
 		return ( value1.X == value2.X && value1.Y == value2.Y && value1.Z == value2.Z && value1.W == value2.W );
 	}
 
-
-
-	// ### my stuff ###
-
-	//Quaternion Quaternion::FromRotationAxis(Vector3 axis, float angle) {
-	//	Quaternion result;
-
-	//	axis.Normalize();
-
-	//	float half = angle * 0.5f;
-	//	float sin = (float)Math::Sin((double)half);
-	//	float cos = (float)Math::Cos((double)half);
-
-	//	result.X = axis.X * sin;
-	//	result.Y = axis.Y * sin;
-	//	result.Z = axis.Z * sin;
-	//	result.W = cos;
-
-	//	return result;
-	//}
-
-	//Quaternion Quaternion::FromYawPitchRoll(float yaw, float pitch, float roll) {
-	//	Quaternion result;
-
-	//	float halfRoll = roll * 0.5f;
-	//	float sinRoll = (float)Math::Sin((double)halfRoll);
-	//	float cosRoll = (float)Math::Cos((double)halfRoll);
-	//	float halfPitch = pitch * 0.5f;
-	//	float sinPitch = (float)Math::Sin((double)halfPitch);
-	//	float cosPitch = (float)Math::Cos((double)halfPitch);
-	//	float halfYaw = yaw * 0.5f;
-	//	float sinYaw = (float)Math::Sin((double)halfYaw);
-	//	float cosYaw = (float)Math::Cos((double)halfYaw);
-
-	//	result.X = (cosYaw * sinPitch * cosRoll) + (sinYaw * cosPitch * sinRoll);
-	//	result.Y = (sinYaw * cosPitch * cosRoll) - (cosYaw * sinPitch * sinRoll);
-	//	result.Z = (cosYaw * cosPitch * sinRoll) - (sinYaw * sinPitch * cosRoll);
-	//	result.W = (cosYaw * cosPitch * cosRoll) + (sinYaw * sinPitch * sinRoll);
-
-	//	//result.X = (cosRoll * sinPitch * cosYaw) + (sinRoll * cosPitch * sinYaw);
-	//	//result.Y = (sinRoll * cosPitch * cosYaw) - (cosRoll * sinPitch * sinYaw);
-	//	//result.Z = (cosRoll * cosPitch * sinYaw) - (sinRoll * sinPitch * cosYaw);
-	//	//result.W = (cosRoll * cosPitch * cosYaw) + (sinRoll * sinPitch * sinYaw);
-
-	//	return result;
-	//}
-
 	Quaternion Quaternion::FromRotation(Vector3 Rotation) { // on Vehicle.Rotation.set
 		//return RotationYawPitchRoll(Helper::DegreeToRadian(Rotation.Z), Helper::DegreeToRadian(Rotation.X), Helper::DegreeToRadian(Rotation.Y));
 		//////Vector3 dir = Helper::RotationToDirection(Rotation);
@@ -553,44 +502,5 @@ namespace GTA {
 	String^ Quaternion::ToString(String^ Seperator, int Digits) {
 		return String::Format( CultureInfo::InvariantCulture, "{0}{4}{1}{4}{2}{4}{3}", Helper::FloatToString(X,Digits), Helper::FloatToString(Y,Digits), Helper::FloatToString(Z,Digits), Helper::FloatToString(W,Digits), Seperator );
 	}
-
-         ///// <summary>  
-         ///// The function converts a Microsoft.Xna.Framework.Quaternion into a Microsoft.Xna.Framework.Vector3  
-         ///// </summary>  
-         ///// <param name="q">The Quaternion to convert</param>  
-         ///// <returns>An equivalent Vector3</returns>  
-         ///// <remarks>  
-         ///// This function was extrapolated by reading the work of Martin John Baker. All credit for this function goes to Martin John.  
-         ///// http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/index.htm  
-         ///// </remarks>  
-         //public Vector3 QuaternionToEuler(Quaternion q) {  
-         //    Vector3 v = new Vector3();  
-   
-         //    v.X = (float)Math.Atan2 (  
-         //        2 * q.Y * q.W - 2 * q.X * q.Z,   
-         //        1 - 2*Math.Pow(q.Y, 2) - 2*Math.Pow(q.Z, 2)  
-         //    );  
-   
-         //    v.Y = (float)Math.Asin (  
-         //        2*q.X*q.Y + 2*q.Z*q.W  
-         //    );  
-   
-         //    v.Z = (float)Math.Atan2 (  
-         //        2*q.X*q.W - 2*q.Y*q.Z,  
-         //        1 - 2*Math.Pow(q.X, 2) - 2*Math.Pow(q.Z, 2)  
-         //    );  
-   
-         //    if(q.X*q.Y + q.Z*q.W == 0.5) {  
-         //        v.X = (float)(2 * Math.Atan2(q.X,q.W));  
-         //        v.Z = 0;      
-         //    }  
-         //    else if(q.X*q.Y + q.Z*q.W == -0.5) {  
-         //        v.X = (float)(-2 * Math.Atan2(q.X, q.W));  
-         //        v.Z = 0;  
-         //    }  
-         //    return v;  
-         //}  
-
-
 
 }

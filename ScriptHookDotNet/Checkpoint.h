@@ -23,15 +23,13 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-
+namespace GTA
+{
 	using namespace System;
 
-	//ref class GraphicsEventArgs;
-
 	CLASS_ATTRIBUTES
-	public ref class Checkpoint sealed : public base::ScriptChild {
-
+	public ref class Checkpoint sealed : public base::ScriptChild
+	{
 	private:
 		System::Drawing::Color pColor;
 		bool bVisible;
@@ -40,62 +38,69 @@ namespace GTA {
 
 		void EachTick(Object^ sender, EventArgs^ e);
 
-	internal:
-
-
 	public:
-		property bool Visible {
-			bool get() {
-				return bVisible;
-			}
-			void set(bool value);
-		}
-
-		Checkpoint(Vector3 Position, System::Drawing::Color Color, float Diameter) {
+		Checkpoint(Vector3 Position, System::Drawing::Color Color, float Diameter)
+		{
 			bVisible = false;
 			pColor = Color;
 			pDiameter = Diameter;
 			pPosition = Position;
 			Visible = true;
 		}
-		Checkpoint() {
+		Checkpoint()
+		{
 			bVisible = false;
 			pColor = System::Drawing::Color::White;
 			pDiameter = 3.0F;
 			pPosition = Vector3();
 		}
 
-		void Disable() {
+		void Disable()
+		{
 			Visible = false;
 		}
 
-		property System::Drawing::Color Color {
-			System::Drawing::Color get() {
+		property bool Visible
+		{
+			bool get()
+			{
+				return bVisible;
+			}
+			void set(bool value);
+		}
+		property System::Drawing::Color Color
+		{
+			System::Drawing::Color get()
+			{
 				return pColor;
 			}
-			void set(System::Drawing::Color value) {
+			void set(System::Drawing::Color value)
+			{
 				pColor = value;
 			}
 		}
-
-		property Vector3 Position {
-			Vector3 get() {
+		property Vector3 Position
+		{
+			Vector3 get()
+			{
 				return pPosition;
 			}
-			void set(Vector3 value) {
+			void set(Vector3 value)
+			{
 				pPosition = value;
 			}
 		}
-
-		property float Diameter {
-			float get() {
+		property float Diameter
+		{
+			float get()
+			{
 				return pDiameter;
 			}
-			void set(float value) {
+			void set(float value)
+			{
 				pDiameter = value;
 			}
 		}
-
 	};
 
 }

@@ -295,9 +295,6 @@
     <ClCompile Include="Graphics.cpp">
       <Filter>Objects\Direct3D</Filter>
     </ClCompile>
-    <ClCompile Include="ImageInformation.cpp">
-      <Filter>Objects\Direct3D</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Objects\Direct3D</Filter>
     </ClCompile>
@@ -594,16 +591,10 @@
     <ClInclude Include="D3D_Device.h">
       <Filter>Objects\Direct3D</Filter>
     </ClInclude>
-    <ClInclude Include="D3D_enums.h">
-      <Filter>Objects\Direct3D</Filter>
-    </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>Objects\Direct3D</Filter>
     </ClInclude>
     <ClInclude Include="Graphics.h">
-      <Filter>Objects\Direct3D</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageInformation.h">
       <Filter>Objects\Direct3D</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
@@ -628,6 +619,9 @@
       <Filter>Objects\_includes</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="d3d9Includes.h">
+      <Filter>Objects\_includes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ScriptHookDotNet.readme.txt" />

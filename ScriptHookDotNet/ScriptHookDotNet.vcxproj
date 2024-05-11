@@ -14,6 +14,7 @@
     <ProjectGuid>{5DD209AC-1B5F-483A-BCA9-150CAD228C5A}</ProjectGuid>
     <RootNamespace>ScriptHookDotNet</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -42,12 +43,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\bin;$(ReferencePath)</ReferencePath>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\bin\</OutDir>
+    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ReferencePath)</ReferencePath>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
-    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\bin;$(ReferencePath)</ReferencePath>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\bin\</OutDir>
+    <ReferencePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ReferencePath)</ReferencePath>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
@@ -60,6 +61,10 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(DXSDK_DIR)Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -115,7 +120,7 @@
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies);$(DXSDK_2008-03)Lib\x86\d3dx9.lib;..\ScriptHook\bin\ScriptHook.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(DXSDK_DIR)Lib\x86\d3dx9.lib</AdditionalDependencies>
       <AdditionalManifestDependencies>%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -130,9 +135,11 @@
       <NoEntryPoint>false</NoEntryPoint>
       <TargetMachine>MachineX86</TargetMachine>
       <CLRThreadAttribute>DefaultThreadingAttribute</CLRThreadAttribute>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>..\bin\_postbuild.bat</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -243,7 +250,6 @@
     <ClCompile Include="D3D_Device.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Graphics.cpp" />
-    <ClCompile Include="ImageInformation.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Viewport.cpp" />
   </ItemGroup>
@@ -251,6 +257,7 @@
     <ClInclude Include="Blip.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Checkpoint.h" />
+    <ClInclude Include="d3d9Includes.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="MemoryStream.h" />
     <ClInclude Include="Object.h" />
@@ -346,10 +353,8 @@
     <ClInclude Include="RemoteScriptDomain.h" />
     <ClInclude Include="Script.h" />
     <ClInclude Include="D3D_Device.h" />
-    <ClInclude Include="D3D_enums.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Graphics.h" />
-    <ClInclude Include="ImageInformation.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="VertexFormats.h" />
     <ClInclude Include="Viewport.h" />

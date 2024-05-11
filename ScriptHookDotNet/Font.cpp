@@ -20,11 +20,12 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "Font.h"
 
-#include "D3D_Device.h"
 #include "Graphics.h"
 
 #pragma managed
@@ -33,15 +34,14 @@ namespace GTA
 {
 
 	// - - - Constructor - - -
-	Font::Font()
-	{
-		InitValues();
-	}
 	Font::Font(Font^ inheritedFont)
 	{
 		InitValues();
 		inherited = inheritedFont;
+
+		RegisterFont();
 	}
+
 	Font::Font(String^ FontFamily, float Height, FontScaling Scaling, bool Bold, bool Italic) 
 	{
 		InitValues();
@@ -50,7 +50,8 @@ namespace GTA
 		pScaling = Scaling;
 		bBold = Bold;
 		bItalic = Italic;
-		bChanged = true;
+
+		RegisterFont();
 	}
 	Font::Font(String^ FontFamily, float Height, FontScaling Scaling)
 	{
@@ -58,7 +59,8 @@ namespace GTA
 		pFontFamilyName = FontFamily;
 		pHeight = Height;
 		pScaling = Scaling;
-		bChanged = true;
+
+		RegisterFont();
 	}
 	Font::Font(float Height, FontScaling Scaling, bool Bold, bool Italic)
 	{
@@ -67,14 +69,16 @@ namespace GTA
 		pScaling = Scaling;
 		bBold = Bold;
 		bItalic = Italic;
-		bChanged = true;
+
+		RegisterFont();
 	}
 	Font::Font(float Height, FontScaling Scaling)
 	{
 		InitValues();
 		pHeight = Height;
 		pScaling = Scaling;
-		bChanged = true;
+
+		RegisterFont();
 	}
 	Font::Font(Drawing::Font^ WindowsFont)
 	{
@@ -92,17 +96,22 @@ namespace GTA
 		pEffectColor = BaseFont->EffectColor;
 		pHeight = NewHeight;
 		pScaling = NewScaling;
-		bChanged = true;
+
+		RegisterFont();
 	}
 
+	Font::Font()
+	{
+		InitValues();
+		RegisterFont();
+	}
 	Font::~Font()
 	{ // Dispose
-		//Unload(true); DO NOT unload it here! unload does not work in the remote script domain!
 		this->!Font();
 	}
 	Font::!Font()
 	{ // Finalize
-		//Unload(true);
+
 	}
 
 	// - - - Properties, Methods and Functions - - -
@@ -119,9 +128,13 @@ namespace GTA
 		pScaling = FontScaling::FontSize;
 
 		inherited = nullptr;
-		pInternalPointer = 0;
-		pD3DObjectID = -1;
-		bChanged = true;
+		pInternalPointer = IntPtr::Zero;
+	}
+
+	void Font::RegisterFont()
+	{
+		// Register font for creation
+		IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_AddFont(this);
 	}
 
 	Drawing::Font^ Font::WindowsFont::get()
@@ -137,51 +150,64 @@ namespace GTA
 
 	void Font::Unload(bool permanent)
 	{
-		if (pInternalPointer != 0)
-		{
-			Direct3D::Release(this);
-			pInternalPointer = 0;
-		}
-		if (permanent)
-		{
-			pD3DObjectID = -1;
-			bChanged = true;
-		}
+
 	}
 	void Font::Reload()
 	{
-		Unload(false);
-		try
+		if (String::IsNullOrWhiteSpace(pFontFamilyName))
+			return;
+
+		// Try find font file with this name in the Windows Fonts folder
+		array<String^>^ foundFiles = Directory::GetFiles(Environment::GetFolderPath(Environment::SpecialFolder::Fonts), pFontFamilyName + ".*", SearchOption::TopDirectoryOnly);
+
+		if (foundFiles->Length != 0)
+			pFullPath = foundFiles[0]; // Just use the first path in the array
+
+		// Try find font file with this name in GTA IV root folder if above search failed
+		if (String::IsNullOrEmpty(pFullPath))
 		{
-			pInternalPointer = Direct3D::NewFontInternal((int)Graphics::ConvertY(pHeight,pScaling,FontScaling::Pixel), 0, bBold ? 700 : 400, 0, bItalic, 1, 0, 0, 0, pFontFamilyName);
-		} catchErrors("Font.GetInternalPointer: Error while creating new font", pInternalPointer = 0; )
+			foundFiles = Directory::GetFiles(IVSDKDotNet::IVGame::GameStartupPath, pFontFamilyName + ".*", SearchOption::TopDirectoryOnly);
+
+			if (foundFiles->Length != 0)
+				pFullPath = foundFiles[0]; // Just use the first path in the array
+		}
+
+		// Try find font file with this name in GTA IV script folder if above search failed
+		if (String::IsNullOrEmpty(pFullPath))
+		{
+			foundFiles = Directory::GetFiles(IVSDKDotNet::IVGame::GameStartupPath + "\\scripts", pFontFamilyName + ".*", SearchOption::AllDirectories);
+
+			if (foundFiles->Length != 0)
+				pFullPath = foundFiles[0]; // Just use the first path in the array
+		}
+
+		bool usingFallbackFont = false;
+
+		// If pFullPath is null or empty file was not found and we use the default IV-SDK .NET font
+		if (String::IsNullOrEmpty(pFullPath))
+		{
+			NetHook::VerboseLog(String::Format("Was trying to create font {0} but it was not found. Using default font public-sans.regular.", pFontFamilyName));
+			pFullPath = CLR::CLRBridge::IVSDKDotNetDataPath + "\\public-sans.regular.ttf";
+			usingFallbackFont = true;
+		}
+
+		float height = Graphics::ConvertY(pHeight, pScaling, FontScaling::Pixel);
+		if (IVSDKDotNet::ImGuiIV::AddFontFromFile(pFullPath, height, pInternalPointer))
+			NetHook::VerboseLog(String::Format("Successfully added font {0} with height {1}!", usingFallbackFont ? "public-sans.regular" : pFontFamilyName, height));
+		else
+			WRITE_TO_DEBUG_OUTPUT(String::Format("Could not add font file {0}! Font might already be added or an unknown error occured.", pFontFamilyName));
 	}
 
 	int Font::GetInternalPointer(bool retrieveNew)
 	{
-		if (pInternalPointer == 0 && retrieveNew)
+		if (pInternalPointer == IntPtr::Zero && retrieveNew)
 			Reload();
 
-		return pInternalPointer;
+		return pInternalPointer.ToInt32();
 	}
 	int Font::GetD3DObjectID(bool retrieveNew)
 	{
-		if isNotNULL(inherited)
-			return inherited->GetD3DObjectID(retrieveNew);
-
-		if (bChanged && retrieveNew)
-		{
-			try
-			{
-				pD3DObjectID = Direct3D::AddNewObject(this);
-			} catchErrors("Font.GetD3DObjectID: Error while creating new font", pD3DObjectID = -1; )
-
-			if (pD3DObjectID < 0)
-				return -1;
-
-			bChanged = false;
-		}
-		return pD3DObjectID;
+		return -1;
 	}
 
 	void Font::DestroyInheritance()
@@ -199,7 +225,8 @@ namespace GTA
 		pEffectSize = inherited->EffectSize;
 		pEffectColor = inherited->EffectColor;
 		inherited = nullptr;
-		bChanged = true;
+
+		NetHook::Log("Inheritance destroyed");
 	}
 
 }

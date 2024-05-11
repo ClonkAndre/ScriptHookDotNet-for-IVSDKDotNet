@@ -41,9 +41,20 @@
 namespace GTA
 {
 
-	static NetHook::NetHook()
+	void NetHook::VerboseLog(String^ Text)
 	{
-
+		if (VERBOSE)
+			IVSDKDotNet::IVGame::Console::PrintWarning(String::Format("[SHDN: NetHook Verbose Log] {0}", Text));
+	}
+	void NetHook::VerboseLog(String^ Text, Exception^ ex)
+	{
+		if (VERBOSE)
+			IVSDKDotNet::IVGame::Console::PrintWarning(String::Format("[SHDN: NetHook Exception Verbose] {0} - Exception: {1}", Text, ex));
+	}
+	void NetHook::VerboseLog(Exception^ ex)
+	{
+		if (VERBOSE)
+			IVSDKDotNet::IVGame::Console::PrintWarning(String::Format("[SHDN: NetHook Exception Verbose] {0}", ex));
 	}
 
 	void NetHook::Log(String^ Text)

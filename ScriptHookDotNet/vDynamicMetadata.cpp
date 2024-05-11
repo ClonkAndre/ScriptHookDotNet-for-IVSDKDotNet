@@ -48,7 +48,7 @@ namespace value {
 		if (bGlobal) {
 			return ContentCache::HasMetaData(pObject->Handle,MetadataName->ToLower());
 		} else {
-			Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
+			Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
 			if (System::Object::ReferenceEquals(scr,nullptr)) return false;
 			return scr->HasMetaData(pObject->Handle,MetadataName->ToLower());
 		}
@@ -58,7 +58,7 @@ namespace value {
 		if (bGlobal) {
 			ContentCache::SetMetaData(pObject->Handle,binder->Name->ToLower(),value);
 		} else {
-			Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
+			Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
 			if (System::Object::ReferenceEquals(scr,nullptr)) return true;
 			scr->SetMetaData(pObject->Handle,binder->Name->ToLower(),value);
 		}
@@ -70,7 +70,7 @@ namespace value {
 		if (bGlobal) {
 			result = ContentCache::GetMetaData(pObject->Handle,binder->Name->ToLower());
 		} else {
-			Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
+			Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
 			if (System::Object::ReferenceEquals(scr,nullptr)) { result = nullptr; return true; }
 			result = scr->GetMetaData(pObject->Handle,binder->Name->ToLower());
 		}

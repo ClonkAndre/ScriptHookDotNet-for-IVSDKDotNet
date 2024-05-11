@@ -23,7 +23,7 @@
 #pragma once
 
 #ifdef DEBUG
-#define VERBOSE true
+#define VERBOSE IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_VerboseLoggingEnabled()
 #else
 #define VERBOSE false
 #endif
@@ -164,6 +164,9 @@ typedef void* ptr;
 #define Vector3ToGTAVector3(vec) GTA::Vector3(vec.X, vec.Y, vec.Z)
 #define GTAVector3ToVector3(vec) System::Numerics::Vector3(vec.X, vec.Y, vec.Z)
 
+#define Vector2ToGTAVector2(vec) GTA::Vector2(vec.X, vec.Y)
+#define GTAVector2ToVector2(vec) System::Numerics::Vector2(vec.X, vec.Y)
+
 #define NotImplementedYet(msg) throw gcnew System::NotImplementedException(msg)
 
 #define isNULL(var) (System::Object::ReferenceEquals(var,nullptr))
@@ -183,11 +186,6 @@ typedef void* ptr;
 
 #define lock(lockobj) { System::Threading::Monitor::Enter(lockobj); try {
 #define unlock(lockobj) } catch (System::Exception^ ex){throw ex;} catch (...){throw gcnew Exception();} finally { System::Threading::Monitor::Exit(lockobj); } }
-
-#define WHILE_LOG(sender) GTA::NetHook::Log("IN WHILE LOOP: " + sender)
-
-#define WRITE_TO_DEBUG_OUTPUT(text) System::Diagnostics::Debugger::Log(0, "ScriptHookDotNet", text + "\n")
-#define LOG_STACK_TRACE() WRITE_TO_DEBUG_OUTPUT((gcnew System::Diagnostics::StackTrace())->ToString())
 
 //#define LOCK lock(syncroot)
 //#define UNLOCK unlock(syncroot)
@@ -220,18 +218,33 @@ typedef void* ptr;
 #define NON_EXISTING_CHECK_NO_RETURN() OBJECT_NON_EXISTING_CHECK_NO_RETURN(this)
 #define NON_EXISTING_CHECK_RELAXED_NO_RETURN() OBJECT_NON_EXISTING_CHECK_RELAXED_NO_RETURN(this)
 
-
 #define V3_NaN Vector3(float::NaN,float::NaN,float::NaN)
 #define V3_NULL Vector3()
 
 #define CLASS_ATTRIBUTES [System::Diagnostics::DebuggerNonUserCode()]
 
+// Logging
 #ifdef DEBUG
-#define VLOG(text) if (VERBOSE) GTA::NetHook::Log( text )
-#define LogCount(cache, name, amount) if ( (VERBOSE) && ((cache->Count % amount) == 0) ) GTA::NetHook::Log("WARNING! " + name + " count: " + cache->Count.ToString());
+
+#define VLOG(text) if (VERBOSE) GTA::NetHook::Log(text)
+#define LogCount(cache, name, amount) if (VERBOSE && (cache->Count % amount) == 0) GTA::NetHook::Log("WARNING! " + name + " count: " + cache->Count.ToString());
+
+#define WHILE_LOG(sender) if (VERBOSE) GTA::NetHook::Log("IN WHILE LOOP: " + sender)
+
+#define WRITE_TO_DEBUG_OUTPUT(text) if (VERBOSE && System::Diagnostics::Debugger::IsAttached) System::Diagnostics::Debugger::Log(0, "ScriptHookDotNet", text + "\n")
+#define LOG_STACK_TRACE() if (VERBOSE) WRITE_TO_DEBUG_OUTPUT((gcnew System::Diagnostics::StackTrace())->ToString())
+
 #else
-#define VLOG(text) // nothing to see here
-#define LogCount(cache, name, amount) // nothing to see here
+
+// nothing to see here
+#define VLOG(text) 
+#define LogCount(cache, name, amount)
+
+#define WHILE_LOG(sender)
+
+#define WRITE_TO_DEBUG_OUTPUT(text)
+#define LOG_STACK_TRACE()
+
 #endif
 
 template <typename R, typename T>
@@ -247,12 +260,4 @@ namespace GTA
 	using namespace System::IO;
 	using namespace System::Collections::Generic;
 	using namespace System::Runtime::InteropServices;
-}
-
-namespace Scripting
-{
-	typedef struct
-	{
-		f32 X, Y, Z;
-	} Vector3;
 }
