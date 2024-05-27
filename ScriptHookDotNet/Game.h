@@ -29,20 +29,15 @@ namespace GTA
 {
 	public ref class Game sealed
 	{
-
 	private:
 		static Game();
-		Game()
-		{
-		}
+		Game(){}
 
 		static value::Globals^ pGlobals;
 
 		static String^ pInstallFolder = System::Windows::Forms::Application::StartupPath;
 		static String^ pExecutableFile = System::Windows::Forms::Application::ExecutablePath;
 		static GTA::GameVersion pVersion;
-
-		static Drawing::Size pResolution;
 
 		static void GetMovement([OutAttribute] int% x, [OutAttribute] int% y);
 
@@ -55,8 +50,6 @@ namespace GTA
 		{
 			bool get();
 		}
-
-		static void PerFrame();
 
 		static bool isPlayerActive(int PlayerID);
 

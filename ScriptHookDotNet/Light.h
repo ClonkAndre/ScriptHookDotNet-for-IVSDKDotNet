@@ -23,15 +23,11 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-
-	using namespace System;
-
-	ref class GraphicsEventArgs;
-
+namespace GTA
+{
 	CLASS_ATTRIBUTES
-	public ref class Light sealed : public base::ScriptChild {
-
+	public ref class Light sealed : public base::ScriptChild
+	{
 	private:
 		System::Drawing::Color pColor;
 		bool bEnabled;
@@ -41,25 +37,25 @@ namespace GTA {
 
 		void PerFrameDrawing(Object^ sender, EventArgs^ e);
 
-	internal:
-
-
 	public:
-		Light(System::Drawing::Color Color, float Range, float Intensity, Vector3 Position) {
+		Light(System::Drawing::Color Color, float Range, float Intensity, Vector3 Position) : base::ScriptChild(GetCallingScript())
+		{
 			bEnabled = false;
 			pColor = Color;
 			pRange = Range;
 			pIntensity = Intensity;
 			pPosition = Position;
 		}
-		Light(System::Drawing::Color Color, float Range, float Intensity) {
+		Light(System::Drawing::Color Color, float Range, float Intensity) : base::ScriptChild(GetCallingScript())
+		{
 			bEnabled = false;
 			pColor = Color;
 			pRange = Range;
 			pIntensity = Intensity;
 			pPosition = Vector3();
 		}
-		Light() {
+		Light() : base::ScriptChild(GetCallingScript())
+		{
 			bEnabled = false;
 			pColor = System::Drawing::Color::White;
 			pRange = 3.0F;
@@ -67,53 +63,63 @@ namespace GTA {
 			pPosition = Vector3();
 		}
 
-		property bool Enabled {
-			bool get() {
+		property bool Enabled
+		{
+			bool get()
+			{
 				return bEnabled;
 			}
 			void set(bool value);
 		}
-
-		void Disable() {
+		void Disable()
+		{
 			Enabled = false;
 		}
 
-		property System::Drawing::Color Color {
-			System::Drawing::Color get() {
+		property System::Drawing::Color Color
+		{
+			System::Drawing::Color get()
+			{
 				return pColor;
 			}
-			void set(System::Drawing::Color value) {
+			void set(System::Drawing::Color value)
+			{
 				pColor = value;
 			}
 		}
-
-		property Vector3 Position {
-			Vector3 get() {
+		property Vector3 Position
+		{
+			Vector3 get()
+			{
 				return pPosition;
 			}
-			void set(Vector3 value) {
+			void set(Vector3 value)
+			{
 				pPosition = value;
 			}
 		}
-
-		property float Range {
-			float get() {
+		property float Range
+		{
+			float get()
+			{
 				return pRange;
 			}
-			void set(float value) {
+			void set(float value)
+			{
 				pRange = value;
 			}
 		}
-
-		property float Intensity {
-			float get() {
+		property float Intensity
+		{
+			float get()
+			{
 				return pIntensity;
 			}
-			void set(float value) {
+			void set(float value)
+			{
 				pIntensity = value;
 			}
 		}
 
 	};
-
 }

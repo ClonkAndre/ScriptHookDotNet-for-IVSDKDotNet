@@ -35,6 +35,8 @@ namespace GTA
 
 	Texture::Texture(array<Byte>^ ImageData)
 	{
+		pOwningScript = GetCallingScript();
+
 		InitValues();
 
 		if ( isNULL(ImageData) || (ImageData->Length == 0) )
@@ -73,7 +75,7 @@ namespace GTA
 
 		int textureWidth;
 		int textureHeight;
-		pInternalPointer = Direct3D::NewTextureInternal(data, textureWidth, textureHeight);
+		pInternalPointer = Direct3D::NewTextureInternal(pOwningScript, data, textureWidth, textureHeight);
 	}
 
 	int Texture::GetInternalPointer(bool retrieveNew)

@@ -251,7 +251,9 @@ namespace GTA
 
 		Graphics^ GFX;
 
+		[IVSDKDotNet::Attributes::HideInInspectorAttribute()]
 		bool KeyDownActionQueued;
+		[IVSDKDotNet::Attributes::HideInInspectorAttribute()]
 		bool KeyUpActionQueued;
 
 		void ProcessBoundKeys(WinForms::Keys Key);

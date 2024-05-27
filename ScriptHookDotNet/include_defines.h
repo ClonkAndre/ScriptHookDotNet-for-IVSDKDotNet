@@ -44,8 +44,6 @@ namespace GTA
 
 	ref class RemoteScriptDomain;
 	ref class Script;
-	ref class KeyboardLayout;
-	ref class KeyWatchDog;
 
 	ref class ContentCache;
 	ref class Game;
@@ -172,29 +170,18 @@ typedef void* ptr;
 #define isNULL(var) (System::Object::ReferenceEquals(var,nullptr))
 #define isNotNULL(var) (!System::Object::ReferenceEquals(var,nullptr))
 
-#define PinStringA(str) (char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(str).ToPointer()
-#define PinStringU(str) (WCHAR*)System::Runtime::InteropServices::Marshal::StringToHGlobalUni(str).ToPointer()
-#define FreeString(ptr) System::Runtime::InteropServices::Marshal::FreeHGlobal(IntPtr(ptr))
+#define GetNameOfCallingScript() System::Reflection::Assembly::GetCallingAssembly()->GetName()->Name->Replace(".net", "")
+#define GetCallingScript() IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_GetScriptByName(GetNameOfCallingScript())
+#define LateInitializeScript(obj) IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_LateInitializeScript(GetNameOfCallingScript(), obj)
 
-#define catchScriptErrors(Script,CodeLocation,onCatch)	\
-	catch(System::Exception^ ex) { onCatch } \
-		catch(...) { onCatch } 
+#define GetCurrentScript(ofEvent) (GTA::Script^)IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_GetCurrentScript((int)ofEvent);
 
-#define catchErrors(LogMessage,onCatch)	\
-	catch(System::Exception^ ex) { GTA::NetHook::Log( LogMessage + ":" ,ex); onCatch } \
-	catch(...) { GTA::NetHook::Log( LogMessage + "!" ); onCatch } 
-
-#define lock(lockobj) { System::Threading::Monitor::Enter(lockobj); try {
-#define unlock(lockobj) } catch (System::Exception^ ex){throw ex;} catch (...){throw gcnew Exception();} finally { System::Threading::Monitor::Exit(lockobj); } }
-
-//#define LOCK lock(syncroot)
-//#define UNLOCK unlock(syncroot)
-
-//#define LogFin(name) if (VERBOSE) GTA::NetHook::Log( "FINALIZING " + name )
-//#define DoGC(name) { if (VERBOSE) GTA::NetHook::Log( "After "+name+" do GC::Collect..." ); System::GC::Collect(); }
-
-//#define ALTERNATE_LOCAL_EVENT(EventID,Arguments,CodeBefore,CodeAfter) if (!NetHook::isPrimary) { CodeBefore \
-//			NetHook::RaiseEventInLocalScriptDomain(EventID, Arguments); CodeAfter }
+//#define catchScriptErrors(Script,CodeLocation,onCatch)	\
+//	catch(System::Exception^ ex) { onCatch } \
+//		catch(...) { onCatch } 
+//#define catchErrors(LogMessage,onCatch)	\
+//	catch(System::Exception^ ex) { GTA::NetHook::Log( LogMessage + ":" ,ex); onCatch } \
+//	catch(...) { GTA::NetHook::Log( LogMessage + "!" ); onCatch } 
 
 
 #ifdef DEBUG
@@ -203,7 +190,7 @@ typedef void* ptr;
 #define NON_EXISTING_MESSAGE(object)
 #endif
 
-// Non existing checks (The no return defines mean that this define does not return a value! It will still return)
+// Non existing checks (The no return defines mean that this define does not return a value! It will still return out of the method)
 #define OBJECT_NON_EXISTING_CHECK(object,returns) if (!object->Exists()) { throw gcnew NonExistingObjectException( NON_EXISTING_MESSAGE(object) ); return returns; }
 #define OBJECT_NON_EXISTING_CHECK_ALLOW_NULL(object,returns) if ((object->Handle != 0) && (!object->Exists())) { throw gcnew NonExistingObjectException( NON_EXISTING_MESSAGE(object) ); return returns; }
 #define OBJECT_NON_EXISTING_CHECK_RELAXED(object,returns) if (!object->Exists()) return returns
@@ -248,7 +235,8 @@ typedef void* ptr;
 #endif
 
 template <typename R, typename T>
-inline R force_cast(T value) {
+inline R force_cast(T value)
+{
 	return *reinterpret_cast<R*>(&value);
 }
 

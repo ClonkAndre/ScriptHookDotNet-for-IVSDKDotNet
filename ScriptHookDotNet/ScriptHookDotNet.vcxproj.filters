@@ -53,9 +53,6 @@
     <Filter Include="Objects\RemoteObjects">
       <UniqueIdentifier>{bd73ee24-375a-4301-8709-7b5d4434a70b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Objects\RemoteObjects\general">
-      <UniqueIdentifier>{4f365d66-f093-4aeb-a12d-976258ae461c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Objects\Direct3D">
       <UniqueIdentifier>{5f0507a3-71e7-47ac-846b-df2720135b81}</UniqueIdentifier>
     </Filter>
@@ -214,9 +211,6 @@
     <ClCompile Include="fColorDialog.cpp">
       <Filter>Objects\ScriptingObjects\forms</Filter>
     </ClCompile>
-    <ClCompile Include="fConfigForm.cpp">
-      <Filter>Objects\ScriptingObjects\forms</Filter>
-    </ClCompile>
     <ClCompile Include="fControl.cpp">
       <Filter>Objects\ScriptingObjects\forms</Filter>
     </ClCompile>
@@ -247,9 +241,6 @@
     <ClCompile Include="fTextbox.cpp">
       <Filter>Objects\ScriptingObjects\forms</Filter>
     </ClCompile>
-    <ClCompile Include="KeyWatchDog.cpp">
-      <Filter>Objects\LocalObjects\helper</Filter>
-    </ClCompile>
     <ClCompile Include="dColorConverter.cpp">
       <Filter>Objects\LocalObjects\helper\design</Filter>
     </ClCompile>
@@ -277,15 +268,6 @@
     <ClCompile Include="nTemplate.cpp">
       <Filter>Objects\LocalObjects\nativecall</Filter>
     </ClCompile>
-    <ClCompile Include="ContentCache.cpp">
-      <Filter>Objects\RemoteObjects\general</Filter>
-    </ClCompile>
-    <ClCompile Include="RemoteScriptDomain.cpp">
-      <Filter>Objects\RemoteObjects\general</Filter>
-    </ClCompile>
-    <ClCompile Include="Script.cpp">
-      <Filter>Objects\RemoteObjects\general</Filter>
-    </ClCompile>
     <ClCompile Include="D3D_Device.cpp">
       <Filter>Objects\Direct3D</Filter>
     </ClCompile>
@@ -298,9 +280,6 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Objects\Direct3D</Filter>
     </ClCompile>
-    <ClCompile Include="Viewport.cpp">
-      <Filter>Objects\Direct3D</Filter>
-    </ClCompile>
     <ClCompile Include="MemoryStream.cpp">
       <Filter>Objects\LocalObjects\helper</Filter>
     </ClCompile>
@@ -309,6 +288,12 @@
     </ClCompile>
     <ClCompile Include="bObject.cpp">
       <Filter>Objects\ScriptingObjects\abstract</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentCache.cpp">
+      <Filter>Objects\RemoteObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Script.cpp">
+      <Filter>Objects\RemoteObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -474,9 +459,6 @@
     <ClInclude Include="sColorIndex.h">
       <Filter>Objects\ScriptingObjects\structs</Filter>
     </ClInclude>
-    <ClInclude Include="sFoundScript.h">
-      <Filter>Objects\ScriptingObjects\structs</Filter>
-    </ClInclude>
     <ClInclude Include="sMatrix.h">
       <Filter>Objects\ScriptingObjects\structs</Filter>
     </ClInclude>
@@ -505,9 +487,6 @@
       <Filter>Objects\ScriptingObjects\forms</Filter>
     </ClInclude>
     <ClInclude Include="fColorDialog.h">
-      <Filter>Objects\ScriptingObjects\forms</Filter>
-    </ClInclude>
-    <ClInclude Include="fConfigForm.h">
       <Filter>Objects\ScriptingObjects\forms</Filter>
     </ClInclude>
     <ClInclude Include="fControl.h">
@@ -539,12 +518,6 @@
     </ClInclude>
     <ClInclude Include="fTextbox.h">
       <Filter>Objects\ScriptingObjects\forms</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyboardLayout.h">
-      <Filter>Objects\LocalObjects\helper</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyWatchDog.h">
-      <Filter>Objects\LocalObjects\helper</Filter>
     </ClInclude>
     <ClInclude Include="dColorConverter.h">
       <Filter>Objects\LocalObjects\helper\design</Filter>
@@ -579,15 +552,6 @@
     <ClInclude Include="nTemplate.h">
       <Filter>Objects\LocalObjects\nativecall</Filter>
     </ClInclude>
-    <ClInclude Include="ContentCache.h">
-      <Filter>Objects\RemoteObjects\general</Filter>
-    </ClInclude>
-    <ClInclude Include="RemoteScriptDomain.h">
-      <Filter>Objects\RemoteObjects\general</Filter>
-    </ClInclude>
-    <ClInclude Include="Script.h">
-      <Filter>Objects\RemoteObjects\general</Filter>
-    </ClInclude>
     <ClInclude Include="D3D_Device.h">
       <Filter>Objects\Direct3D</Filter>
     </ClInclude>
@@ -598,12 +562,6 @@
       <Filter>Objects\Direct3D</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Objects\Direct3D</Filter>
-    </ClInclude>
-    <ClInclude Include="VertexFormats.h">
-      <Filter>Objects\Direct3D</Filter>
-    </ClInclude>
-    <ClInclude Include="Viewport.h">
       <Filter>Objects\Direct3D</Filter>
     </ClInclude>
     <ClInclude Include="MemoryStream.h">
@@ -618,9 +576,17 @@
     <ClInclude Include="include_defines.h">
       <Filter>Objects\_includes</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
     <ClInclude Include="d3d9Includes.h">
       <Filter>Objects\_includes</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentCache.h">
+      <Filter>Objects\RemoteObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Script.h">
+      <Filter>Objects\RemoteObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

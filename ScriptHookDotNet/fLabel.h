@@ -23,22 +23,22 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-namespace Forms {
-
-	using namespace Drawing;
-
+namespace GTA
+{
+namespace Forms
+{
 	CLASS_ATTRIBUTES
-	public ref class Label : public GTA::Forms::Control {
-
+	public ref class Label : public GTA::Forms::Control
+	{
 	public:
 		Label() {}
 
+	internal:
+		virtual void OnPaint() override;
+
 	protected:
-		virtual void OnPaint(GTA::GraphicsEventArgs^ e) override;
 		virtual void OnTextChanged(EventArgs^ e) override;
 
 	};
-
 }
 }

@@ -23,15 +23,17 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-namespace Forms {
+namespace GTA
+{
+namespace Forms
+{
 
 	using namespace Drawing;
 
 	CLASS_ATTRIBUTES
 	[System::ComponentModel::DefaultEventAttribute("Opened")]
-	public ref class Form : public GTA::Forms::Control {
-
+	public ref class Form : public GTA::Forms::Control
+	{
 	private:
 		GTA::Script^ pScript;
 		Drawing::Color pTitleBackColor;
@@ -56,29 +58,22 @@ namespace Forms {
 		void AcceptButton_Click(System::Object^ sender, MouseEventArgs^ e);
 		void CancelButton_Click(System::Object^ sender, MouseEventArgs^ e);
 
-		FormHost^ GetFormHost();
-
 	public:
 		event EventHandler^ Closed;
 		event EventHandler^ Opened;
 
 	internal:
-		virtual void OnDragging(GTA::MouseEventArgs^ e) override;
-
-		virtual Form^ GetForm() override {
-			return this;
-		}
-
 		virtual void InitEarlyValues() override;
 
-		void TriggerBackgroundPaint(GTA::GraphicsEventArgs^ e);
-
-		property GTA::Script^ Script {
+		property GTA::Script^ Script
+		{
 			GTA::Script^ get() { return pScript; }
 		}
 
+		virtual void OnPaint() override;
+
 	protected:
-		virtual void OnPaint(GTA::GraphicsEventArgs^ e) override;
+		
 		virtual void OnVisibleChanged(EventArgs^ e) override;
 
 		//virtual void OnLoad(EventArgs^ e) {

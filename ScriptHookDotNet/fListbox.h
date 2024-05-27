@@ -23,42 +23,53 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-namespace Forms {
+namespace GTA
+{
+namespace Forms
+{
 
 	using namespace Drawing;
 
 	CLASS_ATTRIBUTES
-	public value class ListboxItem : System::IEquatable<ListboxItem> {
-
+	public value class ListboxItem : System::IEquatable<ListboxItem>
+	{
 	private:
 		System::Object^ pValue;
 		String^ pDisplayText;
 
 	public:
-		ListboxItem(System::Object^ Value, String^ DisplayText) {
+		ListboxItem(System::Object^ Value, String^ DisplayText)
+		{
 			pValue = Value;
 			pDisplayText = DisplayText;
 		}
-		ListboxItem(System::Object^ Value) {
+		ListboxItem(System::Object^ Value)
+		{
 			pValue = Value;
 			pDisplayText = String::Empty;
 		}
 
-		property System::Object^ Value {
-			System::Object^ get() {
+		property System::Object^ Value
+		{
+			System::Object^ get()
+			{
 				return pValue;
 			}
 		}
-		property String^ DisplayText {
-			String^ get() {
-				if ( isNotNULL(pDisplayText) && (pDisplayText->Length > 0) ) return pDisplayText;
-				if isNULL(pValue) return "{NULL}";
+		property String^ DisplayText
+		{
+			String^ get()
+			{
+				if ( isNotNULL(pDisplayText) && (pDisplayText->Length > 0) )
+					return pDisplayText;
+				if isNULL(pValue)
+					return "{NULL}";
 				return pValue->ToString();
 			}
 		}
 
-		virtual bool Equals(ListboxItem other) { //System::IEquatable<ListboxItem>::Equals
+		virtual bool Equals(ListboxItem other)
+		{
 			if isNULL(other) return false;
 			if isNULL(pValue) return isNULL(other.pValue);
 			if isNULL(other.pValue) return false;
@@ -69,21 +80,25 @@ namespace Forms {
 
 	CLASS_ATTRIBUTES
 	[System::ComponentModel::DefaultEventAttribute("SelectedIndexChanged")]
-	public ref class Listbox : public GTA::Forms::Control {
-
+	public ref class Listbox : public GTA::Forms::Control
+	{
 	public: 
-
-		ref class ItemCollection : base::Collection<ListboxItem> {
+		ref class ItemCollection : base::Collection<ListboxItem>
+		{
 		public:
-			void Add(System::Object^ Value, String^ DisplayText) {
+			void Add(System::Object^ Value, String^ DisplayText)
+			{
 				base::Collection<ListboxItem>::Add(ListboxItem(Value, DisplayText));
 			}
-			void Add(System::Object^ Value) {
+			void Add(System::Object^ Value)
+			{
 				base::Collection<ListboxItem>::Add(ListboxItem(Value));
 			}
 
-			void Remove(System::Object^ Value) {
-				for (int i = Count-1; i>=0; i--) {
+			void Remove(System::Object^ Value)
+			{
+				for (int i = Count-1; i>=0; i--)
+				{
 					if isNULL(this[i].Value)
 						if isNULL(Value) RemoveAt(i);
 					else
@@ -91,19 +106,26 @@ namespace Forms {
 				}
 			}
 
-			int IndexOf(System::Object^ Value) {
-				if isNULL(Value) {
-					for (int i = 0; i < Count; i++) {
-						if isNULL(this[i].Value) return i;
+			int IndexOf(System::Object^ Value)
+			{
+				if isNULL(Value)
+				{
+					for (int i = 0; i < Count; i++)
+					{
+						if isNULL(this[i].Value)
+							return i;
 					}
-				} else {
-					for (int i = 0; i < Count; i++) {
-						if (Value->Equals(this[i].Value)) return i;
+				}
+				else
+				{
+					for (int i = 0; i < Count; i++)
+					{
+						if (Value->Equals(this[i].Value))
+							return i;
 					}
 				}
 				return -1;
 			}
-		
 		};
 
 	private:
@@ -125,68 +147,90 @@ namespace Forms {
 
 		virtual void OnMouseDown(GTA::MouseEventArgs^ e) override;
 
+	internal:
+		virtual void OnPaint() override;
+
 	protected:
-		virtual void OnPaint(GTA::GraphicsEventArgs^ e) override;
-		virtual void OnResize(EventArgs^ e) override {
+		virtual void OnResize(EventArgs^ e) override
+		{
 			ResizeScrollbar();
 			Control::OnResize(e);
 		}
 
-		virtual void OnSelectedIndexChanged(EventArgs^ e) {
+		virtual void OnSelectedIndexChanged(EventArgs^ e)
+		{
 			SelectedIndexChanged(this, e);
 		}
 
-		property Drawing::Size DefaultSize {
-			virtual Drawing::Size get() override {
+	protected:
+		property Drawing::Size DefaultSize
+		{
+			virtual Drawing::Size get() override
+			{
 				return Drawing::Size(128,128);
 			}
 		}
 
 	public:
-
-		property ItemCollection^ Items {
-			ItemCollection^ get() {
-				if isNULL(pItems) pItems = gcnew ItemCollection();
+		property ItemCollection^ Items
+		{
+			ItemCollection^ get()
+			{
+				if isNULL(pItems)
+					pItems = gcnew ItemCollection();
 				return pItems;
 			}
 		}
 
-		property bool Border {
+		property bool Border
+		{
 			bool get() { return pBorder; }
 			void set(bool value) { pBorder = value; }
 		}
-		property int ScrollbarSize {
+		property int ScrollbarSize
+		{
 			int get() { return pScrollbarSize; }
-			void set(int value) {
+			void set(int value)
+			{
 				if (pScrollbarSize == value) return;
 				pScrollbarSize = value;
 				ResizeScrollbar();
 			}
 		}
-		property Drawing::Color SelectionColor {
-			Drawing::Color get() {
+		property Drawing::Color SelectionColor
+		{
+			Drawing::Color get()
+			{
 				return pSelectionColor;
 			}
-			void set(Drawing::Color value) {
+			void set(Drawing::Color value)
+			{
 				pSelectionColor = value;
 			}
 		}
 
-		property int SelectedIndex {
+		property int SelectedIndex
+		{
 			int get() { return pSelectedIndex; }
-			void set(int value) {
-				if (pSelectedIndex == value) return;
+			void set(int value)
+			{
+				if (pSelectedIndex == value)
+					return;
 				pSelectedIndex = value;
 				OnSelectedIndexChanged(EventArgs::Empty);
 			}
 		}
-		property ListboxItem SelectedItem {
-			ListboxItem get() {
-				if ( (pSelectedIndex < 0) || (pSelectedIndex >= Items->Count) ) return ListboxItem();
+		property ListboxItem SelectedItem
+		{
+			ListboxItem get()
+			{
+				if ( (pSelectedIndex < 0) || (pSelectedIndex >= Items->Count) )
+					return ListboxItem();
 				return Items[pSelectedIndex];
 			}
 		}
-		property System::Object^ SelectedValue {
+		property System::Object^ SelectedValue
+		{
 			System::Object^ get() { return SelectedItem.Value; }
 			void set(System::Object^ value) { SelectedIndex = Items->IndexOf(value); }
 		}

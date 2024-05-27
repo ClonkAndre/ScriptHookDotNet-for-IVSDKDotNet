@@ -23,15 +23,13 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-
-	using namespace System;
-
-namespace value {
-
+namespace GTA
+{
+namespace value
+{
 	CLASS_ATTRIBUTES
-	public ref class DynamicMetadata sealed : System::Dynamic::DynamicObject {
-
+	public ref class DynamicMetadata sealed : System::Dynamic::DynamicObject
+	{
 	internal:
 		DynamicMetadata(GTA::base::HandleObject^ object, bool global);
 
@@ -41,9 +39,9 @@ namespace value {
 		DynamicMetadata^ pGlobalMetadata;
 
 	public:
-
 		[System::Runtime::CompilerServices::Dynamic]
-		property System::Object^ Global {
+		property System::Object^ Global
+		{
 			System::Object^ get();
 		}
 
@@ -53,6 +51,5 @@ namespace value {
         virtual bool TryGetMember(System::Dynamic::GetMemberBinder^ binder, [Out] System::Object^% result) override;
 
 	};
-
 }
 }

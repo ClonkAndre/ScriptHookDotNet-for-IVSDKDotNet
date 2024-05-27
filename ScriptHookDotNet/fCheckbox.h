@@ -23,15 +23,17 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-namespace Forms {
+namespace GTA
+{
+namespace Forms
+{
 
 	using namespace Drawing;
 
 	CLASS_ATTRIBUTES
 	[System::ComponentModel::DefaultEventAttribute("CheckedChanged")]
-	public ref class Checkbox : public GTA::Forms::Control {
-
+	public ref class Checkbox : public GTA::Forms::Control
+	{
 	private:
 		Drawing::Color pCheckColor;
 		bool bChecked;
@@ -43,39 +45,51 @@ namespace Forms {
 
 		virtual void OnMouseDown(GTA::MouseEventArgs^ e) override;
 
-	protected:
-		virtual void OnPaint(GTA::GraphicsEventArgs^ e) override;
-		virtual void OnCheckedChanged(EventArgs^ e) {
+	internal:
+		virtual void OnPaint() override;
+		virtual void OnCheckedChanged(EventArgs^ e)
+		{
 			CheckedChanged(this, e);
 		}
 
-		property Drawing::Size DefaultSize {
-			virtual Drawing::Size get() override {
+	protected:
+		property Drawing::Size DefaultSize
+		{
+			virtual Drawing::Size get() override
+			{
 				return Drawing::Size(128,32);
 			}
 		}
 
 	public:
-		Checkbox() {
+		Checkbox()
+		{
 			pCheckColor = Drawing::Color::FromArgb(240, 48, 64, 192);
 			bChecked = false;
 		}
 
-		property Drawing::Color CheckColor {
-			Drawing::Color get() {
+		property Drawing::Color CheckColor
+		{
+			Drawing::Color get()
+			{
 				return pCheckColor;
 			}
-			void set(Drawing::Color value) {
+			void set(Drawing::Color value)
+			{
 				pCheckColor = value;
 			}
 		}
 
-		property bool Checked {
-			bool get() {
+		property bool Checked
+		{
+			bool get()
+			{
 				return bChecked;
 			}
-			void set(bool value) {
-				if (bChecked == value) return;
+			void set(bool value)
+			{
+				if (bChecked == value)
+					return;
 				bChecked = value;
 				OnCheckedChanged(EventArgs::Empty);
 			}

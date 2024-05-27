@@ -25,64 +25,204 @@
 #include "bHandleObject.h"
 
 #include "ContentCache.h"
-#include "RemoteScriptDomain.h"
 #include "Script.h"
 #include "vDynamicMetadata.h"
 
 #pragma managed
 
-namespace GTA {
-namespace base {
+namespace GTA
+{
+namespace base
+{
 
-	System::Object^ HandleObject::Metadata::get() {
-		if isNULL(pMetadata) pMetadata = gcnew GTA::value::DynamicMetadata(this, false);
+	System::Object^ HandleObject::Metadata::get()
+	{
+		if isNULL(pMetadata)
+			pMetadata = gcnew GTA::value::DynamicMetadata(this, false);
+
 		return pMetadata;
 	}
 
 	generic<typename T>
-	T HandleObject::GetMetadata(System::String^ ValueName, bool Global) {
-		if (Global) {
+	T HandleObject::GetMetadata(System::String^ ValueName, bool Global)
+	{
+		if (Global)
+		{
 			return static_cast<T>(ContentCache::GetMetaData(pHandle,ValueName));
-		} else {
-			Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
-			if (System::Object::ReferenceEquals(scr,nullptr)) return T();
+		}
+		else
+		{
+			Script^ scr = nullptr;
+			
+			// Try get calling script
+			System::Object^ s = GetCallingScript();
+
+			if (s)
+			{
+				scr = (GTA::Script^)s;
+				VLOG(String::Format("[HandleObject::GetMetadata|2] Successfully got calling script {0}!", scr->Name));
+			}
+			else
+			{
+				WRITE_TO_DEBUG_OUTPUT("[HandleObject::GetMetadata|2] Failed to get calling script! Trying out with legacy method.");
+
+				// Try get calling script via legacy method
+				scr = GetCurrentScript(ScriptEvent::Tick);
+
+				if (scr)
+					VLOG(String::Format("[HandleObject::GetMetadata|2] Successfully got calling script {0} via legacy method!", scr->Name));
+				else
+					WRITE_TO_DEBUG_OUTPUT("[HandleObject::GetMetadata|2] Failed to get calling script via legacy method! Not in an ideal state right now...");
+			}
+
+			if (System::Object::ReferenceEquals(scr,nullptr))
+				return T();
+
 			return static_cast<T>(scr->GetMetaData(pHandle,ValueName));
 		}
 	}
 
 	generic<typename T>
-	T HandleObject::GetMetadata(System::String^ ValueName) {
-		Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
-		if (!System::Object::ReferenceEquals(scr,nullptr)) {
-			if (scr->HasMetaData(pHandle,ValueName)) return static_cast<T>(scr->GetMetaData(pHandle,ValueName));
+	T HandleObject::GetMetadata(System::String^ ValueName)
+	{
+		Script^ scr = nullptr;
+
+		// Try get calling script
+		System::Object^ s = GetCallingScript();
+
+		if (s)
+		{
+			scr = (GTA::Script^)s;
+			VLOG(String::Format("[HandleObject::GetMetadata|1] Successfully got calling script {0}!", scr->Name));
 		}
+		else
+		{
+			WRITE_TO_DEBUG_OUTPUT("[HandleObject::GetMetadata|1] Failed to get calling script! Trying out with legacy method.");
+
+			// Try get calling script via legacy method
+			scr = GetCurrentScript(ScriptEvent::Tick);
+
+			if (scr)
+				VLOG(String::Format("[HandleObject::GetMetadata|1] Successfully got calling script {0} via legacy method!", scr->Name));
+			else
+				WRITE_TO_DEBUG_OUTPUT("[HandleObject::GetMetadata|1] Failed to get calling script via legacy method! Not in an ideal state right now...");
+		}
+
+		if (!System::Object::ReferenceEquals(scr,nullptr))
+		{
+			if (scr->HasMetaData(pHandle,ValueName))
+				return static_cast<T>(scr->GetMetaData(pHandle,ValueName));
+		}
+
 		return static_cast<T>(ContentCache::GetMetaData(pHandle,ValueName));
 	}
 
-	bool HandleObject::HasMetadata(System::String^ ValueName, bool Global) {
-		if (Global) {
+	bool HandleObject::HasMetadata(System::String^ ValueName, bool Global)
+	{
+		if (Global)
+		{
 			return ContentCache::HasMetaData(pHandle,ValueName);
-		} else {
-			Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
-			if (System::Object::ReferenceEquals(scr,nullptr)) return false;
+		}
+		else
+		{
+			Script^ scr = nullptr;
+
+			// Try get calling script
+			System::Object^ s = GetCallingScript();
+
+			if (s)
+			{
+				scr = (GTA::Script^)s;
+				VLOG(String::Format("[HandleObject::HasMetadata|2] Successfully got calling script {0}!", scr->Name));
+			}
+			else
+			{
+				WRITE_TO_DEBUG_OUTPUT("[HandleObject::HasMetadata|2] Failed to get calling script! Trying out with legacy method.");
+
+				// Try get calling script via legacy method
+				scr = GetCurrentScript(ScriptEvent::Tick);
+
+				if (scr)
+					VLOG(String::Format("[HandleObject::HasMetadata|2] Successfully got calling script {0} via legacy method!", scr->Name));
+				else
+					WRITE_TO_DEBUG_OUTPUT("[HandleObject::HasMetadata|2] Failed to get calling script via legacy method! Not in an ideal state right now...");
+			}
+
+			if (System::Object::ReferenceEquals(scr,nullptr))
+				return false;
+
 			return scr->HasMetaData(pHandle,ValueName);
 		}
 	}
-	bool HandleObject::HasMetadata(System::String^ ValueName) {
-		Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
-		if (!System::Object::ReferenceEquals(scr,nullptr)) {
-			if (scr->HasMetaData(pHandle,ValueName)) return true;
+	bool HandleObject::HasMetadata(System::String^ ValueName)
+	{
+		Script^ scr = nullptr;
+
+		// Try get calling script
+		System::Object^ s = GetCallingScript();
+
+		if (s)
+		{
+			scr = (GTA::Script^)s;
+			VLOG(String::Format("[HandleObject::HasMetadata|1] Successfully got calling script {0}!", scr->Name));
 		}
+		else
+		{
+			WRITE_TO_DEBUG_OUTPUT("[HandleObject::HasMetadata|1] Failed to get calling script! Trying out with legacy method.");
+
+			// Try get calling script via legacy method
+			scr = GetCurrentScript(ScriptEvent::Tick);
+
+			if (scr)
+				VLOG(String::Format("[HandleObject::HasMetadata|1] Successfully got calling script {0} via legacy method!", scr->Name));
+			else
+				WRITE_TO_DEBUG_OUTPUT("[HandleObject::HasMetadata|1] Failed to get calling script via legacy method! Not in an ideal state right now...");
+		}
+
+		if (!System::Object::ReferenceEquals(scr,nullptr))
+		{
+			if (scr->HasMetaData(pHandle,ValueName))
+				return true;
+		}
+
 		return ContentCache::HasMetaData(pHandle,ValueName);
 	}
 
 	generic<typename T>
-	void HandleObject::SetMetadata(System::String^ ValueName, bool Global, T Value) {
-		if (Global) {
+	void HandleObject::SetMetadata(System::String^ ValueName, bool Global, T Value)
+	{
+		if (Global)
+		{
 			ContentCache::SetMetaData(pHandle,ValueName,(System::Object^)Value);
-		} else {
-			Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
-			if (System::Object::ReferenceEquals(scr,nullptr)) return;
+		}
+		else
+		{
+			Script^ scr = nullptr;
+
+			// Try get calling script
+			System::Object^ s = GetCallingScript();
+
+			if (s)
+			{
+				scr = (GTA::Script^)s;
+				VLOG(String::Format("[HandleObject::SetMetadata] Successfully got calling script {0}!", scr->Name));
+			}
+			else
+			{
+				WRITE_TO_DEBUG_OUTPUT("[HandleObject::SetMetadata] Failed to get calling script! Trying out with legacy method.");
+
+				// Try get calling script via legacy method
+				scr = GetCurrentScript(ScriptEvent::Tick);
+
+				if (scr)
+					VLOG(String::Format("[HandleObject::SetMetadata] Successfully got calling script {0} via legacy method!", scr->Name));
+				else
+					WRITE_TO_DEBUG_OUTPUT("[HandleObject::SetMetadata] Failed to get calling script via legacy method! Not in an ideal state right now...");
+			}
+
+			if (System::Object::ReferenceEquals(scr,nullptr))
+				return;
+
 			scr->SetMetaData(pHandle,ValueName,(System::Object^)Value);
 		}
 	}

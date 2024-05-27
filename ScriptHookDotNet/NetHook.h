@@ -23,37 +23,25 @@
 #pragma once
 #pragma managed
 
+#include "fMouse.h"
+
 namespace GTA
 {
-
 	CLASS_ATTRIBUTES
 	private ref class NetHook sealed
 	{
 	private:
-		static bool bPrimary = false;
-
-		static GTA::Forms::FormHost^ pFormHost;
 		static GTA::base::Mouse^ pMouse;
 
 	public:
-		//static property GTA::Forms::FormHost^ FormHost {
-		//	GTA::Forms::FormHost^ get() {
-		//		return pFormHost;
-		//	}
-		//}
-		static property GTA::base::Mouse^ Mouse {
-			GTA::base::Mouse^ get() {
+		static property GTA::base::Mouse^ Mouse
+		{
+			GTA::base::Mouse^ get()
+			{
+				if (!pMouse)
+					pMouse = gcnew GTA::Forms::Mouse();
+
 				return pMouse;
-			}
-		}
-		//static property bool isPrimary {
-		//	bool get() {
-		//		return bPrimary;
-		//	}
-		//}
-		static property bool isScriptDomain {
-			bool get() {
-				return !bPrimary;
 			}
 		}
 
@@ -70,5 +58,4 @@ namespace GTA
 		static void LogInner(Exception^ ex);
 		
 	};
-
 }

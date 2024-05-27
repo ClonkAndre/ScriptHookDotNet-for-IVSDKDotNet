@@ -47,9 +47,7 @@ namespace GTA
 
 		int Team::MemberCount::get()
 		{
-			NotImplementedYet("Team::MemberCount::get");
-			//return IVSDKDotNet::Native::Natives::GET_NO_OF_PLAYERS_IN_TEAM(pID);
-			return 0;
+			return IVSDKDotNet::Native::Natives::GET_NO_OF_PLAYERS_IN_TEAM(pID);
 		}
 
 		int Team::ColorID::get()

@@ -28,71 +28,87 @@
 
 #pragma managed
 
-namespace GTA {
+namespace GTA
+{
 
-	// MOSUE EVENT ARGS
-
-	Drawing::Point MouseEventArgs::PixelLocation::get() {
+	// MOUSE EVENT ARGS
+	Drawing::Point MouseEventArgs::PixelLocation::get()
+	{
 		return Drawing::Point((int)Graphics::ConvertUnitsToPixelX(pLocation.X), (int)Graphics::ConvertUnitsToPixelY(pLocation.Y));
 	}
 
 	// CONSOLE EVENT ARGS
-
-	ConsoleEventArgs::ConsoleEventArgs(String^ Command, array<String^>^ Parameter) {
+	ConsoleEventArgs::ConsoleEventArgs(String^ Command, array<String^>^ Parameter)
+	{
 		pCommand = Command;
 		pParameter = gcnew ParameterCollection(Parameter);
 	}
 
 	// SCRIPT COMMAND EVENT ARGS
-
-	ScriptCommandEventArgs::ScriptCommandEventArgs(Script^ sender, String^ Command, array<System::Object^>^ Parameter) {
+	ScriptCommandEventArgs::ScriptCommandEventArgs(Script^ sender, String^ Command, array<System::Object^>^ Parameter)
+	{
 		pSender = sender;
 		pCommand = Command;
 		pParameters = gcnew ObjectCollection(Parameter);
 	}
 
 	// PARAMETER COLLECTION
-
-	ParameterCollection::ParameterCollection(array<String^>^ Parameters) {
+	ParameterCollection::ParameterCollection(array<String^>^ Parameters)
+	{
 		pAddRange(Parameters);
 	}
 
-	int ParameterCollection::ToInteger(int index) {
-		if ((index < 0) || (index >= Count)) return 0;
+	int ParameterCollection::ToInteger(int index)
+	{
+		if ((index < 0) || (index >= Count))
+			return 0;
 		return Helper::StringToInteger(this->default[index], 0);
 	}
-	float ParameterCollection::ToFloat(int index) {
-		if ((index < 0) || (index >= Count)) return 0.0f;
+	float ParameterCollection::ToFloat(int index)
+	{
+		if ((index < 0) || (index >= Count))
+			return 0.0f;
 		return Helper::StringToFloat(this->default[index], 0.0f);
 	}
-	Vector3 ParameterCollection::ToVector3(int firstIndex) {
+	Vector3 ParameterCollection::ToVector3(int firstIndex)
+	{
 		Vector3 val;
 		val.X = ToFloat(firstIndex);
 		val.Y = ToFloat(firstIndex+1);
 		val.Z = ToFloat(firstIndex+2);
 		return val;
 	}
-	Model ParameterCollection::ToModel(int index) {
-		if ((index < 0) || (index >= Count)) return 0;
+	Model ParameterCollection::ToModel(int index)
+	{
+		if ((index < 0) || (index >= Count))
+			return 0;
 		return Helper::StringToModel(this->default[index],Model(0));
 	}
-	String^ ParameterCollection::ToString(int index) {
-		if ((index < 0) || (index >= Count)) return String::Empty;
+	String^ ParameterCollection::ToString(int index)
+	{
+		if ((index < 0) || (index >= Count))
+			return String::Empty;
 		return this->default[index];
 	}
 
 	// OBJECT COLLECTION
-
-	ObjectCollection::ObjectCollection(array<System::Object^>^ Objects) {
+	ObjectCollection::ObjectCollection(array<System::Object^>^ Objects)
+	{
 		pAddRange(Objects);
 	}
 
 	generic <typename T>
-	T ObjectCollection::Convert(int index) {
-		if ((index < 0) || (index >= Count)) return T(); //nullptr;
-		try {
+	T ObjectCollection::Convert(int index)
+	{
+		if ((index < 0) || (index >= Count))
+			return T(); //nullptr;
+
+		try
+		{
 			return static_cast<T>(this->default[index]); //static_cast<T>(this->default[index]);
-		} catch(...) {
+		}
+		catch(...)
+		{
 			return T(); //nullptr;
 		}
 	}

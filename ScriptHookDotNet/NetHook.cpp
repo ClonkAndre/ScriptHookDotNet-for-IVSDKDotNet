@@ -20,21 +20,12 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #pragma once
 #include "stdafx.h"
 
 #include "NetHook.h"
-
-#include "Console.h"
-#include "D3D_Device.h"
-#include "Game.h"
-#include "Graphics.h"
-#include "KeyboardLayout.h"
-#include "KeyWatchDog.h"
-#include "Player.h"
-#include "RemoteScriptDomain.h"
-#include "fFormHost.h"
-#include "fMouse.h"
 
 #pragma managed
 

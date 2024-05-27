@@ -23,10 +23,10 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-
-	public ref class Garage sealed {
-
+namespace GTA
+{
+	public ref class Garage sealed
+	{
 	private:
 		String^ pName;
 
@@ -34,24 +34,27 @@ namespace GTA {
 		Garage(String^ Name);
 
 	public:
-
-		property String^ Name {
-			String^ get() {
+		property String^ Name
+		{
+			String^ get()
+			{
 				return pName;
 			}
 		}
-
-		property bool DontAffectCamera {
+		property bool DontAffectCamera
+		{
 			void set(bool value);
 		}
-		property GarageType Type {
+		property GarageType Type
+		{
 			void set(GarageType value);
 		}
-
-		property bool isClosed {
+		property bool isClosed
+		{
 			bool get();
 		}
-		property bool isOpen {
+		property bool isOpen
+		{
 			bool get();
 			//void set(bool value);
 		}
@@ -68,15 +71,16 @@ namespace GTA {
 
 		static void AbortAllGarageActivity();
 
-		static bool operator == ( Garage^ left, Garage^ right ) {
+		static bool operator == ( Garage^ left, Garage^ right )
+		{
 			if (Object::ReferenceEquals(left,nullptr)) return Object::ReferenceEquals(right,nullptr);
 			if (Object::ReferenceEquals(right,nullptr)) return false;
 			return (left->Name == right->Name);
 		}
-		static bool operator != ( Garage^ left, Garage^ right ) {
+		static bool operator != ( Garage^ left, Garage^ right )
+		{
 			return !(left == right);
 		}
 
 	};
-
 }

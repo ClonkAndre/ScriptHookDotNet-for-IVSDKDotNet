@@ -23,39 +23,45 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-namespace base {
-
+namespace GTA
+{
+namespace base
+{
 	CLASS_ATTRIBUTES
-	public ref class Mouse abstract {
-
+	public ref class Mouse abstract
+	{
 	internal:
 		Mouse(){}
 
 	public:
-		property bool Enabled {
+		property bool Enabled
+		{
 			virtual bool get() abstract;
 			virtual void set(bool value) abstract;
 		}
-		property Drawing::PointF Position {
+		property Drawing::PointF Position
+		{
 			virtual Drawing::PointF get() abstract;
 		}
-		property Drawing::PointF Movement {
+		property Drawing::PointF Movement
+		{
 			virtual Drawing::PointF get() abstract;
 		}
-		property Drawing::Point PositionPixel {
+		property Drawing::Point PositionPixel
+		{
 			Drawing::Point get();
 		}
-		property Drawing::Point MovementPixel {
+		property Drawing::Point MovementPixel
+		{
 			Drawing::Point get();
 		}
-		property System::Windows::Forms::MouseButtons PressedButtons {
+		property System::Windows::Forms::MouseButtons PressedButtons
+		{
 			virtual System::Windows::Forms::MouseButtons get() abstract;
 		}
 
 		virtual bool isButtonDown(System::Windows::Forms::MouseButtons Button) abstract;
 
 	};
-
 }
 }

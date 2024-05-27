@@ -35,16 +35,16 @@ namespace GTA
 {
 
 	// - - - Constructor - - -
-	Timer::Timer()
+	Timer::Timer() : base::ScriptChild(GetCallingScript())
 	{
 		InitValues();
 	}
-	Timer::Timer(int Interval)
+	Timer::Timer(int Interval) : base::ScriptChild(GetCallingScript())
 	{
 		InitValues();
 		pInterval = Interval;
 	}
-	Timer::Timer(int Interval, bool StartNow)
+	Timer::Timer(int Interval, bool StartNow) : base::ScriptChild(GetCallingScript())
 	{
 		InitValues();
 		pInterval = Interval;

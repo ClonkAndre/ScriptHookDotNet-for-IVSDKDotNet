@@ -47,8 +47,7 @@ namespace GTA
 	}
 	void Garage::Type::set(GarageType value)
 	{
-		NotImplementedYet("Garage::Type::set");
-		//IVSDKDotNet::Native::Natives::CHANGE_GARAGE_TYPE(pName, (int)value);
+		IVSDKDotNet::Native::Natives::CHANGE_GARAGE_TYPE(pName, (int)value);
 	}
 
 	bool Garage::isClosed::get()

@@ -27,8 +27,6 @@
 
 namespace GTA
 {
-	//namespace value {
-
 	public ref class SettingsFile
 	{
 	private:
@@ -284,6 +282,4 @@ namespace GTA
 		}
 
 	};
-
-	//}
 }

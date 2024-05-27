@@ -24,8 +24,6 @@
 
 #include "bObject.h"
 
-#include "RemoteScriptDomain.h"
-
 #pragma managed
 
 namespace GTA

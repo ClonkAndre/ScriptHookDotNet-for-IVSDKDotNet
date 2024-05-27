@@ -23,40 +23,45 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-
+namespace GTA
+{
 	CLASS_ATTRIBUTES
-	public ref class MemoryStream : System::IO::Stream {
-
+	public ref class MemoryStream : System::IO::Stream
+	{
 	private:
 		__int64 pBaseAddress;
 		__int64 pPosition;
 		unsigned char* pMemPosition;
 
 	internal:
-
 		MemoryStream(__int64 BaseAddress);
 
 	public:
 		MemoryStream();
 
-		property __int64 BaseAddress {
+		property __int64 BaseAddress
+		{
 			__int64 get() { return pBaseAddress; }
 		}
 
-		virtual property bool CanRead {
+		virtual property bool CanRead
+		{
 			bool get() override;
 		}
-		virtual property bool CanSeek {
+		virtual property bool CanSeek
+		{
 			bool get() override;
 		}
-		virtual property bool CanWrite {
+		virtual property bool CanWrite
+		{
 			bool get() override;
 		}
-		virtual property __int64 Length {
+		virtual property __int64 Length
+		{
 			__int64 get() override;
 		}
-		virtual property __int64 Position {
+		virtual property __int64 Position
+		{
 			__int64 get() override;
 			void set(__int64 value) override;
 		}
@@ -74,13 +79,11 @@ namespace GTA {
 		__int64 FindBytes(array<Byte>^ value, __int64 offset);
 
 	private:
-
 		__int64 FindData(unsigned char* value, int length, __int64 offset);
 		bool ReadData(unsigned char* value, int length, __int64 offset);
 		bool WriteData(unsigned char* value, int length, __int64 offset);
 
 	public:
-
 		generic <typename T>
 		void ReadValue(T Target, __int64 offset);
 		generic <typename T>
@@ -112,5 +115,4 @@ namespace GTA {
 		void RedirectFunction(__int64 FunctionAddress, __int64 ReplacementFunctionAddress);
 
 	};
-
 }

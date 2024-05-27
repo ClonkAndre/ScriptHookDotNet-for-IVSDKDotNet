@@ -27,7 +27,6 @@
 #include "Script.h"
 
 #include "Game.h"
-#include "RemoteScriptDomain.h"
 #include "Player.h"
 #include "SettingsFile.h"
 #include "fFormHost.h"
@@ -42,6 +41,23 @@ namespace GTA
 	// - - - Constructor - - -
 	Script::Script()
 	{
+		// Get full path without file extension
+		pFullPath = System::IO::Path::GetFullPath(String::Format(".\\scripts\\{0}", Name->Split(gcnew array<String^> { "." }, StringSplitOptions::None)[0]));
+
+		// Get filename with extension
+		pFilename = System::IO::Path::GetFileName(pFullPath) + ".net.dll";
+
+		// Get filename without extension
+		pFilenameWithoutExtension = System::IO::Path::GetFileName(pFullPath);
+
+		// Late Initialize this script
+		int errorId = LateInitializeScript(this);
+
+		if (errorId != 0)
+			WRITE_TO_DEBUG_OUTPUT(String::Format("Failed to late initialize script {0}! Error ID: {1}", pFilename, errorId));
+		else
+			VLOG(String::Format("Successfully late initialized script {0}.", pFilename));
+
 		// Set the current constructing script to this script
 		IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_SetCurrentScript((int)ScriptEvent::ctor, this);
 
@@ -54,15 +70,6 @@ namespace GTA
 		NextTick = System::DateTime::MinValue;
 		pGUID = Guid::NewGuid();
 		pGeneralInfo = String::Empty;
-
-		// Get full path without file extension
-		pFullPath = System::IO::Path::GetFullPath(String::Format(".\\scripts\\{0}", Name->Split(gcnew array<String^> { "." }, StringSplitOptions::None)[0]));
-
-		// Get filename with extension
-		pFilename = System::IO::Path::GetFileName(pFullPath) + ".net.dll";
-
-		// Get filename without extension
-		pFilenameWithoutExtension = System::IO::Path::GetFileName(pFullPath);
 
 		// Lists
 		BoundKeys = gcnew List<BoundKeyItem>();
@@ -387,8 +394,8 @@ namespace GTA
 		if (!GFX)
 			GFX = gcnew Graphics(ctx);
 
-		PerFrameDrawing(this, gcnew GraphicsEventArgs(GFX));
-		FormHost->TriggerDragging();
+		GraphicsEventArgs^ e = gcnew GraphicsEventArgs(GFX);
+		PerFrameDrawing(this, e);
 
 		BlockWait = bw;
 	}
@@ -400,6 +407,7 @@ namespace GTA
 		bool bw = BlockWait;
 		BlockWait = true;
 		
+		FormHost->Draw();
 		PerFrameScriptDrawing(this, EventArgs::Empty);
 
 		BlockWait = bw;

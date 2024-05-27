@@ -39,7 +39,7 @@ namespace GTA
 		void EachTick(Object^ sender, EventArgs^ e);
 
 	public:
-		Checkpoint(Vector3 Position, System::Drawing::Color Color, float Diameter)
+		Checkpoint(Vector3 Position, System::Drawing::Color Color, float Diameter) : base::ScriptChild(GetCallingScript())
 		{
 			bVisible = false;
 			pColor = Color;
@@ -47,7 +47,7 @@ namespace GTA
 			pPosition = Position;
 			Visible = true;
 		}
-		Checkpoint()
+		Checkpoint() : base::ScriptChild(GetCallingScript())
 		{
 			bVisible = false;
 			pColor = System::Drawing::Color::White;

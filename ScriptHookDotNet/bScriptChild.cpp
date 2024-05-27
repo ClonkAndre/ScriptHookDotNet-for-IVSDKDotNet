@@ -26,7 +26,7 @@
 
 #include "bScriptChild.h"
 
-#include "RemoteScriptDomain.h"
+#include "Script.h"
 
 #pragma managed
 
@@ -35,19 +35,35 @@ namespace GTA
 	namespace base
 	{
 
-		ScriptChild::ScriptChild()
+		ScriptChild::ScriptChild(System::Object^ callingScript)
 		{
-			// Get the current constructing script and assume they created this object...
-			pParent = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::ctor);
+			if (callingScript)
+			{
+				pParent = (GTA::Script^)callingScript;
+				VLOG(String::Format("[ScriptChild::ScriptChild] Successfully got calling script {0}!", pParent->Name));
+			}
+			else
+			{
+				WRITE_TO_DEBUG_OUTPUT("[ScriptChild::ScriptChild] Failed to get calling script! Trying out with legacy method (ctor).");
 
-			// If there is no current constructing script get the current ticking script and assume they created this object...
+				// Try get calling script via legacy method
+				pParent = GetCurrentScript(ScriptEvent::ctor);
+
+				if (pParent)
+				{
+					VLOG(String::Format("[ScriptChild::ScriptChild] Successfully got calling script {0} via legacy method (ctor)!", pParent->Name));
+				}
+				else
+				{
+					WRITE_TO_DEBUG_OUTPUT("[ScriptChild::ScriptChild] Failed to get calling script via legacy method (ctor)! Trying with another legacy method (Tick)...");
+				
+					// Try get calling script via legacy method
+					pParent = GetCurrentScript(ScriptEvent::Tick);
+				}
+			}
+
 			if (!pParent)
-				pParent = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
-
-			// This is all pretty shit.. need to find a better solution
-
-			if (!pParent)
-				throw gcnew Exception("Unable to determine the owning Script for this object!");
+				throw gcnew Exception("Unable to determine the owning Script for this ScriptChild object!");
 		}
 
 	}

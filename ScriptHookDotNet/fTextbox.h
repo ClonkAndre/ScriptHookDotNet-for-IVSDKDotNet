@@ -23,21 +23,21 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-namespace Forms {
-
-	using namespace Drawing;
-
+namespace GTA
+{
+namespace Forms
+{
 	CLASS_ATTRIBUTES
-	public ref class Textbox : public GTA::Forms::Control {
-
+	public ref class Textbox : public GTA::Forms::Control
+	{
 	private:
 		int pCursorPos;
 		int pMaxLength;
 		bool pBorder;
 
 	public:
-		Textbox() {
+		Textbox()
+		{
 			BackColor = Drawing::Color::FromArgb(50, 255, 255, 255);
 			pCursorPos = 0;
 			pMaxLength = -1;
@@ -45,31 +45,32 @@ namespace Forms {
 		}
 
 	public protected:
-
 		virtual void OnKeyDown(GTA::KeyEventArgs^ e) override;
 
-	protected:
-		virtual void OnPaint(GTA::GraphicsEventArgs^ e) override;
+	internal:
+		virtual void OnPaint() override;
 
-		property Drawing::Size DefaultSize {
-			virtual Drawing::Size get() override {
+	protected:
+		property Drawing::Size DefaultSize
+		{
+			virtual Drawing::Size get() override
+			{
 				return Drawing::Size(128,32);
 			}
 		}
 
 	public:
-
-		property bool Border {
+		property bool Border
+		{
 			bool get() { return pBorder; }
 			void set(bool value) { pBorder = value; }
 		}
-
-		property int MaxLength {
+		property int MaxLength
+		{
 			int get() { return pMaxLength; }
 			void set(int value) { pMaxLength = value; }
 		}
 
 	};
-
 }
 }
