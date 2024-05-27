@@ -23,73 +23,79 @@
 #pragma once
 #pragma managed
 
-namespace GTA{
-
+namespace GTA
+{
 	CLASS_ATTRIBUTES
 	[SerializableAttribute]
 	public ref class Blip sealed :
 		public base::HandleObject,
 		public base::iPositioned,
 		public base::iDeletable,
-		public base::iAddressableObject {
-
-	protected:
-		//int pHandle;
-
+		public base::iAddressableObject
+	{
 	internal:
 		Blip(int Handle);
-		//property int Handle{ 
-		//	int get();
-		//}
 
 		virtual bool InternalCheckExists() override;
 
 	public:
-		property int MemoryAddress {
+		property int MemoryAddress
+		{
 			virtual int get();
 		}
 
-		property GTA::Vector3 Position{
+		property GTA::Vector3 Position
+		{
 			virtual GTA::Vector3 get();
 			virtual void set(GTA::Vector3 value);
 		}
-
-		property BlipColor Color{ 
+		property BlipColor Color
+		{ 
 			BlipColor get();
 			void set(BlipColor value);
 		}
-		property BlipDisplay Display{ 
+		property BlipDisplay Display
+		{ 
 			BlipDisplay get();
 			void set(BlipDisplay value);
 		}
-		property int Priority{ 
+		property int Priority
+		{ 
 			void set(int value);
 		}
-		property bool Friendly { 
+		property bool Friendly
+		{ 
 			void set(bool value);
 		}
-		property float Scale { 
+		property float Scale
+		{ 
 			void set(float value);
 		}
-		property float Transparency { 
+		property float Transparency
+		{ 
 			void set(float value);
 		}
-		property BlipIcon Icon { 
+		property BlipIcon Icon
+		{ 
 			BlipIcon get();
 			void set(BlipIcon value);
 		}
-		property bool ShowOnlyWhenNear { 
+		property bool ShowOnlyWhenNear
+		{ 
 			bool get();
 			void set(bool value);
 		}
-		property String^ Name { 
+		property String^ Name
+		{ 
 			String^ get();
 			void set(String^ value);
 		}
-		property bool RouteActive { 
+		property bool RouteActive
+		{ 
 			void set(bool value);
 		}
-		property BlipType Type { 
+		property BlipType Type
+		{ 
 			BlipType get();
 		}
 
@@ -101,10 +107,8 @@ namespace GTA{
 		void SetColorRGB(Drawing::Color color);
 
 		virtual void Delete();
-		//virtual bool Exists() override;
 
 		// STATIC
-
 		static Blip^ AddBlip(GTA::Pickup^ Target);
 		static Blip^ AddBlip(GTA::Object^ Target);
 		static Blip^ AddBlip(GTA::Vector3 Target);
@@ -114,9 +118,5 @@ namespace GTA{
 
 		static array<Blip^>^ GetAllBlipsOfType(BlipType type);
 
-		//static bool operator == ( Blip^ left, Blip^ right );
-		//static bool operator != ( Blip^ left, Blip^ right );
-
 	};
-
 }

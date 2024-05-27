@@ -25,9 +25,6 @@
 
 namespace GTA
 {
-
-	using namespace System;
-
 	CLASS_ATTRIBUTES
 	public ref class Timer : base::ScriptChild
 	{
@@ -95,5 +92,4 @@ namespace GTA
 		}
 
 	};
-
 }

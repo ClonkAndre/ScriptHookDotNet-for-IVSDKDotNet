@@ -23,43 +23,45 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-namespace Forms {
+namespace GTA
+{
+namespace Forms
+{
 
 	using namespace Drawing;
 
 	CLASS_ATTRIBUTES
-	public ref class Button : public GTA::Forms::Control {
-
+	public ref class Button : public GTA::Forms::Control
+	{
 	private:
 		Drawing::Color pDownColor;
 		bool bDown;
 
 	public:
-		Button() {
+		Button()
+		{
 			pDownColor = Drawing::Color::FromArgb(50, 0, 0, 0);
 			bDown = false;
 		}
 
-
-
 	public protected:
-
 		virtual void OnMouseDown(GTA::MouseEventArgs^ e) override;
 		virtual void OnDragRelease(GTA::MouseEventArgs^ e) override;
 
 		virtual void OnClick(GTA::MouseEventArgs^ e) override;
 
-	protected:
-		virtual void OnPaint(GTA::GraphicsEventArgs^ e) override;
+	internal:
+		virtual void OnPaint() override;
 
-		property Drawing::Size DefaultSize {
-			virtual Drawing::Size get() override {
-				return Drawing::Size(128,32);
+	protected:
+		property Drawing::Size DefaultSize
+		{
+			virtual Drawing::Size get() override
+			{
+				return Drawing::Size(128, 32);
 			}
 		}
 
 	};
-
 }
 }

@@ -37,6 +37,7 @@
 namespace GTA
 {
 
+	// - - - Constructor - - -
 	static Game::Game()
 	{
 		try
@@ -51,11 +52,7 @@ namespace GTA
 		pGlobals = gcnew value::Globals();
 	}
 
-	void Game::PerFrame()
-	{
-		pResolution = System::Drawing::Size(0, 0);
-	}
-
+	// - - - Properties, Methods and Functions - - -
 	GTA::GameEpisode Game::CurrentEpisode::get()
 	{
 		return (GTA::GameEpisode)IVSDKDotNet::Native::Natives::GET_CURRENT_EPISODE();
@@ -67,9 +64,7 @@ namespace GTA
 	}
 	GTA::base::Mouse^ Game::Mouse::get()
 	{
-		NotImplementedYet("Game::Mouse::get");
-		return nullptr;
-		//return NetHook::Mouse;
+		return NetHook::Mouse;
 	}
 
 	System::Drawing::Size Game::Resolution::get()
@@ -366,10 +361,12 @@ namespace GTA
 
 	Script^ Game::GetScript(Guid GUID)
 	{
-		NotImplementedYet("Game::GetScript");
-		//if (NetHook::isPrimary) return nullptr;
-		//return RemoteScriptDomain::Instance->GetScript(GUID);
-		return nullptr;
+		System::Object^ obj = IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_GetScriptByGUID(GUID);
+
+		if (!obj)
+			return nullptr;
+
+		return (Script^)obj;
 	}
 	Script^ Game::GetScript(String^ GUID)
 	{
@@ -389,36 +386,24 @@ namespace GTA
 	//}
 	bool Game::isScriptRunning(Guid GUID)
 	{
-		NotImplementedYet("Game::isScriptRunning");
-		//if (NetHook::isPrimary)
-		//	return NetHook::ScriptDomain->isScriptRunning(GUID);
-		//else
-		//	return RemoteScriptDomain::Instance->isScriptRunning(GUID);
-		return false;
+		return IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_IsScriptRunning(GUID);
 	}
 	//bool Game::isScriptRunning(String^ GUID) {
 	//	return isScriptRunning(gcnew Guid(GUID));
 	//}
 
-
 	void Game::PlayAudioEvent(String^ EventName)
 	{
 		IVSDKDotNet::Native::Natives::PLAY_AUDIO_EVENT(EventName);
 	}
-	//HEADLAMP_SWITCH_BEAM_ON, MOBILE_PHONE_SMS_RECIEVE
-
 	void Game::PlayGameSound(String^ SoundName)
 	{
 		IVSDKDotNet::Native::Natives::PLAY_SOUND(-1, SoundName);
 	}
-	//PHONE_PRESS_KEY, PHONE_PRESS_KEY_SPEED, PAYANDSPRAY_COMPRESSOR
-
 	void Game::PlayFrontendSound(String^ SoundName)
 	{
 		IVSDKDotNet::Native::Natives::PLAY_SOUND_FRONTEND(-1, SoundName);
 	}
-	//SFX_PHONE_REMOTE_HANG_UP_CLICK, FRONTEND_GAME_PHONE_DIAL_HANG_UP, MOUSE_SINGLE_CLICK
-
 	void Game::PlayPhoneKeypadTone(int KeyNum, bool fast)
 	{
 		if ((KeyNum < 0) || (KeyNum > 11))
@@ -458,7 +443,6 @@ namespace GTA
 	{
 		PlayPhoneKeypadTone(KeyNum, false);
 	}
-
 	void Game::PlayCreditsMusic()
 	{
 		IVSDKDotNet::Native::Natives::START_END_CREDITS_MUSIC();
@@ -478,13 +462,7 @@ namespace GTA
 
 	void Game::SendChatMessage(String^ Text)
 	{
-		NotImplementedYet("Game::SendChatMessage");
-		//char* ptr = PinStringA(Text);
-		//try {
-		//	Scripting::NetworkSendTextChat(Scripting::GetPlayerId(), ptr);
-		//} finally {
-		//	FreeString(ptr);
-		//}
+		IVSDKDotNet::Native::Natives::NETWORK_SEND_TEXT_CHAT((int)IVSDKDotNet::Native::Natives::GET_PLAYER_ID(), Text);
 	}
 
 	void Game::Pause()

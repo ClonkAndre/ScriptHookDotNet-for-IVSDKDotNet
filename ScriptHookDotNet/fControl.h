@@ -23,8 +23,10 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-namespace Forms {
+namespace GTA
+{
+namespace Forms
+{
 
 	using namespace Drawing;
 
@@ -32,13 +34,11 @@ namespace Forms {
 
 	CLASS_ATTRIBUTES
 	[System::ComponentModel::DefaultEventAttribute("Click")]
-	public ref class Control abstract : System::ComponentModel::Component {
-
+	public ref class Control abstract : System::ComponentModel::Component
+	{
 	private:
 		String^ pName;
-		String^ pText;
 		GTA::Font^ pFont;
-		bool bVisible;
 		Drawing::Point pLocation;
 		Drawing::Size pSize;
 		ControlCollection^ pControls;
@@ -51,13 +51,17 @@ namespace Forms {
 		static GTA::Font^ pDefaultFont;
 
 	protected:
-		static property GTA::Font^ DefaultFont {
+		static property GTA::Font^ DefaultFont
+		{
 			GTA::Font^ get();
 		}
 
 	internal:
+		String^ pText;
+		bool bVisible;
 
-		property Drawing::Color BorderColorLight {
+		property Drawing::Color BorderColorLight
+		{
 			Drawing::Color get() {
 				return pBorderColorLight;
 			}
@@ -65,7 +69,8 @@ namespace Forms {
 				pBorderColorLight = value;
 			}
 		}
-		property Drawing::Color BorderColorDark {
+		property Drawing::Color BorderColorDark
+		{
 			Drawing::Color get() {
 				return pBorderColorDark;
 			}
@@ -74,40 +79,8 @@ namespace Forms {
 			}
 		}
 
-		void DrawBorder3D(GTA::Graphics^ g, Drawing::Rectangle rect, bool Up, int Width);
-		void DrawEffectLine(GTA::Graphics^ g, float Width, Drawing::Color LineColor, Drawing::Color EffectColor, ... array<Drawing::Point>^ Points);
-		void DrawEffectLine(GTA::Graphics^ g, float Width, ... array<Drawing::Point>^ Points);
-
-		Drawing::Rectangle GrowLeftRight(Drawing::Rectangle rect, int amount) {
-			return Drawing::Rectangle(rect.X-amount, rect.Y, rect.Width+amount*2, rect.Height);
-		}
-		Drawing::Rectangle GrowLeft(Drawing::Rectangle rect, int amount) {
-			return Drawing::Rectangle(rect.X-amount, rect.Y, rect.Width+amount, rect.Height);
-		}
-		
-		void DoTick();
-		void TriggerPaint(GraphicsEventArgs^ e);
-
 		virtual void InitEarlyValues(){}
-
-		void SetParent(Control^ Parent) {
-			pParent = Parent;
-		}
-		virtual Form^ GetForm() {
-			if isNULL(pParent) return nullptr;
-			return pParent->GetForm();
-		}
-
-		property Drawing::Rectangle ScreenRectangle {
-			Drawing::Rectangle get() {
-				Drawing::Rectangle rect = Drawing::Rectangle(pLocation,pSize);
-				if isNULL(Parent) return rect;
-				return Parent->RectangleToScreen(rect);
-			}
-		}
-
-		static float tosX(int ScreenPosX);
-		static float tosY(int ScreenPosY);
+		virtual void OnPaint(){}
 
 	public:
 		event EventHandler^ VisibleChanged;
@@ -119,19 +92,18 @@ namespace Forms {
 		event GTA::KeyEventHandler^ KeyDown;
 		event GTA::KeyEventHandler^ KeyUp;
 
-	internal:
-		virtual void OnDragging(GTA::MouseEventArgs^ e) {}
-
 	protected:
-		virtual void OnVisibleChanged(EventArgs^ e) {
+		virtual void OnVisibleChanged(EventArgs^ e)
+		{
 			VisibleChanged(this, e);
 		}
-		virtual void OnPaint(GTA::GraphicsEventArgs^ e);
 		virtual void OnResize(EventArgs^ e) {}
 		virtual void OnTextChanged(EventArgs^ e) {}
 
-		property Drawing::Size DefaultSize {
-			virtual Drawing::Size get() {
+		property Drawing::Size DefaultSize
+		{
+			virtual Drawing::Size get()
+			{
 				return Drawing::Size(64,64);
 			}
 		}
@@ -161,8 +133,6 @@ namespace Forms {
 	public:
 		[System::Diagnostics::DebuggerNonUserCode()]
 		Control();
-
-
 
 		property String^ Name {
 			String^ get() {
@@ -241,7 +211,7 @@ namespace Forms {
 		}
 		property Form^ ParentForm {
 			Form^ get() {
-				return GetForm();
+				return nullptr;
 			}
 		}
 
@@ -285,10 +255,12 @@ namespace Forms {
 
 		Drawing::Point PointToClient(Point ScreenPoint);
 		Drawing::Point PointToScreen(Point ClientPoint);
-		Drawing::Rectangle RectangleToClient(Drawing::Rectangle ScreenRect) {
+		Drawing::Rectangle RectangleToClient(Drawing::Rectangle ScreenRect)
+		{
 			return Drawing::Rectangle(PointToClient(ScreenRect.Location), ScreenRect.Size);
 		}
-		Drawing::Rectangle RectangleToScreen(Drawing::Rectangle ClientRect) {
+		Drawing::Rectangle RectangleToScreen(Drawing::Rectangle ClientRect)
+		{
 			return Drawing::Rectangle(PointToScreen(ClientRect.Location), ClientRect.Size);
 		}
 
@@ -298,84 +270,108 @@ namespace Forms {
 	};
 
 	CLASS_ATTRIBUTES
-	public ref class ControlCollection : public base::ReadOnlyCollection<Control^> {
-
+	public ref class ControlCollection : public base::ReadOnlyCollection<Control^>
+	{
 	private:
 		Control^ pParent;
 
-		bool ContainsName(String^ Name) {
-			for (int i = 0; i < Count; i++) {
+		bool ContainsName(String^ Name)
+		{
+			for (int i = 0; i < Count; i++)
+			{
 				if (Name->Equals(this->default[i]->Name, StringComparison::InvariantCultureIgnoreCase)) return true;
 			}
 			return false;
 		}
 
-		String^ GetDefaultName(String^ TypeName) {
+		String^ GetDefaultName(String^ TypeName)
+		{
 			int id = 0;
 			String^ NewName;
-			do {
+			do
+			{
 				id++;
 				NewName = TypeName + id.ToString();
 			} while(ContainsName(NewName));
 			return NewName;
 		}
 
-		void AfterAdd(Control^ item) {
+		void AfterAdd(Control^ item)
+		{
 			item->Parent = pParent;
-			if (item->Name->Length == 0) item->Name = GetDefaultName(item->GetType()->Name);
+			if (item->Name->Length == 0)
+				item->Name = GetDefaultName(item->GetType()->Name);
 		}
 
 	internal:
-		ControlCollection(Control^ Parent) {
+		ControlCollection(Control^ Parent)
+		{
 			pParent = Parent;
 		}
 
 	protected:
-
-		virtual bool isReadOnly() override {
+		virtual bool isReadOnly() override
+		{
 			return false;
 		}
 
 	public:
-
-		property Control^ Parent {
-			Control^ get() {
+		property Control^ Parent
+		{
+			Control^ get()
+			{
 				return pParent;
 			}
 		}
 
-		void Add(Control^ item) {
-			if isNULL(item) return;
-			if (Contains(item)) return;
+		void Add(Control^ item)
+		{
+			if isNULL(item)
+				return;
+			if (Contains(item))
+				return;
+
 			pAdd(item);
 			AfterAdd(item);
 		}
-		void AddRange(System::Collections::Generic::IEnumerable<Control^>^ collection) {
-			for each (Control^ c in collection) {
+		void AddRange(System::Collections::Generic::IEnumerable<Control^>^ collection)
+		{
+			for each (Control^ c in collection)
+			{
 				Add(c);
 			}
 		}
 
-		void Insert(int index, Control^ item) {
-			if isNULL(item) return;
-			if (Contains(item)) return;
+		void Insert(int index, Control^ item)
+		{
+			if isNULL(item)
+				return;
+			if (Contains(item))
+				return;
+
 			pInsert(index,item);
 			AfterAdd(item);
 		}
 
-		bool Remove(Control^ item) {
-			if isNULL(item) return false;
-			if (!pRemove(item)) return false;
+		bool Remove(Control^ item)
+		{
+			if isNULL(item)
+				return false;
+			if (!pRemove(item))
+				return false;
+
 			item->Parent = nullptr;
 			return true;
 		}
-
-		void RemoveAt(int index) {
+		void RemoveAt(int index)
+		{
 			Remove(this->default[index]);
 		}
 
-		void Clear() {
-			for (int i = Count-1; i >= 0; i--) {
+		void Clear()
+		{
+			for (int i = Count-1; i >= 0; i--)
+			{
 				Remove(this->default[i]);
 			}
 			pClear();

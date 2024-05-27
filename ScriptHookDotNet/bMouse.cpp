@@ -28,14 +28,18 @@
 
 #pragma managed
 
-namespace GTA {
-namespace base {
+namespace GTA
+{
+namespace base
+{
 
-	Drawing::Point Mouse::PositionPixel::get() {
+	Drawing::Point Mouse::PositionPixel::get()
+	{
 		Drawing::PointF p = Position;
 		return Drawing::Point((int)Graphics::ConvertUnitsToPixelX(p.X),(int)Graphics::ConvertUnitsToPixelY(p.Y));
 	}
-	Drawing::Point Mouse::MovementPixel::get() {
+	Drawing::Point Mouse::MovementPixel::get()
+	{
 		Drawing::PointF m = Movement;
 		return Drawing::Point((int)Graphics::ConvertUnitsToPixelX(m.X),(int)Graphics::ConvertUnitsToPixelY(m.Y));
 	}

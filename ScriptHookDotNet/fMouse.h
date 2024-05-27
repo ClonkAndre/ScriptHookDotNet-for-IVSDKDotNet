@@ -20,133 +20,88 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #pragma once
 #pragma managed
 
-namespace GTA {
-namespace Forms {
-
+namespace GTA
+{
+namespace Forms
+{
 	CLASS_ATTRIBUTES
-	private ref class Mouse : base::Mouse {
-
+	private ref class Mouse : base::Mouse
+	{
 	private:
-		////static String^ TXD = "network";
-		////static String^ TEX = "MOUSECURSOR";
-		//Texture^ TexArrow;
-		//Texture^ TexUpDown;
-		bool bEnabled;
-		Drawing::PointF pPosition;
-		Drawing::PointF pMovement;
-		System::Windows::Forms::MouseButtons pButtons;
-		CursorType pCursor;
-
 		Drawing::PointF GetMovement();
-		//array<bool>^ buttonstate;
 
 	internal:
-		Mouse();
-
-		void Check();
-		void Draw(Graphics^ g);
-		//void CheckButton(System::Windows::Forms::Keys Key);
-		void CheckButtonDown(System::Windows::Forms::Keys Key);
-		void CheckButtonUp(System::Windows::Forms::Keys Key);
-		void DoButtonDown(System::Windows::Forms::MouseButtons Button);
-		void DoButtonUp(System::Windows::Forms::MouseButtons Button);
+		Mouse(){}
 
 	public:
-		event MouseEventHandler^ ButtonDown;
-		event MouseEventHandler^ ButtonUp;
-
-		property bool Enabled {
-			virtual bool get() override {
-				return bEnabled;
+		property bool Enabled
+		{
+			virtual bool get() override
+			{
+				return IVSDKDotNet::ImGuiIV::ForceCursor;
 			}
 			virtual void set(bool value) override;
 		}
-		property CursorType Cursor {
-			CursorType get() {
-				return pCursor;
-			}
-			void set(CursorType value) {
-				pCursor = value;
-			}
-		}
-		property Drawing::PointF Position {
-			virtual Drawing::PointF get() override {
-				return pPosition;
+		property Drawing::PointF Position
+		{
+			virtual Drawing::PointF get() override
+			{
+				System::Numerics::Vector2 mPos = IVSDKDotNet::ImGuiIV::GetMousePos();
+				return Drawing::PointF(mPos.X, mPos.Y);
 			}
 		}
-		property Drawing::PointF Movement {
-			virtual Drawing::PointF get() override {
-				return pMovement;
+		property Drawing::PointF Movement
+		{
+			virtual Drawing::PointF get() override
+			{
+				return GetMovement();
 			}
 		}
-		property System::Windows::Forms::MouseButtons PressedButtons {
-			virtual System::Windows::Forms::MouseButtons get() override {
-				return pButtons;
+		property System::Windows::Forms::MouseButtons PressedButtons
+		{
+			virtual System::Windows::Forms::MouseButtons get() override
+			{
+				bool lD = IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::Left);
+				bool rD = IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::Right);
+				bool mD = IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::Middle);
+
+				if (!lD && !rD && !mD)
+					return System::Windows::Forms::MouseButtons::None;
+
+				System::Windows::Forms::MouseButtons pressedButtons;
+
+				if (lD)
+					pressedButtons = pressedButtons | System::Windows::Forms::MouseButtons::Left;
+				if (rD)
+					pressedButtons = pressedButtons | System::Windows::Forms::MouseButtons::Right;
+				if (mD)
+					pressedButtons = pressedButtons | System::Windows::Forms::MouseButtons::Middle;
+
+				return pressedButtons;
 			}
 		}
 
-		virtual bool isButtonDown(System::Windows::Forms::MouseButtons Button) override {
-			return ((pButtons & Button) == Button);
+		virtual bool isButtonDown(System::Windows::Forms::MouseButtons Button) override
+		{
+			// TODO: Add support for XButton1 and XButton2 in the future (If needed)
+			switch (Button)
+			{
+				case System::Windows::Forms::MouseButtons::Left:
+					return IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::Left);
+				case System::Windows::Forms::MouseButtons::Right:
+					return IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::Right);
+				case System::Windows::Forms::MouseButtons::Middle:
+					return IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::Middle);
+				default:
+					return false;
+			}
 		}
 
 	};
-
-	CLASS_ATTRIBUTES
-	private ref class RemoteMouse : base::Mouse {
-
-	private:
-		bool bEnabled;
-		Drawing::PointF pPosition;
-		Drawing::PointF pMovement;
-		System::Windows::Forms::MouseButtons pButtons;
-
-	internal:
-		RemoteMouse() {
-			bEnabled = false;
-			pPosition = Drawing::PointF(0.5f, 0.5f);
-			pMovement = Drawing::PointF(0.0f, 0.0f);
-			pButtons = System::Windows::Forms::MouseButtons::None;
-		}
-
-		void SetValues(bool Enabled, Drawing::PointF Position, Drawing::PointF Movement, System::Windows::Forms::MouseButtons Buttons) {
-			bEnabled = Enabled;
-			pPosition = Position;
-			pMovement = Movement;
-			pButtons = Buttons;
-		}
-
-	public:
-
-		property bool Enabled {
-			virtual bool get() override {
-				return bEnabled;
-			}
-			virtual void set(bool value) override;
-		}
-		property Drawing::PointF Position {
-			virtual Drawing::PointF get() override {
-				return pPosition;
-			}
-		}
-		property Drawing::PointF Movement {
-			virtual Drawing::PointF get() override {
-				return pMovement;
-			}
-		}
-		property System::Windows::Forms::MouseButtons PressedButtons {
-			virtual System::Windows::Forms::MouseButtons get() override {
-				return pButtons;
-			}
-		}
-
-		virtual bool isButtonDown(System::Windows::Forms::MouseButtons Button) override {
-			return ((pButtons & Button) == Button);
-		}
-
-	};
-
 }
 }

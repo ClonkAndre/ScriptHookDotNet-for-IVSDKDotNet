@@ -31,10 +31,8 @@
 
 #include "Font.h"
 #include "Texture.h"
-#include "VertexFormats.h"
 
 #include "Script.h"
-#include "RemoteScriptDomain.h"
 
 #pragma managed
 
@@ -65,7 +63,7 @@ namespace GTA
 		ptr->Release();
 	}
 
-	IntPtr Direct3D::NewTextureInternal(array<Byte>^ data, [Out] int% textureWidth, [Out] int% textureHeight)
+	IntPtr Direct3D::NewTextureInternal(System::Object^ callingScript, array<Byte>^ data, [Out] int% textureWidth, [Out] int% textureHeight)
 	{
 		pin_ptr<System::Byte> pinnedData = &data[0];
 		unsigned char* pby = pinnedData;
@@ -98,16 +96,30 @@ namespace GTA
 		textureWidth = imageDesc.Width;
 		textureHeight = imageDesc.Height;
 
-		// Register texture to current script
-		Script^ s = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::PerFrameDrawing);
-
-		if (s)
+		// Try assign texture to calling script
+		if (callingScript)
 		{
-			s->Textures->Add(ptr);
+			GTA::Script^ script = (GTA::Script^)callingScript;
+			VLOG(String::Format("[Direct3D::NewTextureInternal] Successfully got calling script {0}!", script->Name));
+			script->Textures->Add(ptr);
 			NetHook::VerboseLog(String::Format("Assigned texture {0} to current script!", ptr));
 		}
 		else
-			NetHook::Log("Could not assign texture to current script!"); // Not an ideal state...
+		{
+			WRITE_TO_DEBUG_OUTPUT("[Direct3D::NewTextureInternal] Failed to get calling script! Trying out with legacy method.");
+
+			// Try get calling script via legacy method
+			GTA::Script^ script = GetCurrentScript(ScriptEvent::PerFrameDrawing);
+
+			if (script)
+			{
+				VLOG(String::Format("[Direct3D::NewTextureInternal] Successfully got calling script {0} via legacy method!", script->Name));
+				script->Textures->Add(ptr);
+				NetHook::VerboseLog(String::Format("Assigned texture {0} to current script!", ptr));
+			}
+			else
+				WRITE_TO_DEBUG_OUTPUT("[Direct3D::NewTextureInternal] Failed to get calling script via legacy method! Not in an ideal state right now...");
+		}
 
 		return ptr;
 	}

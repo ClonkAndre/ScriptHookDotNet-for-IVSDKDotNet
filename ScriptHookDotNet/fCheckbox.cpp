@@ -29,33 +29,25 @@
 
 #pragma managed
 
-namespace GTA {
-namespace Forms {
+using namespace IVSDKDotNet;
 
-	void Checkbox::OnPaint(GTA::GraphicsEventArgs^ e) {
-		Control::OnPaint(e);
+namespace GTA
+{
+namespace Forms
+{
 
-		Drawing::Rectangle rect = ScreenRectangle;
-		int boxsize = int(Font->Height) + 4;
-		int boxy = rect.Y + (rect.Height - boxsize) / 2;
-
-		DrawBorder3D(e->Graphics, Drawing::Rectangle(rect.X, boxy, boxsize, boxsize), false, 2);
-		//e->Graphics->DrawText(tosX(rect.X+boxp+4), tosY(rect.Y), Text, ForeColor, TextAlignment::Left, Font->Height, 2.0f, -1.0f, Font);
-		e->Graphics->DrawText(Text, Drawing::Rectangle(rect.X+boxsize+2, rect.Y, rect.Width-boxsize-2, rect.Height), TextAlignment::SingleLine | TextAlignment::VerticalCenter, ForeColor, Font);
-
-		if (Checked) {
-			Drawing::Point p1 = Drawing::Point(rect.X+boxsize/4, boxy+(boxsize/5)*2);
-			Drawing::Point p2 = Drawing::Point(rect.X+boxsize/2, boxy+(boxsize/4)*3);
-			Drawing::Point p3 = Drawing::Point(rect.X+(boxsize/4)*3, boxy);
-			e->Graphics->DrawLine(p1, p2, 3, pCheckColor);
-			e->Graphics->DrawLine(p2, p3, 3, pCheckColor);
-		}
+	void Checkbox::OnPaint()
+	{
+		if (ImGuiIV::CheckBox(Text, bChecked))
+			OnCheckedChanged(EventArgs::Empty);
 	}
 
-	void Checkbox::OnMouseDown(GTA::MouseEventArgs^ e) {
+	void Checkbox::OnMouseDown(GTA::MouseEventArgs^ e)
+	{
 		int boxp = int(Font->Height) + 4;
 		Drawing::Point pos = PointToClient(e->PixelLocation);
-		if ((pos.X <=boxp) && (pos.Y <=boxp)) {
+		if ((pos.X <=boxp) && (pos.Y <=boxp))
+		{
 			Checked = !Checked;
 		}
 		Control::OnMouseDown(e);

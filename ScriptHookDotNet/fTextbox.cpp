@@ -26,25 +26,23 @@
 
 #include "Font.h"
 #include "Graphics.h"
-#include "KeyboardLayout.h"
 
 #pragma managed
 
-namespace GTA {
-namespace Forms {
+using namespace IVSDKDotNet;
 
-	void Textbox::OnPaint(GTA::GraphicsEventArgs^ e) {
-		Control::OnPaint(e);
+namespace GTA
+{
+namespace Forms
+{
 
-		Drawing::Rectangle rect = ScreenRectangle;
-		int offY = (rect.Height - int(Font->Height) - 4) / 2;
-
-		if (pBorder) DrawBorder3D(e->Graphics, rect, false, 2);
-		//e->Graphics->DrawText(rect.X + 2, rect.Y+offY, Text, ForeColor, TextAlignment::Left, Font->Height, 2.0f, -1.0f, Font); //tosX(rect.X + 2), tosY(rect.Y+offY)
-		e->Graphics->DrawText(Text, GrowLeft(rect,-2), TextAlignment::SingleLine | TextAlignment::VerticalCenter, ForeColor, Font);
+	void Textbox::OnPaint()
+	{
+		ImGuiIV::InputText(Name, pText);
 	}
 
-	void Textbox::OnKeyDown(GTA::KeyEventArgs^ e) {
+	void Textbox::OnKeyDown(GTA::KeyEventArgs^ e)
+	{
 		switch (e->Key) {
 			case Windows::Forms::Keys::Back:
 				if (Text->Length > 0) Text = Text->Substring(0, Text->Length-1);

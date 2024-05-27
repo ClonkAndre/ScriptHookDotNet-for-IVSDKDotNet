@@ -223,7 +223,6 @@
     <ClCompile Include="fButton.cpp" />
     <ClCompile Include="fCheckbox.cpp" />
     <ClCompile Include="fColorDialog.cpp" />
-    <ClCompile Include="fConfigForm.cpp" />
     <ClCompile Include="fControl.cpp" />
     <ClCompile Include="fForm.cpp" />
     <ClCompile Include="fFormHost.cpp" />
@@ -234,7 +233,6 @@
     <ClCompile Include="fMouse.cpp" />
     <ClCompile Include="fScrollbar.cpp" />
     <ClCompile Include="fTextbox.cpp" />
-    <ClCompile Include="KeyWatchDog.cpp" />
     <ClCompile Include="dColorConverter.cpp" />
     <ClCompile Include="dControlDesigner.cpp" />
     <ClCompile Include="dFormRootDesigner.cpp" />
@@ -245,13 +243,11 @@
     <ClCompile Include="nParameter.cpp" />
     <ClCompile Include="nTemplate.cpp" />
     <ClCompile Include="ContentCache.cpp" />
-    <ClCompile Include="RemoteScriptDomain.cpp" />
     <ClCompile Include="Script.cpp" />
     <ClCompile Include="D3D_Device.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blip.h" />
@@ -312,7 +308,6 @@
     <ClInclude Include="NmMessage.h" />
     <ClInclude Include="NmPedalLegsHelper.h" />
     <ClInclude Include="sColorIndex.h" />
-    <ClInclude Include="sFoundScript.h" />
     <ClInclude Include="sMatrix.h" />
     <ClInclude Include="sModel.h" />
     <ClInclude Include="sQuaternion.h" />
@@ -323,7 +318,6 @@
     <ClInclude Include="fButton.h" />
     <ClInclude Include="fCheckbox.h" />
     <ClInclude Include="fColorDialog.h" />
-    <ClInclude Include="fConfigForm.h" />
     <ClInclude Include="fControl.h" />
     <ClInclude Include="fForm.h" />
     <ClInclude Include="fFormHost.h" />
@@ -334,8 +328,6 @@
     <ClInclude Include="fMouse.h" />
     <ClInclude Include="fScrollbar.h" />
     <ClInclude Include="fTextbox.h" />
-    <ClInclude Include="KeyboardLayout.h" />
-    <ClInclude Include="KeyWatchDog.h" />
     <ClInclude Include="dColorConverter.h" />
     <ClInclude Include="dControlDesigner.h" />
     <ClInclude Include="dEventArgs.h" />
@@ -350,14 +342,11 @@
     <ClInclude Include="nParameter.h" />
     <ClInclude Include="nTemplate.h" />
     <ClInclude Include="ContentCache.h" />
-    <ClInclude Include="RemoteScriptDomain.h" />
     <ClInclude Include="Script.h" />
     <ClInclude Include="D3D_Device.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="VertexFormats.h" />
-    <ClInclude Include="Viewport.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ScriptHookDotNet.readme.txt" />

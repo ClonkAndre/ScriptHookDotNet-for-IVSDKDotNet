@@ -165,26 +165,7 @@ namespace Forms {
 	}
 
 	void ColorDialog::OnPaint(GTA::GraphicsEventArgs^ e) {
-		Form::OnPaint(e);
-		Drawing::Point pos = PointToScreen(Drawing::Point(0,0));
-		Drawing::Rectangle rect;
-		if (bSwatchesVisible) {
-			for (int i = 0; i < GTA::ColorIndex::colary->Length; i++) {
-				rect = GetColorRect(i);
-				rect.Offset(pos);
-				e->Graphics->DrawRectangle(rect, Drawing::Color::FromArgb(GTA::ColorIndex::colary[i] | 0xFF000000));
-			}
-		} else {
-			e->Graphics->DrawText("R", tosX(pos.X + 8), tosY(pos.Y + 8), ForeColor, Font);
-			e->Graphics->DrawText("G", tosX(pos.X + 8), tosY(pos.Y + 8+32), ForeColor, Font);
-			e->Graphics->DrawText("B", tosX(pos.X + 8), tosY(pos.Y + 8+32*2), ForeColor, Font);
-			if (pAllowAlpha) e->Graphics->DrawText("A", tosX(pos.X + 8), tosY(pos.Y + 8+32*3), ForeColor, Font);
-		}
-		int x = ColCols * ColSize + 8*2;
-		e->Graphics->DrawText("Color:", tosX(pos.X + x), tosY(pos.Y + 4), ForeColor, Font);
-		rect = Drawing::Rectangle(pos.X + x, pos.Y + 24, ClientRectangle.Width - x - 8, ColRows * ColSize - 16 );
-		e->Graphics->DrawRectangle(rect, SelectedColorRGB);
-		DrawBorder3D(e->Graphics, rect, false, 2);
+
 	}
 
 	void ColorDialog::OnMouseDown(GTA::MouseEventArgs^ e) {

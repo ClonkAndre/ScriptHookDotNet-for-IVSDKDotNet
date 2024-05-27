@@ -20,6 +20,8 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "fForm.h"
@@ -27,25 +29,21 @@
 #include "Font.h"
 #include "Game.h"
 #include "Graphics.h"
-#include "RemoteScriptDomain.h"
 #include "Script.h"
 #include "fButton.h"
 #include "fFormHost.h"
 
 #pragma managed
 
-namespace GTA {
-namespace Forms {
+using namespace IVSDKDotNet;
 
-	void Form::InitEarlyValues() {
-		Control::InitEarlyValues();
-		pTitleBackColor = Drawing::Color::FromArgb(150,77,109,243);
-		BackColor = Drawing::Color::FromArgb(150,200,200,200);
-		pSymbolFont = gcnew GTA::Font(DefaultFont);
-		TitleSize = 24; // without p to set fontsize too
-		pBorder = 2;
-	}
-	Form::Form() {
+namespace GTA
+{
+namespace Forms
+{
+
+	Form::Form()
+	{
 		pDialogResult = Windows::Forms::DialogResult::None;
 		pBlockVisibleChanged = true;
 		Visible = false;
@@ -60,9 +58,41 @@ namespace Forms {
 
 		Name = this->GetType()->Name;
 
-		if (NetHook::isScriptDomain) pScript = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
+		// Try get calling script
+		Object^ s = GetCallingScript();
+
+		if (s)
+		{
+			VLOG(String::Format("[Form::Form] Successfully got calling script {0}!", ((GTA::Script^)s)->Name));
+			pScript = (GTA::Script^)s;
+			pScript->FormHost->Add(this);
+		}
+		else
+		{
+			WRITE_TO_DEBUG_OUTPUT("[Form::Form] Failed to get calling script! Trying out with legacy method.");
+
+			// Try get calling script via legacy method
+			pScript = GetCurrentScript(ScriptEvent::Tick);
+
+			if (pScript)
+			{
+				VLOG(String::Format("[Form::Form] Successfully got calling script {0} via legacy method!", pScript->Name));
+				pScript->FormHost->Add(this);
+			}
+			else
+				WRITE_TO_DEBUG_OUTPUT("[Form::Form] Failed to get calling script via legacy method! Not in an ideal state right now...");
+		}
 	}
-	
+	void Form::InitEarlyValues()
+	{
+		Control::InitEarlyValues();
+		pTitleBackColor = Drawing::Color::FromArgb(150, 77, 109, 243);
+		BackColor = Drawing::Color::FromArgb(150, 200, 200, 200);
+		pSymbolFont = gcnew GTA::Font(DefaultFont);
+		TitleSize = 24; // without p to set fontsize too
+		pBorder = 2;
+	}
+
 	void Form::TitleSize::set(int value) {
 		pTitleSize = value;
 		if (value > 4) pSymbolFont = gcnew GTA::Font(pSymbolFont, float(value-4), FontScaling::Pixel);
@@ -97,58 +127,40 @@ namespace Forms {
 		Close();
 	}
 
-	void Form::OnPaint(GTA::GraphicsEventArgs^ e) {
-		Drawing::Rectangle rect = ScreenRectangle;
-		if (pTitleSize > 0) {
-			Drawing::Rectangle titleRect = Drawing::Rectangle(rect.X,rect.Y,rect.Width,pTitleSize);
-			e->Graphics->DrawRectangle(titleRect, pTitleBackColor);
-			if (pTitleSize > 4) {
-				e->Graphics->DrawText(Text, GrowLeft(titleRect,-4), TextAlignment::SingleLine | TextAlignment::VerticalCenter, ForeColor, pSymbolFont);
-				e->Graphics->DrawText("X", Drawing::Rectangle(titleRect.Right-pTitleSize,titleRect.Y,pTitleSize,titleRect.Height), TextAlignment::Center | TextAlignment::VerticalCenter, ForeColor, pSymbolFont);
-			}
-		}
-		e->Graphics->DrawRectangle(Drawing::Rectangle(rect.X,rect.Y+pTitleSize,rect.Width,rect.Height-pTitleSize), BackColor);
-		Paint(this, e);
-	}
-	void Form::TriggerBackgroundPaint(GTA::GraphicsEventArgs^ e) {
-		Drawing::Rectangle rect = ScreenRectangle;
-		//if (pTitleSize > 0) {
-		//	//e->Graphics->DrawRectangle(Drawing::Rectangle(rect.X,rect.Y,rect.Width,pTitleSize), pDisabledTitleColor);
-		//	//e->Graphics->DrawText(tosX(rect.X+pBorder),tosY(rect.Y),Text,pDisabledFontColor,pSymbolFont);
-		//	//e->Graphics->DrawText(tosX(rect.Right-pTitleSize),tosY(rect.Y),"X",pDisabledFontColor,pSymbolFont);
-		//	Drawing::Rectangle titleRect = Drawing::Rectangle(rect.X,rect.Y,rect.Width,pTitleSize);
-		//	e->Graphics->DrawRectangle(titleRect, pDisabledTitleColor);
-		//	e->Graphics->DrawText(Text, GrowLeft(titleRect,-4), TextAlignment::SingleLine | TextAlignment::VerticalCenter, pDisabledFontColor, pSymbolFont);
-		//	e->Graphics->DrawText("X", Drawing::Rectangle(titleRect.Right-pTitleSize,titleRect.Y,pTitleSize,titleRect.Height), TextAlignment::Center | TextAlignment::VerticalCenter, pDisabledFontColor, pSymbolFont);
-		//}
-		//e->Graphics->DrawRectangle(Drawing::Rectangle(rect.X,rect.Y+pTitleSize,rect.Width,rect.Height-pTitleSize), pDisabledBackColor);
-		e->Graphics->DrawRectangle(rect, pDisabledBackColor);
+	void Form::OnPaint()
+	{
+		if (!bVisible)
+			return;
+
+		ImGuiIV::Begin(Text, bVisible, IVSDKDotNet::Enums::eImGuiWindowFlags::NoCollapse);
+
+		for (int i = 0; i < Controls->Count; i++)
+			Controls[i]->OnPaint();
+
+		ImGuiIV::End();
 	}
 
-	FormHost^ Form::GetFormHost() {
-		//if (NetHook::isPrimary) {
-		//	return NetHook::FormHost;
-		//} else {
-		//	GTA::Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
-		//	if isNULL(scr) return nullptr;
-		//	return scr->FormHost;
-		//}
-		return nullptr;
-	}
-
-	void Form::OnVisibleChanged(EventArgs^ e) {
-		if (pBlockVisibleChanged) return;
+	void Form::OnVisibleChanged(EventArgs^ e)
+	{
+		if (pBlockVisibleChanged)
+			return;
 		Control::OnVisibleChanged(e);
 
-		GTA::Forms::FormHost^ fh = GetFormHost();
-		if isNULL(fh) return;
+		GTA::Forms::FormHost^ fh = nullptr;
+		if isNULL(fh)
+			return;
 
-		if (Visible) {
-			switch (pStartPosition) {
-				case FormStartPosition::CenterScreen: {
+		if (Visible)
+		{
+			switch (pStartPosition)
+			{
+				case FormStartPosition::CenterScreen:
+				{
 					Location = Drawing::Point((GTA::Game::Resolution.Width - Size.Width) / 2, (GTA::Game::Resolution.Height - Size.Height) / 2);
-					break; }
-				case FormStartPosition::Random: {
+					break;
+				}
+				case FormStartPosition::Random:
+				{
 					Drawing::Point max = Drawing::Point(GTA::Game::Resolution.Width - Size.Width, GTA::Game::Resolution.Height - Size.Height);
 					if (max.X > 0)
 						max.X = IVSDKDotNet::Helper::GetRandom()->Next(0, max.X);
@@ -159,16 +171,21 @@ namespace Forms {
 					else
 						max.Y = 0;
 					Location = max; //Drawing::Point(NetHook::Random->Next(0, max.X), NetHook::Random->Next(0, max.Y));
-					break; }
-				default: {
-					break; }
+					break;
+				}
+				default:
+				{
+					break;
+				}
 			}
 			pDialogResult = Windows::Forms::DialogResult::None;
 
 			fh->Add(this);
 			Opened(this, e);
 
-		} else {
+		}
+		else
+		{
 			bDragClose = false;
 			bDragTitle = false;
 
@@ -177,7 +194,8 @@ namespace Forms {
 		}
 	}
 
-	void Form::OnMouseDown(GTA::MouseEventArgs^ e) {
+	void Form::OnMouseDown(GTA::MouseEventArgs^ e)
+	{
 		Drawing::Point pos = PointToClient(e->PixelLocation);
 		if (pos.Y < 0) {
 			if (pos.X > (Width - TitleSize)) {
@@ -195,7 +213,8 @@ namespace Forms {
 		}
 		Control::OnMouseDown(e);
 	}
-	void Form::OnDragRelease(GTA::MouseEventArgs^ e) {
+	void Form::OnDragRelease(GTA::MouseEventArgs^ e)
+	{
 		Drawing::Point pos = PointToClient(e->PixelLocation);
 		if (pos.Y <= 0) {
 			if (pos.X > (Width - TitleSize)) {
@@ -209,33 +228,36 @@ namespace Forms {
 		bDragTitle = false;
 		Control::OnMouseDown(e);
 	}
-	void Form::OnDragging(GTA::MouseEventArgs^ e) {
-		if (bDragTitle) Location = Helper::SubtractPoint(e->PixelLocation, pDragOffset);
-	}
 
-	void Form::Close() {
-		if (DialogResult == Windows::Forms::DialogResult::None) DialogResult = Windows::Forms::DialogResult::Cancel;
+	void Form::Close()
+	{
+		if (DialogResult == Windows::Forms::DialogResult::None)
+			DialogResult = Windows::Forms::DialogResult::Cancel;
 		Visible = false;
 	}
-	void Form::Show() {
+	void Form::Show()
+	{
 		Visible = true;
 	}
-	Windows::Forms::DialogResult Form::ShowDialog() {
-		GTA::Forms::FormHost^ fh = GetFormHost();
-		if isNULL(fh) return Windows::Forms::DialogResult::None;
+	Windows::Forms::DialogResult Form::ShowDialog()
+	{
+		GTA::Forms::FormHost^ fh = nullptr;
+		if isNULL(fh)
+			return Windows::Forms::DialogResult::None;
 
 		Show();
-		fh->SetModalForm(this);
+		
+		// TODO
+		//try {
+		//	GTA::Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
+		//	if isNULL(scr) return Windows::Forms::DialogResult::None;
+		//	while (Visible) {
+		//		//GTA::Game::WaitInCurrentScript(0);
+		//		scr->Wait(0);
+		//		//if (Visible) scr->ProcessEvents();
+		//	}
+		//} catchErrors("Error during Form.ShowDialog",)
 
-		try {
-			GTA::Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
-			if isNULL(scr) return Windows::Forms::DialogResult::None;
-			while (Visible) {
-				//GTA::Game::WaitInCurrentScript(0);
-				scr->Wait(0);
-				//if (Visible) scr->ProcessEvents();
-			}
-		} catchErrors("Error during Form.ShowDialog",)
 		return DialogResult;
 	}
 

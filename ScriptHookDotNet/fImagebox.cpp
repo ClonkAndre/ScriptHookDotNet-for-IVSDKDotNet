@@ -33,11 +33,7 @@ namespace GTA {
 namespace Forms {
 
 	void Imagebox::OnPaint(GTA::GraphicsEventArgs^ e) {
-		Control::OnPaint(e);
-		Drawing::Rectangle rect = ScreenRectangle;
-		if isNotNULL(Image) e->Graphics->DrawSprite(Image, rect);
-		if (Border == BorderType::Lowered) DrawBorder3D(e->Graphics, rect, false, 2);
-		if (Border == BorderType::Raised) DrawBorder3D(e->Graphics, rect, true, 2);
+
 	}
 
 }

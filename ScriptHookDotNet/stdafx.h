@@ -42,7 +42,6 @@
 #include "sQuaternion.h"
 #include "sMatrix.h"
 #include "sModel.h"
-#include "sFoundScript.h"
 #include "sRoom.h"
 #include "dColorConverter.h"
 #include "sColorIndex.h"

@@ -25,9 +25,6 @@
 
 namespace GTA
 {
-
-	ref class Script;
-
 	namespace base
 	{
 		CLASS_ATTRIBUTES
@@ -43,7 +40,7 @@ namespace GTA
 			}
 
 		internal:
-			ScriptChild();
+			ScriptChild(System::Object^ callingScript);
 		};
 	}
 }

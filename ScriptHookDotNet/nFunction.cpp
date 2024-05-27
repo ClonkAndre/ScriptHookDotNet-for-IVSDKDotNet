@@ -30,6 +30,9 @@
 #include "nTemplate.h"
 
 //#include "sModel.h"
+#include "Object.h"
+#include "Ped.h"
+#include "Vehicle.h"
 #include "Player.h"
 
 #pragma managed
@@ -47,6 +50,8 @@ namespace GTA
 			// Get type of value returned by the called native function
 			Type^ returnValueType = returnValue->GetType();
 
+			WRITE_TO_DEBUG_OUTPUT(String::Format("Trying to convert type '{0}' to expected type '{1}'", returnValueType, expectedType));
+
 			// Try convert returned int32 value to expected uint32 value
 			if (returnValueType == System::Int32::typeid && expectedType == System::UInt32::typeid)
 				return Convert::ToUInt32(returnValue);
@@ -55,9 +60,25 @@ namespace GTA
 			if (returnValueType == System::UInt32::typeid && expectedType == System::Int32::typeid)
 				return Convert::ToInt32(returnValue);
 
+			// Try convert returned boolean value to expected int32 value
+			if (returnValueType == System::Boolean::typeid && expectedType == System::Int32::typeid)
+				return Convert::ToInt32(returnValue);
+
 			// Try convert returned type value to expected bool value (If returned type is a numeric type)
 			if (IVSDKDotNet::Helper::IsNumericType(returnValueType) && expectedType == System::Boolean::typeid)
 				return Convert::ToBoolean(returnValue);
+
+			// Try convert returned int32 value to expected GTA.Object value
+			if (returnValueType == System::Int32::typeid && expectedType == GTA::Object::typeid)
+				return gcnew GTA::Object(Convert::ToInt32(returnValue));
+
+			// Try convert returned int32 value to expected GTA.Ped value
+			if (returnValueType == System::Int32::typeid && expectedType == GTA::Ped::typeid)
+				return gcnew GTA::Ped(Convert::ToInt32(returnValue));
+
+			// Try convert returned int32 value to expected GTA.Vehicle value
+			if (returnValueType == System::Int32::typeid && expectedType == GTA::Vehicle::typeid)
+				return gcnew GTA::Vehicle(Convert::ToInt32(returnValue));
 
 			// TODO: Add more if needed
 
@@ -155,6 +176,7 @@ namespace GTA
 
 			// Result
 			System::Object^ r = IVSDKDotNet::Native::Function::Call<System::Object^>(Name, args);
+			WRITE_TO_DEBUG_OUTPUT(String::Format("Just called the native function '{0}'", Name));
 
 			// Set new argument values if they are pointers
 			for (int i = 0; i < args->Length; i++)

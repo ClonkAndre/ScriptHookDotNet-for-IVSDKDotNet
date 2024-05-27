@@ -23,11 +23,11 @@
 #pragma once
 #pragma managed
 
-namespace GTA{
-
+namespace GTA
+{
 	CLASS_ATTRIBUTES
-	private ref class ContentCache sealed {
-
+	private ref class ContentCache sealed
+	{
 	private:
 
 		static const int MAX_FIRES = 100;

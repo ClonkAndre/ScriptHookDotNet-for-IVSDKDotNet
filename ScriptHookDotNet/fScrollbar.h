@@ -206,7 +206,7 @@ namespace Forms {
 				pGrabHandleOffset = 0;
 			}
 
-			pButtonRectMinus.Location = ScreenRectangle.Location;
+
 			if (bHorizontal) {
 				pButtonRectMinus.Height = pShortSideSize;
 				pButtonRectMinus.Width = pButtonSize;

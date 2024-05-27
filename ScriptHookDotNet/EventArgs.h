@@ -26,7 +26,7 @@
 namespace GTA
 {
 
-	using namespace System;
+	//using namespace System;
 
 	value class Vector3;
 	ref class Script;
@@ -36,7 +36,6 @@ namespace GTA
 	[SerializableAttribute]
 	public ref class SerializableEventArgs : EventArgs {};
 	public delegate void SerializableEventHandler(System::Object^ sender, SerializableEventArgs^ e);
-
 
 	CLASS_ATTRIBUTES
 	[SerializableAttribute]
@@ -327,7 +326,6 @@ namespace GTA
 	};
 	public delegate void ScriptCommandEventHandler(System::Object^ sender, ScriptCommandEventArgs^ e);
 
-
 	CLASS_ATTRIBUTES
 	[SerializableAttribute]
 	public ref class PhoneDialEventArgs : SerializableEventArgs
@@ -351,7 +349,6 @@ namespace GTA
 		}
 	};
 	public delegate void PhoneDialEventHandler(System::Object^ sender, PhoneDialEventArgs^ e);
-
 
 	CLASS_ATTRIBUTES
 	[SerializableAttribute]

@@ -33,24 +33,7 @@ namespace GTA {
 namespace Forms {
 
 	void Keybox::OnPaint(GTA::GraphicsEventArgs^ e) {
-		Control::OnPaint(e);
 
-		Drawing::Rectangle rect = ScreenRectangle;
-		int offY = (rect.Height - int(Font->Height) - 4) / 2;
-
-		String^ Text;
-		if (bAwaitKey) {
-			if (pCurrentKey == Windows::Forms::Keys::None)
-				Text = "Press a key combination...";
-			else
-				Text = pCurrentKey.ToString()->Replace(", "," + "); //Helper::RemoveRedundantKeyModifiers
-		} else {
-			Text = SelectedKey.ToString()->Replace(", "," + "); //Helper::RemoveRedundantKeyModifiers
-		}
-
-		DrawBorder3D(e->Graphics, rect, false, 2);
-		//e->Graphics->DrawText(rect.X + 2, rect.Y+offY, Text, ForeColor, TextAlignment::Left, Font->Height, 2.0f, -1.0f, Font); //tosX(rect.X + 2), tosY(rect.Y+offY)
-		e->Graphics->DrawText(Text, rect, TextAlignment::SingleLine | TextAlignment::VerticalCenter | TextAlignment::Center, ForeColor, Font);
 	}
 
 	void Keybox::OnClick(GTA::MouseEventArgs^ e) {

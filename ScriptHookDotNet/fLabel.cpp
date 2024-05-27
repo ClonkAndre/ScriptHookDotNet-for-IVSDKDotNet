@@ -29,17 +29,20 @@
 
 #pragma managed
 
-namespace GTA {
-namespace Forms {
+using namespace IVSDKDotNet;
 
-	void Label::OnPaint(GTA::GraphicsEventArgs^ e) {
-		Control::OnPaint(e);
-		Drawing::Rectangle rect = ScreenRectangle;
-		//e->Graphics->DrawText(tosX(rect.X), tosY(rect.Y), Text, ForeColor, TextAlignment::Left, Font->Height, tosX(rect.Right), Font);
-		e->Graphics->DrawText(Text, rect, TextAlignment::WordBreak, ForeColor, Font);
+namespace GTA
+{
+namespace Forms
+{
+
+	void Label::OnPaint()
+	{
+		ImGuiIV::Text(Text);
 	}
 
-	void Label::OnTextChanged(EventArgs^ e) {
+	void Label::OnTextChanged(EventArgs^ e)
+	{
 		Control::OnTextChanged(e);
 		//Drawing::Rectangle rect = ScreenRectangle;
 		//Drawing::Size size;

@@ -30,10 +30,15 @@
 
 #pragma managed
 
-namespace GTA {
-namespace Forms {
+using namespace IVSDKDotNet;
 
-	Listbox::Listbox() {
+namespace GTA
+{
+namespace Forms
+{
+
+	Listbox::Listbox()
+	{
 		BackColor = Drawing::Color::FromArgb(50, 255, 255, 255);
 		pSelectionColor = Drawing::Color::FromArgb(127, 48, 64, 192);
 		pBorder = true;
@@ -47,47 +52,31 @@ namespace Forms {
 		this->Controls->Add(scr);
 	}
 
-	void Listbox::ResizeScrollbar() {
+	void Listbox::ResizeScrollbar()
+	{
 		scr->Size = Drawing::Size(pScrollbarSize, Size.Height);
 		scr->Location = Point(Size.Width - pScrollbarSize, 0);
 	}
 
-	void Listbox::OnPaint(GTA::GraphicsEventArgs^ e) {
-		//Control::OnPaint(e);
+	void Listbox::OnPaint()
+	{
+		if (ImGuiIV::BeginListBox(Text))
+		{
 
-		Drawing::Rectangle rect = ScreenRectangle;
-		Drawing::Rectangle internalrect; 
-		int lh = (int)Font->GetLineHeight(FontScaling::Pixel);
-		int num = (rect.Height-4) / lh;
-		if ( (pScrollbarSize > 0) && (Items->Count > num) ) {
-			scr->Visible = true;
-			scr->ContentSize = num;
-			scr->MaxContentValue = Items->Count-1;
-			internalrect = Drawing::Rectangle(rect.X, rect.Y, rect.Width - pScrollbarSize, rect.Height);
-		} else {
-			scr->Visible = false;
-			scr->Value = 0;
-			internalrect = rect;
-		}
+			for (int i = 0; i < Items->Count; i++)
+			{
+				ListboxItem^ item = Items[i];
 
-		if (BackColor.A > 0) e->Graphics->DrawRectangle(internalrect,BackColor);
-		if (pBorder) DrawBorder3D(e->Graphics, internalrect, false, 2);
-
-		if (Items->Count > 0) {
-			int max = System::Math::Min(scr->Value+num, Items->Count);
-			int id = 0;
-			for (int i = scr->Value; i < max; i++) {
-				if (i == pSelectedIndex) e->Graphics->DrawRectangle(Drawing::Rectangle(rect.X, rect.Y+2+id*lh, internalrect.Width, lh), pSelectionColor);
-				//e->Graphics->DrawText(tosX(rect.X + 2), tosY(rect.Y+2+id*lh), Items[i].DisplayText, ForeColor, TextAlignment::Left, Font->Height, tosX(internalrect.Right), -1.0f, Font); //tosX(rect.X + 2), tosY(rect.Y+2+id*lh) //tosX(internalrect.Right)
-				e->Graphics->DrawText(Items[i].DisplayText, Drawing::Rectangle(rect.X+2, rect.Y+2+id*lh, internalrect.Width-2, lh), TextAlignment::SingleLine, ForeColor, Font);
-				id++;
+				if (ImGuiIV::Selectable(item->DisplayText, i == pSelectedIndex))
+					pSelectedIndex = i;
 			}
-		}
 
-		Paint(this, e);
+			ImGuiIV::EndListBox();
+		}
 	}
 
-	void Listbox::OnMouseDown(GTA::MouseEventArgs^ e) {
+	void Listbox::OnMouseDown(GTA::MouseEventArgs^ e)
+	{
 		int pos = this->PointToClient(e->PixelLocation).Y - 2;
 		int id = -1;
 		if (pos >= 0) {

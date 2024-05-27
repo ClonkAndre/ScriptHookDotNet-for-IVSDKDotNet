@@ -29,7 +29,7 @@
 namespace GTA
 {
 
-	using namespace System;
+	//using namespace System;
 
 	public enum class ScriptActionID
 	{
@@ -187,7 +187,6 @@ namespace GTA
 		///// </summary>
 		//RtlReading = 0x20000, //DT_RTLREADING,
 	};
-
 
 	public enum class FontEffect
 	{

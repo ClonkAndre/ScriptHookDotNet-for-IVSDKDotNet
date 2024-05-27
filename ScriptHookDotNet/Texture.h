@@ -32,6 +32,7 @@ namespace GTA
 	private:
 		array<Byte>^ data;
 
+		System::Object^ pOwningScript;
 		IntPtr pInternalPointer;
 
 		void InitValues();

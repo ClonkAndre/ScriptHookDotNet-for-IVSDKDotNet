@@ -20,6 +20,8 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "SettingsFile.h"
@@ -30,9 +32,8 @@
 
 namespace GTA
 {
-	//namespace value {
 
-		// - - - Constructor - - -
+	// - - - Constructor - - -
 	SettingsFile::SettingsFile(IVSDKDotNet::SettingsFile^ file)
 	{
 		instance = file;
@@ -54,14 +55,13 @@ namespace GTA
 	// - - - Properties, Methods and Functions - - -
 	void SettingsFile::Clear()
 	{
-		// TODO: Implement
+		instance->Clear();
 	}
 
 	void SettingsFile::Load()
 	{
 		instance->Load();
 	}
-
 	bool SettingsFile::Save()
 	{
 		return instance->Save();
@@ -105,30 +105,64 @@ namespace GTA
 		return GetValueString(OptionName, String::Empty, String::Empty);
 	}
 
-	int SettingsFile::GetValueInteger(String^ OptionName, String^ Category, int DefaultValue)
+	void SettingsFile::SetValue(String^ OptionName, String^ Category, String^ Value)
 	{
-		String^ val = GetValueString(OptionName, Category, String::Empty);
-		return Helper::StringToInteger(val, DefaultValue);
+		instance->SetValue(Category, OptionName, Value);
 	}
-	float SettingsFile::GetValueFloat(String^ OptionName, String^ Category, float DefaultValue)
+
+	void SettingsFile::SetValue(String^ OptionName, String^ Category, Vector3 Value)
 	{
-		String^ val = GetValueString(OptionName, Category, String::Empty);
-		return Helper::StringToFloat(val, DefaultValue);
-	}
-	bool SettingsFile::GetValueBool(String^ OptionName, String^ Category, bool DefaultValue)
-	{
-		String^ val = GetValueString(OptionName, Category, String::Empty);
-		return Helper::StringToBoolean(val, DefaultValue);
+		SetValue(OptionName, Category, Value.ToString(", ", 4));
 	}
 	Vector3 SettingsFile::GetValueVector3(String^ OptionName, String^ Category, Vector3 DefaultValue)
 	{
 		String^ val = GetValueString(OptionName, Category, String::Empty);
 		return Helper::StringToVector3(val, DefaultValue);
 	}
+
+	void SettingsFile::SetValue(String^ OptionName, String^ Category, bool Value)
+	{
+		SetValue(OptionName, Category, Value.ToString());
+	}
+	bool SettingsFile::GetValueBool(String^ OptionName, String^ Category, bool DefaultValue)
+	{
+		String^ val = GetValueString(OptionName, Category, String::Empty);
+		return Helper::StringToBoolean(val, DefaultValue);
+	}
+
+	void SettingsFile::SetValue(String^ OptionName, String^ Category, float Value)
+	{
+		SetValue(OptionName, Category, Helper::FloatToString(Value, 4));
+	}
+	float SettingsFile::GetValueFloat(String^ OptionName, String^ Category, float DefaultValue)
+	{
+		String^ val = GetValueString(OptionName, Category, String::Empty);
+		return Helper::StringToFloat(val, DefaultValue);
+	}
+
+	void SettingsFile::SetValue(String^ OptionName, String^ Category, int Value)
+	{
+		SetValue(OptionName, Category, Value.ToString());
+	}
+	int SettingsFile::GetValueInteger(String^ OptionName, String^ Category, int DefaultValue)
+	{
+		String^ val = GetValueString(OptionName, Category, String::Empty);
+		return Helper::StringToInteger(val, DefaultValue);
+	}
+
+	void SettingsFile::SetValue(String^ OptionName, String^ Category, Windows::Forms::Keys Value)
+	{
+		SetValue(OptionName, Category, Value.ToString());
+	}
 	Windows::Forms::Keys SettingsFile::GetValueKey(String^ OptionName, String^ Category, Windows::Forms::Keys DefaultValue)
 	{
 		String^ val = GetValueString(OptionName, Category, String::Empty);
 		return Helper::StringToKey(val, DefaultValue);
+	}
+
+	void SettingsFile::SetValue(String^ OptionName, String^ Category, GTA::Model Value)
+	{
+		SetValue(OptionName, Category, Value.ToString());
 	}
 	GTA::Model SettingsFile::GetValueModel(String^ OptionName, String^ Category, GTA::Model DefaultValue)
 	{
@@ -136,34 +170,4 @@ namespace GTA
 		return Helper::StringToModel(val, DefaultValue);
 	}
 
-	void SettingsFile::SetValue(String^ OptionName, String^ Category, String^ Value)
-	{
-		instance->SetValue(Category, OptionName, Value);
-	}
-	void SettingsFile::SetValue(String^ OptionName, String^ Category, Vector3 Value)
-	{
-		SetValue(OptionName, Category, Value.ToString(", ", 4));
-	}
-	void SettingsFile::SetValue(String^ OptionName, String^ Category, bool Value)
-	{
-		SetValue(OptionName, Category, Value.ToString());
-	}
-	void SettingsFile::SetValue(String^ OptionName, String^ Category, float Value)
-	{
-		SetValue(OptionName, Category, Helper::FloatToString(Value, 4));
-	}
-	void SettingsFile::SetValue(String^ OptionName, String^ Category, int Value)
-	{
-		SetValue(OptionName, Category, Value.ToString());
-	}
-	void SettingsFile::SetValue(String^ OptionName, String^ Category, Windows::Forms::Keys Value)
-	{
-		SetValue(OptionName, Category, Value.ToString());
-	}
-	void SettingsFile::SetValue(String^ OptionName, String^ Category, GTA::Model Value)
-	{
-		SetValue(OptionName, Category, Value.ToString());
-	}
-
-	//}
 }

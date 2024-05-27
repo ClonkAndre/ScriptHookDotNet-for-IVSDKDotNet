@@ -25,10 +25,6 @@
 
 namespace GTA
 {
-	value class Viewport;
-
-	using namespace System;
-
 	private ref class Direct3D sealed
 	{
 	internal:
@@ -38,7 +34,7 @@ namespace GTA
 		/// <summary>
 		/// Creates a new Direct3D Font and returns the pointer.
 		/// </summary>
-		static IntPtr NewTextureInternal(array<Byte>^ data, [Out] int% textureWidth, [Out] int% textureHeight);
+		static IntPtr NewTextureInternal(System::Object^ callingScript, array<Byte>^ data, [Out] int% textureWidth, [Out] int% textureHeight);
 
 	};
 }
