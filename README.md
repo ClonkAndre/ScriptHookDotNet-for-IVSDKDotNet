@@ -9,6 +9,10 @@ Please open up a new issue in the [issues page](https://github.com/ClonkAndre/Sc
 
 See the currently known issues with this project [here](https://github.com/ClonkAndre/ScriptHookDotNet-for-IVSDKDotNet/issues/1).
 
+## How to install
+This modified version of ScriptHookDotNet gets shipped with IV-SDK .NET since version 1.2 so there's basically no need to install it manually.  
+If you still need to install it manually, download the latest version from the [releases](https://github.com/ClonkAndre/ScriptHookDotNet-for-IVSDKDotNet/releases) tab, and place the ScriptHookDotNet.dll file within the "**IVSDKDotNet -> bin**" directory. 
+
 ## Requirements
 - [IV-SDK .NET](https://github.com/ClonkAndre/IV-SDK-DotNet) (Version 1.2 or above)
 - [ClonksCodingLib.GTAIV](https://github.com/ClonkAndre/ClonksCodingLib.GTAIV)
