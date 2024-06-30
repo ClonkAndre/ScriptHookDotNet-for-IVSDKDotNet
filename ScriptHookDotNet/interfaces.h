@@ -28,122 +28,146 @@
 
 #pragma managed
 
-namespace GTA {
+namespace GTA
+{
 
 	ref class Ped;
 	value class Room;
 	//value class Model;
 
-namespace base {
+namespace base
+{
 
 	//private interface class iLocalScriptDomain {
 	//	void RemoteEvent(String^ EventName, SerializableEventArgs^ Args);
 	//};
 
-	public interface class iBaseObject {
+	public interface class iBaseObject
+	{
 		//bool CheckExists();
 		bool Exists();
 	};
 
-	public interface class iHandleObject :
-		System::IEquatable<iHandleObject^>,
-		iBaseObject {
-
-		property int Handle {
+	public interface class iHandleObject : System::IEquatable<iHandleObject^>, iBaseObject
+	{
+		property int Handle
+		{
 			int get();
 		}
 		[System::Runtime::CompilerServices::Dynamic]
-		property System::Object^ Metadata {
+		property System::Object^ Metadata
+		{
 			System::Object^ get();
 		}
 	};
 
-	public interface class iGroup
-		: System::Collections::Generic::IEnumerable<Ped^> {
-		
-		property int MemberCount {
+	public interface class iGroup : System::Collections::Generic::IEnumerable<Ped^>
+	{
+		property int MemberCount
+		{
 			int get();
 		}
-		property Ped^ Leader {
+		property Ped^ Leader
+		{
 			Ped^ get();
 		}
 		bool AddMember(Ped^ ped);
-
 	};
 
-	public interface class iPositioned {
+	public interface class iPositioned
+	{
 		property Vector3 Position;
 	};
 
-	public interface class iRotatable {
+	public interface class iRotatable
+	{
 		//property Vector3 Rotation;
 		property float Heading;
-		property GTA::Vector3 Direction {
+		property GTA::Vector3 Direction
+		{
 			GTA::Vector3 get();
 		}
 	};
 
-	public interface class iInteriorObject {
+	public interface class iInteriorObject
+	{
 		property GTA::Room CurrentRoom;
 	};
 
-	public interface class iModelObject {
+	public interface class iModelObject
+	{
 		//property Vector3 Rotation;
-		property GTA::Model Model {
+		property GTA::Model Model
+		{
 			GTA::Model get();
 		}
 	};
 
-	public interface class iVisibleObject {
-		property bool Visible {
+	public interface class iVisibleObject
+	{
+		property bool Visible
+		{
 			void set(bool value);
 		}
 	};
 
-	public interface class iRequestable {
+	public interface class iRequestable
+	{
 		void NoLongerNeeded();
 	};
-	public interface class iDeletable {
+	public interface class iDeletable
+	{
 		void Delete();
 	};
 
-	public interface class iBurnable {
-		property bool isOnFire {
+	public interface class iBurnable
+	{
+		property bool isOnFire
+		{
 			bool get();
 			void set(bool value);
 		}
 	};
 
-	public interface class iFreezable {
-		property bool FreezePosition {
+	public interface class iFreezable
+	{
+		property bool FreezePosition
+		{
 			void set(bool value);
 		}
 	};
 
-	public interface class iForce {
+	public interface class iForce
+	{
 		void ApplyForce(Vector3 Direction, Vector3 Rotation);
 		void ApplyForce(Vector3 Direction);
 		void ApplyForceRelative(Vector3 Direction, Vector3 Rotation);
 		void ApplyForceRelative(Vector3 Direction);
-		property Vector3 Velocity {
+		property Vector3 Velocity
+		{
 			Vector3 get();
 			void set(Vector3 value);
 		}
 	};
 
-	public interface class iAddressableObject {
-		property int MemoryAddress {
+	public interface class iAddressableObject
+	{
+		property int MemoryAddress
+		{
 			int get();
 		}
 	};
-	public interface class iMissionObject {
-		property bool isRequiredForMission {
+	public interface class iMissionObject
+	{
+		property bool isRequiredForMission
+		{
 			bool get();
 			void set(bool value);
 		}
 	};
 
-	public interface class iD3DObject {
+	public interface class iD3DObject
+	{
 		int GetD3DObjectID(bool retrieveNew);
 		void Unload(bool permanent);
 		void Reload();

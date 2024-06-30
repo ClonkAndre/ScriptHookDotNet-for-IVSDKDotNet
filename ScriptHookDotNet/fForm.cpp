@@ -42,6 +42,7 @@ namespace GTA
 namespace Forms
 {
 
+	// - - - Constructor - - -
 	Form::Form()
 	{
 		pDialogResult = Windows::Forms::DialogResult::None;
@@ -83,6 +84,8 @@ namespace Forms
 				WRITE_TO_DEBUG_OUTPUT("[Form::Form] Failed to get calling script via legacy method! Not in an ideal state right now...");
 		}
 	}
+
+	// - - - Properties, Methods and Functions - - -
 	void Form::InitEarlyValues()
 	{
 		Control::InitEarlyValues();
@@ -93,36 +96,55 @@ namespace Forms
 		pBorder = 2;
 	}
 
-	void Form::TitleSize::set(int value) {
+	void Form::TitleSize::set(int value)
+	{
 		pTitleSize = value;
-		if (value > 4) pSymbolFont = gcnew GTA::Font(pSymbolFont, float(value-4), FontScaling::Pixel);
+
+		if (value > 4)
+			pSymbolFont = gcnew GTA::Font(pSymbolFont, float(value-4), FontScaling::Pixel);
+
 		//pSymbolFont->Height = float(value-4); // float(
 		//pSymbolFont->EnforcedWidth = pSymbolFont->Height * 1.3f;
 	}
 
-	GTA::value::Resources^ Form::Resources::get() {
+	GTA::value::Resources^ Form::Resources::get()
+	{
 		return pScript->Resources;
 	}
 
-	void Form::AcceptButton::set(Button^ value) {
-		if (System::Object::ReferenceEquals(pAcceptButton, value)) return;
-		if isNotNULL(pAcceptButton) pAcceptButton->Click -= gcnew MouseEventHandler(this, &Form::AcceptButton_Click);
+	void Form::AcceptButton::set(Button^ value)
+	{
+		if (System::Object::ReferenceEquals(pAcceptButton, value))
+			return;
+
+		if isNotNULL(pAcceptButton)
+			pAcceptButton->Click -= gcnew MouseEventHandler(this, &Form::AcceptButton_Click);
+
 		pAcceptButton = value;
-		if isNotNULL(pAcceptButton) pAcceptButton->Click += gcnew MouseEventHandler(this, &Form::AcceptButton_Click);
-	}
 
-	void Form::CancelButton::set(Button^ value) {
-		if (System::Object::ReferenceEquals(pCancelButton, value)) return;
-		if isNotNULL(pCancelButton) pCancelButton->Click -= gcnew MouseEventHandler(this, &Form::CancelButton_Click);
+		if isNotNULL(pAcceptButton)
+			pAcceptButton->Click += gcnew MouseEventHandler(this, &Form::AcceptButton_Click);
+	}
+	void Form::CancelButton::set(Button^ value)
+	{
+		if (System::Object::ReferenceEquals(pCancelButton, value))
+			return;
+
+		if isNotNULL(pCancelButton)
+			pCancelButton->Click -= gcnew MouseEventHandler(this, &Form::CancelButton_Click);
+
 		pCancelButton = value;
-		if isNotNULL(pCancelButton) pCancelButton->Click += gcnew MouseEventHandler(this, &Form::CancelButton_Click);
-	}
 
-	void Form::AcceptButton_Click(System::Object^ sender, MouseEventArgs^ e) {
+		if isNotNULL(pCancelButton)
+			pCancelButton->Click += gcnew MouseEventHandler(this, &Form::CancelButton_Click);
+	}
+	void Form::AcceptButton_Click(System::Object^ sender, MouseEventArgs^ e)
+	{
 		DialogResult = Windows::Forms::DialogResult::OK;
 		Close();
 	}
-	void Form::CancelButton_Click(System::Object^ sender, MouseEventArgs^ e) {
+	void Form::CancelButton_Click(System::Object^ sender, MouseEventArgs^ e)
+	{
 		DialogResult = Windows::Forms::DialogResult::Cancel;
 		Close();
 	}
@@ -134,6 +156,40 @@ namespace Forms
 
 		ImGuiIV::Begin(Text, bVisible, IVSDKDotNet::Enums::eImGuiWindowFlags::NoCollapse);
 
+		// Set window size
+		ImGuiIV::SetWindowSize(System::Numerics::Vector2(Size.Width, Size.Height), IVSDKDotNet::Enums::eImGuiCond::Appearing);
+
+		// Set window starting pos
+		switch (StartPosition)
+		{
+			case FormStartPosition::CenterScreen:
+			{
+				ImGuiIV::SetWindowPos(System::Numerics::Vector2((GTA::Game::Resolution.Width - Size.Width) / 2.0F, (GTA::Game::Resolution.Height - Size.Height) / 2.0F), IVSDKDotNet::Enums::eImGuiCond::Appearing);
+				break;
+			}
+			case FormStartPosition::Random:
+			{
+				Drawing::Point max = Drawing::Point(GTA::Game::Resolution.Width - Size.Width, GTA::Game::Resolution.Height - Size.Height);
+
+				if (max.X > 0)
+					max.X = IVSDKDotNet::Helper::GetRandom()->Next(0, max.X);
+				else
+					max.X = 0;
+				if (max.Y > 0)
+					max.Y = IVSDKDotNet::Helper::GetRandom()->Next(0, max.Y);
+				else
+					max.Y = 0;
+
+				ImGuiIV::SetWindowPos(System::Numerics::Vector2(max.X, max.Y), IVSDKDotNet::Enums::eImGuiCond::Appearing);
+
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+
 		for (int i = 0; i < Controls->Count; i++)
 			Controls[i]->OnPaint();
 
@@ -144,6 +200,7 @@ namespace Forms
 	{
 		if (pBlockVisibleChanged)
 			return;
+
 		Control::OnVisibleChanged(e);
 
 		GTA::Forms::FormHost^ fh = nullptr;
@@ -152,7 +209,7 @@ namespace Forms
 
 		if (Visible)
 		{
-			switch (pStartPosition)
+			switch (StartPosition)
 			{
 				case FormStartPosition::CenterScreen:
 				{
@@ -233,12 +290,14 @@ namespace Forms
 	{
 		if (DialogResult == Windows::Forms::DialogResult::None)
 			DialogResult = Windows::Forms::DialogResult::Cancel;
+
 		Visible = false;
 	}
 	void Form::Show()
 	{
 		Visible = true;
 	}
+
 	Windows::Forms::DialogResult Form::ShowDialog()
 	{
 		GTA::Forms::FormHost^ fh = nullptr;

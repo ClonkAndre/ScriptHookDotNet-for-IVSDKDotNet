@@ -35,13 +35,11 @@ namespace Forms
 	{
 	private:
 		Drawing::Color pDownColor;
-		bool bDown;
 
 	public:
 		Button()
 		{
 			pDownColor = Drawing::Color::FromArgb(50, 0, 0, 0);
-			bDown = false;
 		}
 
 	public protected:

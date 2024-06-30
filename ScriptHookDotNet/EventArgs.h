@@ -442,8 +442,14 @@ namespace GTA
 		static System::String^ DEFAULT_MESSAGE = "Invalid call to an object that doesn't exist anymore!";
 
 	public:
-		NonExistingObjectException() : System::Exception(DEFAULT_MESSAGE) {}
-		NonExistingObjectException(System::String^ message) : System::Exception(message) {}
+		NonExistingObjectException() : System::Exception(DEFAULT_MESSAGE)
+		{
+
+		}
+		NonExistingObjectException(System::String^ message) : System::Exception(message)
+		{
+
+		}
 
 	};
 

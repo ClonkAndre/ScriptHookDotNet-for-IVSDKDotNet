@@ -224,17 +224,23 @@ namespace GTA
 			bool get() { return bWaiting; }
 		}
 		
-		property String^ Filename
-		{
-			String^ get() { return pFilename; }
-		}
 		property String^ Name
 		{
-			String^ get() { return GetType()->FullName; }
+			String^ get()
+			{
+				return pFilenameWithoutExtension;
+			}
 		}
 		property String^ FullName
 		{
-			String^ get() { return System::IO::Path::GetFileName(Filename) + ":" + Name; }
+			String^ get()
+			{
+				return Filename + ":" + Name;
+			}
+		}
+		property String^ Filename
+		{
+			String^ get() { return pFilename; }
 		}
 
 		void Abort(bool calledFromManager); // Only the IV-SDK .NET Manager will call this
@@ -247,14 +253,8 @@ namespace GTA
 		List<BoundScriptCommandItem>^ ScriptCommands;
 		List<BoundCommandItem>^ ConsoleCommands;
 		Queue<ScriptAction>^ ActionQueue;
-		List<IntPtr>^ Textures;
 
 		Graphics^ GFX;
-
-		[IVSDKDotNet::Attributes::HideInInspectorAttribute()]
-		bool KeyDownActionQueued;
-		[IVSDKDotNet::Attributes::HideInInspectorAttribute()]
-		bool KeyUpActionQueued;
 
 		void ProcessBoundKeys(WinForms::Keys Key);
 		void ProcessBoundScriptCommand(ScriptCommandEventArgs^ sceva);

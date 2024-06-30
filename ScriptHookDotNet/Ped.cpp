@@ -907,9 +907,6 @@ namespace GTA
 		//BlockPermanentEvents = false;
 	}
 
-	//void Ped::WalkAwayAndDespawn() {
-	//	Scripting::RemoveCharElegantly(pHandle);
-	//}
 	void Ped::NoLongerNeeded()
 	{
 		NON_EXISTING_CHECK_RELAXED_NO_RETURN();
@@ -921,6 +918,8 @@ namespace GTA
 		if (pHandle == 0)
 			return false;
 
+		// This seems to randomly return false? I guess its because its gettig called from the rendering thread instead of the proper "script" thread?
+		// CONFIRMED THAT IT RANDOMLY RETURNS FALSE!
 		return IVSDKDotNet::Native::Natives::DOES_CHAR_EXIST(pHandle);
 	}
 	void Ped::Die()
@@ -949,11 +948,14 @@ namespace GTA
 	Player^ Ped::GetControllingPlayer()
 	{
 		NON_EXISTING_CHECK(nullptr);
-		array<Player^>^ pl = Game::PlayerList;
-		for (int i = 0; i < pl->Length; i++)
+
+		array<Player^>^ players = Game::PlayerList;
+		for (int i = 0; i < players->Length; i++)
 		{
-			if (this == pl[i]->Character)
-				return pl[i];
+			Player^ player = players[i];
+
+			if (this == player->Character)
+				return player;
 		}
 		return nullptr;
 	}

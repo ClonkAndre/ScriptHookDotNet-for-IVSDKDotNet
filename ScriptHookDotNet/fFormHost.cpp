@@ -26,9 +26,6 @@
 
 #include "fFormHost.h"
 
-//#include "Font.h"
-//#include "Graphics.h"
-//#include "RemoteScriptDomain.h"
 #include "Script.h"
 
 #pragma managed
@@ -67,8 +64,7 @@ namespace Forms
 	{
 		for (int i = 0; i < pForms->Count; i++)
 		{
-			Form^ f = pForms[i];
-			f->OnPaint();
+			pForms[i]->OnPaint();
 		}
 	}
 

@@ -20,6 +20,8 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "fCheckbox.h"
@@ -44,12 +46,6 @@ namespace Forms
 
 	void Checkbox::OnMouseDown(GTA::MouseEventArgs^ e)
 	{
-		int boxp = int(Font->Height) + 4;
-		Drawing::Point pos = PointToClient(e->PixelLocation);
-		if ((pos.X <=boxp) && (pos.Y <=boxp))
-		{
-			Checked = !Checked;
-		}
 		Control::OnMouseDown(e);
 	}
 

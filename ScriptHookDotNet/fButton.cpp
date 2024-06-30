@@ -20,6 +20,8 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "fButton.h"
@@ -39,20 +41,18 @@ namespace Forms
 	void Button::OnPaint()
 	{
 		if (ImGuiIV::Button(Text))
-			Control::OnClick(nullptr);
+		{
+			System::Numerics::Vector2 mousePos = ImGuiIV::GetMousePos();
+			Control::OnClick(gcnew GTA::MouseEventArgs(true, PointF(mousePos.X, mousePos.Y), System::Windows::Forms::MouseButtons::Left));
+		}
 	}
 
 	void Button::OnMouseDown(GTA::MouseEventArgs^ e)
 	{
-		if (e->Button == Windows::Forms::MouseButtons::Left)
-		{
-			bDown = true;
-		}
 		Control::OnMouseDown(e);
 	}
 	void Button::OnDragRelease(GTA::MouseEventArgs^ e)
 	{
-		bDown = false;
 		Control::OnDragRelease(e);
 	}
 

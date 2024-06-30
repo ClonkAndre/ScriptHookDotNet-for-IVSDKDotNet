@@ -23,29 +23,33 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-namespace Forms {
+namespace GTA
+{
+namespace Forms
+{
 
 	using namespace Drawing;
 
 	CLASS_ATTRIBUTES
-	public ref class Imagebox : public GTA::Forms::Control {
-
+	public ref class Imagebox : public GTA::Forms::Control
+	{
 	private:
 		BorderType pBorder;
 		GTA::Texture^ pImage;
 
 	public:
-		Imagebox() {
+		Imagebox()
+		{
 			pBorder = BorderType::None;
 		}
 
-		property BorderType Border {
+		property BorderType Border
+		{
 			BorderType get() { return pBorder; }
 			void set(BorderType value) { pBorder = value; }
 		}
-
-		property GTA::Texture^ Image {
+		property GTA::Texture^ Image
+		{
 			GTA::Texture^ get() { return pImage; }
 			void set(GTA::Texture^ value) { pImage = value; }
 		}

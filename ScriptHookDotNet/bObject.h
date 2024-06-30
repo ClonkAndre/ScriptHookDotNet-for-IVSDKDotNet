@@ -23,13 +23,15 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-namespace base {
+namespace GTA
+{
+namespace base
+{
 
 	CLASS_ATTRIBUTES
 	[System::SerializableAttribute]
-	public ref class Object abstract :
-		iBaseObject {
+	public ref class Object abstract : iBaseObject
+	{
 
 	public:
 		/// <summary>
@@ -40,49 +42,54 @@ namespace base {
 
 	private:
 		bool bExists;
-		static int sUID = 1;
 		int pUID;
-		int pLastExistsCheck;
 
 	protected:
 		[System::ComponentModel::EditorBrowsableAttribute(EditorBrowsableState::Never)]
-		virtual void OnCeasedToExist(EventArgs^ e) {
+		virtual void OnCeasedToExist(EventArgs^ e)
+		{
 			CeasedToExist(this, e);
 		}
 
 	internal:
-		virtual bool InternalCheckExists() {
+		virtual bool InternalCheckExists()
+		{
 			return true;
 		}
 
-		property int UID {
+		property int UID
+		{
 			int get() { return pUID; }
+			void set(int value) { pUID = value; }
 		}
 
-		void SetExistsFalse() {
+		void SetExistsFalse()
+		{
 			bExists = false;
 		}
-		void ResetExists() {
+		void ResetExists()
+		{
 			bExists = true;
-			pLastExistsCheck = -1;
 		}
-		void ForceNextExistsCheck() {
-			pLastExistsCheck = -1;
-		}
-		bool ExistsForced() {
-			pLastExistsCheck = -1;
-			return Exists();
-		}
+		//void ForceNextExistsCheck()
+		//{
+
+		//}
+		//bool ExistsForced()
+		//{
+		//	return Exists();
+		//}
 
 	public:
-		Object(){
+		Object()
+		{
 			bExists = true;
-			pUID = sUID++;
-			pLastExistsCheck = -1;
+			pUID = 0;
 		}
 
 		/// <summary>
-		/// Returns whether the object still exists in game. Other calls to non-existing objects will result in an error. This function is FAST and is better checked too much rather than too less.
+		/// Returns whether the object still exists in game. Other calls to non-existing objects will result in an error.
+		/// This function is FAST and is better checked too much rather than too less.
 		/// </summary>
 		virtual bool Exists() sealed;
 

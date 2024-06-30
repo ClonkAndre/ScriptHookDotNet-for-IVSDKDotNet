@@ -49,7 +49,24 @@ namespace GTA
 
 	SettingsFile^ SettingsFile::Open(String^ Filename)
 	{
-		return ContentCache::GetINI(Filename);
+		if (String::IsNullOrWhiteSpace(Filename))
+			return nullptr;
+
+		String^ path = Filename;
+
+		if (!File::Exists(path))
+		{
+			path = String::Format("{0}\\scripts\\{1}", IVSDKDotNet::IVGame::GameStartupPath, Filename);
+
+			if (!File::Exists(path))
+			{
+				WRITE_TO_DEBUG_OUTPUT(String::Format("Could not find settings file {0}!", path));
+			}
+		}
+
+		SettingsFile^ settings = gcnew SettingsFile(path);
+		settings->Load();
+		return settings;
 	}
 
 	// - - - Properties, Methods and Functions - - -
@@ -81,15 +98,11 @@ namespace GTA
 
 	array<String^>^ SettingsFile::GetCategoryNames()
 	{
-		// TODO: Implement
-		NotImplementedYet("SettingsFile::GetCategoryNames");
-		return nullptr;
+		return instance->GetSectionNames();
 	}
 	array<String^>^ SettingsFile::GetValueNames(String^ Category)
 	{
-		// TODO: Implement
-		NotImplementedYet("SettingsFile::GetValueNames");
-		return nullptr;
+		return instance->GetValueNames(Category);
 	}
 
 	String^ SettingsFile::GetValueString(String^ OptionName, String^ Category, String^ DefaultValue)

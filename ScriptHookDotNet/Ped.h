@@ -412,51 +412,19 @@ namespace GTA{
 		void LeaveGroup();
 		void LeaveVehicle();
 		void RandomizeOutfit();
-		//void SwitchToRagdoll();
 		void BecomeMissionCharacter();
 
 		void CancelAmbientSpeech();
 		void SayAmbientSpeech(String^ PhraseID);
 		void StartKillingSpree(bool alsoAttackPlayer);
 
-		//void WalkAwayAndDespawn();
 		virtual void NoLongerNeeded();
-		//virtual bool Exists() override;
 		void Die();
 		virtual void Delete();
 
 		Player^ GetControllingPlayer();
 
 		static operator Ped^ (Player^ source);
-		//static operator Scripting::Ped (Ped^ source);
-
-		//public:
-		////internal:
-
-		//int GetPropIndex(PedProp proptype) {
-		//	u32 index;
-		//	Scripting::GetCharPropIndex2(pHandle, (u32)proptype, &index);
-		//	return index;
-		//}
-		//void SetPropIndex(PedProp proptype, int index) {
-		//	Scripting::SetCharPropIndex(pHandle, (u32)proptype, index);
-		//}
-
-		//int GetComponentModel(PedComponent component) {
-		//	return Scripting::GetCharDrawableVariation(pHandle, (Scripting::ePedComponent)component);
-		//}
-		//void SetComponentModel(PedComponent component, int model) {
-		//	//u32 texture = Scripting::GetCharTextureVariation(pHandle, (Scripting::ePedComponent)component);
-		//	Scripting::SetCharComponentVariation(pHandle, (u32)component, model, 0); // changing model resets texture
-		//}
-
-		//int GetComponentTexture(PedComponent component) {
-		//	return Scripting::GetCharTextureVariation(pHandle, (Scripting::ePedComponent)component);
-		//}
-		//void SetComponentTexture(PedComponent component, int texture) {
-		//	u32 model = Scripting::GetCharDrawableVariation(pHandle, (Scripting::ePedComponent)component);
-		//	Scripting::SetCharComponentVariation(pHandle, (u32)component, model, texture);
-		//}
 
 	};
 

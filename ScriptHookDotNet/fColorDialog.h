@@ -23,15 +23,17 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
+namespace GTA
+{
 
 	value class Color;
 
-namespace Forms {
+namespace Forms
+{
 
 	CLASS_ATTRIBUTES
-	public ref class ColorDialog : public GTA::Forms::Form {
-
+	public ref class ColorDialog : public GTA::Forms::Form
+	{
 	private:
 		Drawing::Color pSelectedColorRGB;
 		int pSelectedColorID;

@@ -26,13 +26,11 @@
 namespace GTA
 {
 	CLASS_ATTRIBUTES
-	private ref class ContentCache sealed
+	public ref class ContentCache sealed
 	{
-	private:
+	public:
 
 		static const int MAX_FIRES = 100;
-
-		ContentCache() { }
 
 		static Dictionary<int,Player^>^ PlayerCache = gcnew Dictionary<int,Player^>();
 		static Dictionary<int,Ped^>^ PedCache = gcnew Dictionary<int,Ped^>();
@@ -42,25 +40,22 @@ namespace GTA
 		static Dictionary<int,Group^>^ GroupCache = gcnew Dictionary<int,Group^>();
 		static Dictionary<int,Blip^>^ BlipCache = gcnew Dictionary<int,Blip^>();
 		static Dictionary<int,Camera^>^ CameraCache = gcnew Dictionary<int,Camera^>();
-		static Dictionary<String^,SettingsFile^>^ iniCache = gcnew Dictionary<String^,SettingsFile^>();
 		static List<ScriptedFire^>^ FireCache = gcnew List<ScriptedFire^>();
 
-		static List<base::iDeletable^>^ DeleteCache = gcnew List<base::iDeletable^>();
-		static List<int>^ DeleteCueue = gcnew List<int>();
-		static Dictionary<String^,System::Object^>^ metadata = gcnew Dictionary<String^,System::Object^>();
+		static Queue<base::iDeletable^>^ DeleteCache = gcnew Queue<base::iDeletable^>();
+		static Queue<int>^ DeleteQueue = gcnew Queue<int>();
 
-		static void DeleteStuff();
+		static Dictionary<String^,System::Object^>^ metadata = gcnew Dictionary<String^,System::Object^>();
 
 		generic <class T> where T: base::Object
 		static void RemoveNonExisting(List<T>^ list);
 		generic <class T> where T: base::Object
 		static void RemoveNonExisting(Dictionary<int,T>^ dict);
 
-	public:
-
 		static void RemoveNonExisting();
 		static void RemoveAll(bool DeleteStuff);
-		
+		static void DeleteStuff();
+
 		static void AddPlayer(GTA::Player^ p);
 		static GTA::Player^ GetPlayer(int ID);
 		static void RemovePlayer(int ID);
@@ -100,12 +95,6 @@ namespace GTA
 		static GTA::Camera^ GetCamera(int Handle, bool CreatedByMe);
 		static void RemoveCamera(int Handle);
 		static void RemoveCamera(GTA::Camera^ c);
-
-		static void AddINI(GTA::SettingsFile^ file);
-		static GTA::SettingsFile^ GetINI(String^ Filename);
-		static void RemoveINI(String^ Filename);
-		static void RemoveINI(GTA::SettingsFile^ file);
-		static void SaveINIs();
 
 		static void AddFire(GTA::ScriptedFire^ f, bool CreatedByMe);
 		static GTA::ScriptedFire^ GetFire(int Handle, bool CreatedByMe);

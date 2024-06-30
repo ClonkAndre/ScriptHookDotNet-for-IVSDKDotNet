@@ -22,6 +22,9 @@
 
 #include "stdafx.h"
 
+#include "Player.h"
+#include "Ped.h"
+#include "Game.h"
 #include "bObject.h"
 
 #pragma managed
@@ -35,21 +38,24 @@ namespace GTA
 		{
 			if (!bExists)
 				return false;
-	
-			try
+
+			bExists = InternalCheckExists();
+
+			// Some hacks if the function returned false
+			// thought the previous method worked.. well it did.. kinda... and apparently only once... ffs...
+			if (!bExists /*&& System::Threading::Thread::CurrentThread->ManagedThreadId != IVSDKDotNet::Manager::ManagerScript::GetInstance()->GetMainThreadID()*/)
 			{
-				bExists = InternalCheckExists();
+
+				// HACK: If the UID is equal to the local player character handle ID then always return true as the local player never stops existing...
+				if (UID == Game::LocalPlayer->Character->Handle)
+					bExists = true;
+
 			}
-			catch (...)
-			{
-				bExists = false;
-			}
-	
+
 			if (bExists)
 				return true;
-	
+
 			OnCeasedToExist(EventArgs::Empty);
-			VLOG( GetType()->Name + " " + pUID.ToString() + " ceased to exist!" );
 			return false;
 		}
 

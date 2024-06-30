@@ -41,9 +41,9 @@ namespace GTA
 {
 
 	// - - - Constructor - - -
-	Player::Player(int ID)
+	Player::Player(int id)
 	{
-		this->pID = ID;
+		this->pID = id;
 	}
 
 	// - - - Properties, Methods and Functions - - -
@@ -53,7 +53,7 @@ namespace GTA
 	}
 	int Player::Index::get()
 	{
-		return IVSDKDotNet::Native::Natives::CONVERT_INT_TO_PLAYERINDEX(pID);
+		return IVSDKDotNet::Native::Natives::CONVERT_INT_TO_PLAYERINDEX((unsigned int)ID);
 	}
 	int Player::PedHandle::get()
 	{
@@ -64,21 +64,21 @@ namespace GTA
 
 	Ped^ Player::Character::get()
 	{
-		int c = PedHandle;
+		int handle = PedHandle;
 
-		if (c == 0)
+		if (handle == 0)
 			return nullptr;
 
-		if (!Object::ReferenceEquals(pPed, nullptr))
+		if (pPed)
 		{
-			if (c == pPed->Handle)
+			if (handle == pPed->Handle)
 				return pPed;
 
-			pPed->SetHandle(c);
+			pPed->SetHandle(handle);
 		}
 		else
 		{
-			pPed = ContentCache::GetPed(c);
+			pPed = ContentCache::GetPed(handle);
 		}
 
 		return pPed;
@@ -297,7 +297,7 @@ namespace GTA
 	}
 
 	[System::Runtime::ExceptionServices::HandleProcessCorruptedStateExceptions]
-		Ped^ Player::GetTargetedPed()
+	Ped^ Player::GetTargetedPed()
 	{
 		array<int>^ list = World::GetValidPedHandles(GTA::Model::Null);
 

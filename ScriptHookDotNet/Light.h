@@ -35,7 +35,7 @@ namespace GTA
 		float pIntensity;
 		Vector3 pPosition;
 
-		void PerFrameDrawing(Object^ sender, EventArgs^ e);
+		void EachTick(Object^ sender, EventArgs^ e);
 
 	public:
 		Light(System::Drawing::Color Color, float Range, float Intensity, Vector3 Position) : base::ScriptChild(GetCallingScript())

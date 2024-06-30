@@ -56,7 +56,7 @@ namespace GTA
 	{
 		ContentCache::RemoveGroup(this);
 		pHandle = Handle;
-		ResetExists();
+		// ResetExists(); // TODO: Remove completely probably
 		ContentCache::AddGroup(this, CreatedByMe);
 	}
 
@@ -82,7 +82,7 @@ namespace GTA
 	int Group::MemberCount::get()
 	{
 		NON_EXISTING_CHECK(0);
-		u32 s, c;
+		int s, c;
 		IVSDKDotNet::Native::Natives::GET_GROUP_SIZE(pHandle, s, c);
 		return c;
 	}
@@ -143,7 +143,7 @@ namespace GTA
 			RemoveMember(i);
 		}
 
-		ForceNextExistsCheck();
+		//ForceNextExistsCheck(); // TODO: Remove completely probably
 	}
 	void Group::RemoveMember(Ped^ ped)
 	{
@@ -151,7 +151,7 @@ namespace GTA
 			return;
 
 		ped->LeaveGroup();
-		ForceNextExistsCheck();
+		//ForceNextExistsCheck(); // TODO: Remove completely probably
 	}
 	void Group::RemoveMember(int Index)
 	{
@@ -163,7 +163,7 @@ namespace GTA
 		if (p != 0)
 			IVSDKDotNet::Native::Natives::REMOVE_CHAR_FROM_GROUP(p);
 
-		ForceNextExistsCheck();
+		//ForceNextExistsCheck(); // TODO: Remove completely probably
 	}
 
 	array<Ped^>^ Group::ToArray(bool IncludingLeader)
@@ -254,7 +254,7 @@ namespace GTA
 	}
 	void Group::Delete()
 	{
-		if (!ExistsForced())
+		if (!Exists())
 			return;
 
 		SetExistsFalse();

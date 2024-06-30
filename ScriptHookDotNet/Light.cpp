@@ -40,14 +40,14 @@ namespace GTA
 			return;
 
 		if (value)
-			Parent->PerFrameScriptDrawing += gcnew EventHandler(this, &Light::PerFrameDrawing);
+			Parent->EachTick += gcnew EventHandler(this, &Light::EachTick);
 		else
-			Parent->PerFrameScriptDrawing -= gcnew EventHandler(this, &Light::PerFrameDrawing);
+			Parent->EachTick -= gcnew EventHandler(this, &Light::EachTick);
 
 		bEnabled = value;
 	}
 
-	void Light::PerFrameDrawing(Object^ sender, EventArgs^ e)
+	void Light::EachTick(Object^ sender, EventArgs^ e)
 	{
 		World::DrawLight(pPosition, pColor, pRange, pIntensity);
 	}

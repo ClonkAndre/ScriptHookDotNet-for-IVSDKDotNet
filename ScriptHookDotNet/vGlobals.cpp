@@ -54,11 +54,11 @@ namespace GTA
 
 		void Globals::Write(int index, int value)
 		{
-			return IVSDKDotNet::IVTheScripts::SetGlobal(index, value);
+			IVSDKDotNet::IVTheScripts::SetGlobal(index, value);
 		}
 		void Globals::Write(int index, float value)
 		{
-			return IVSDKDotNet::IVTheScripts::SetGlobal(index, value);
+			IVSDKDotNet::IVTheScripts::SetGlobal(index, value);
 		}
 		void Globals::Write(int index, String^ value, int MaxLength)
 		{
@@ -67,7 +67,7 @@ namespace GTA
 			else if (value->Length > MaxLength)
 				value = value->Substring(0, MaxLength);
 
-			return IVSDKDotNet::IVTheScripts::SetGlobal(index, value);
+			IVSDKDotNet::IVTheScripts::SetGlobal(index, value);
 		}
 	}
 }

@@ -20,6 +20,8 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "fLabel.h"
@@ -38,17 +40,12 @@ namespace Forms
 
 	void Label::OnPaint()
 	{
-		ImGuiIV::Text(Text);
+		ImGuiIV::TextUnformatted(Text);
 	}
 
 	void Label::OnTextChanged(EventArgs^ e)
 	{
 		Control::OnTextChanged(e);
-		//Drawing::Rectangle rect = ScreenRectangle;
-		//Drawing::Size size;
-		//size.Height = (int)Font->Height;
-		//size.Width = (int)Graphics::ConvertUnitsToPixelX(Graphics::GetTextWidth(tosX(rect.X), tosY(rect.Y), Text, TextAlignment::Left, Font->Height, 2.0f, Font));
-		//this->Size = size;
 	}
 
 }
