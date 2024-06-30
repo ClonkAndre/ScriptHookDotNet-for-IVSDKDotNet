@@ -41,8 +41,9 @@ namespace GTA
 
 			bExists = InternalCheckExists();
 
-			// Some hacks if the function returned false and if the calling thread is not equal the main thread
-			if (!bExists && System::Threading::Thread::CurrentThread->ManagedThreadId != IVSDKDotNet::Manager::ManagerScript::GetInstance()->GetMainThreadID())
+			// Some hacks if the function returned false
+			// thought the previous method worked.. well it did.. kinda... and apparently only once... ffs...
+			if (!bExists /*&& System::Threading::Thread::CurrentThread->ManagedThreadId != IVSDKDotNet::Manager::ManagerScript::GetInstance()->GetMainThreadID()*/)
 			{
 
 				// HACK: If the UID is equal to the local player character handle ID then always return true as the local player never stops existing...

@@ -147,7 +147,7 @@
       <HintPath>..\..\ClonksCodingLib.GTAIV\ClonksCodingLib.GTAIV\ClonksCodingLib.GTAIV\bin\x86\Release\ClonksCodingLib.GTAIV.dll</HintPath>
     </Reference>
     <Reference Include="IVSDKDotNetWrapper">
-      <HintPath>..\..\IVSDKDotNet\Debug\IVSDKDotNetWrapper.dll</HintPath>
+      <HintPath>..\..\IVSDKDotNet\Release\IVSDKDotNetWrapper.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
