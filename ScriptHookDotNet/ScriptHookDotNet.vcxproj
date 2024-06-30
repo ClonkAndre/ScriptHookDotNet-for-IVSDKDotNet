@@ -170,6 +170,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="Blip.cpp" />
     <ClCompile Include="bObject.cpp" />
     <ClCompile Include="Camera.cpp" />

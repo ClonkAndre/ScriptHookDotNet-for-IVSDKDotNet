@@ -50,7 +50,7 @@ namespace GTA
 			// Get type of value returned by the called native function
 			Type^ returnValueType = returnValue->GetType();
 
-			WRITE_TO_DEBUG_OUTPUT(String::Format("Trying to convert type '{0}' to expected type '{1}'", returnValueType, expectedType));
+			LOG_NATIVE_CALL_TO_DEBUG_OUTPUT(String::Format("Trying to convert type '{0}' to expected type '{1}'", returnValueType, expectedType));
 
 			// Try convert returned int32 value to expected uint32 value
 			if (returnValueType == System::Int32::typeid && expectedType == System::UInt32::typeid)
@@ -89,7 +89,7 @@ namespace GTA
 		T Function::Call(String^ Name, ... array<Parameter^>^ Arguments)
 		{
 			// Copy arguments to object array and convert them if necessary
-			array<Object^>^ args = gcnew array<Object^>(Arguments->Length);
+			array<System::Object^>^ args = gcnew array<System::Object^>(Arguments->Length);
 
 			for (int i = 0; i < args->Length; i++)
 			{
@@ -174,9 +174,22 @@ namespace GTA
 				}
 			}
 
+			// Some hacks for mods that pass some weird arguments to native functions...
+			if (Name == "SET_VOICE_ID_FROM_HEAD_COMPONENT")
+			{
+
+				// The "DialogueSystem" mod is trying to call the "SET_VOICE_ID_FROM_HEAD_COMPONENT" native passing a string to the "VoiceId" parameter but the native wants an integer?
+				// After checking all the sco scripts, none of the scripts using this native pass in a integer instead of a string...
+				// Function.Call("SET_VOICE_ID_FROM_HEAD_COMPONENT", ped, "PED_COMPONENT_HEAD", 1);
+				if (args[1]->GetType() == System::String::typeid)
+					args[1] = 0; // Just default to 0...
+
+			}
+
 			// Result
+			LOG_NATIVE_CALL_TO_DEBUG_OUTPUT(String::Format("About to call native function '{0}'", Name));
 			System::Object^ r = IVSDKDotNet::Native::Function::Call<System::Object^>(Name, args);
-			WRITE_TO_DEBUG_OUTPUT(String::Format("Just called the native function '{0}'", Name));
+			LOG_NATIVE_CALL_TO_DEBUG_OUTPUT(String::Format("Just called the native function '{0}'", Name));
 
 			// Set new argument values if they are pointers
 			for (int i = 0; i < args->Length; i++)

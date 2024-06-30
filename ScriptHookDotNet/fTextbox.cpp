@@ -20,6 +20,8 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "fTextbox.h"
@@ -43,15 +45,6 @@ namespace Forms
 
 	void Textbox::OnKeyDown(GTA::KeyEventArgs^ e)
 	{
-		switch (e->Key) {
-			case Windows::Forms::Keys::Back:
-				if (Text->Length > 0) Text = Text->Substring(0, Text->Length-1);
-				break;
-		}
-		if ( (pMaxLength <= 0) || (Text->Length < pMaxLength) ) { 
-			// TODO: Might replace with ImGui anyway
-			//Text += NetHook::KeyboardLayout->ParseKey(e->KeyWithModifiers);
-		}
 		Control::OnKeyDown(e);
 	}
 

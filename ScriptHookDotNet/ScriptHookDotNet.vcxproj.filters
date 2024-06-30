@@ -295,6 +295,9 @@
     <ClCompile Include="Script.cpp">
       <Filter>Objects\RemoteObjects</Filter>
     </ClCompile>
+    <ClCompile Include="AssemblyInfo.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blip.h">

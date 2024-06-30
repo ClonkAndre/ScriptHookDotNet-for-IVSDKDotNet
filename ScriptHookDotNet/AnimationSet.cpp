@@ -63,7 +63,6 @@ namespace GTA
 			IVSDKDotNet::Native::Natives::REQUEST_ANIMS(pName);
 			while (!IVSDKDotNet::Native::Natives::HAVE_ANIMS_LOADED(pName))
 			{
-				WHILE_LOG("AnimationSet::LoadToMemoryNow");
 				Game::WaitInCurrentScript(0);
 				IVSDKDotNet::Native::Natives::REQUEST_ANIMS(pName);
 				tries++;

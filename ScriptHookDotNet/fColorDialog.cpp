@@ -31,13 +31,16 @@
 
 #pragma managed
 
-namespace GTA {
-namespace Forms {
+namespace GTA
+{
+namespace Forms
+{
 
-	ColorDialog::ColorDialog() {
+	ColorDialog::ColorDialog()
+	{
 		pBlockChange = true;
 		pSelectedColorID = 0;
-		pSelectedColorRGB = Drawing::Color::FromArgb(GTA::ColorIndex::colary[pSelectedColorID] | 0xFF000000);;
+		pSelectedColorRGB = Drawing::Color::FromArgb(GTA::ColorIndex::colary[pSelectedColorID] | 0xFF000000);
 		Text = "Select a color...";
 		InitializeComponent();
 		pBlockChange = false;

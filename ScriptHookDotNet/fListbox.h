@@ -132,11 +132,8 @@ namespace Forms
 		ItemCollection^ pItems;
 		bool pBorder;
 		int pSelectedIndex;
-		Scrollbar^ scr;
 		int pScrollbarSize;
 		Drawing::Color pSelectionColor;
-
-		void ResizeScrollbar();
 
 	public:
 		Listbox();
@@ -153,7 +150,6 @@ namespace Forms
 	protected:
 		virtual void OnResize(EventArgs^ e) override
 		{
-			ResizeScrollbar();
 			Control::OnResize(e);
 		}
 
@@ -194,7 +190,6 @@ namespace Forms
 			{
 				if (pScrollbarSize == value) return;
 				pScrollbarSize = value;
-				ResizeScrollbar();
 			}
 		}
 		property Drawing::Color SelectionColor

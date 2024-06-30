@@ -112,21 +112,26 @@ namespace GTA
 	}
 	GTA::Player^ Game::LocalPlayer::get()
 	{
-		return gcnew GTA::Player((int)IVSDKDotNet::Native::Natives::GET_PLAYER_ID());
+		return ContentCache::GetPlayer((int)IVSDKDotNet::Native::Natives::GET_PLAYER_ID());
 	}
 	array<GTA::Player^>^ Game::PlayerList::get()
 	{
 		if ((!isMultiplayer) || (PlayerCount == 1))
-			return gcnew array<GTA::Player^>(1)
 		{
-			LocalPlayer
-		};
+			return gcnew array<GTA::Player^>(1)
+			{
+				LocalPlayer
+			};
+		}
+
 		List<GTA::Player^>^ list = gcnew List<GTA::Player^>();
+
 		for (int i = 0; i < 32; i++)
 		{
 			if (isPlayerActive(i))
 				list->Add(ContentCache::GetPlayer(i));
 		}
+
 		return list->ToArray();
 	}
 

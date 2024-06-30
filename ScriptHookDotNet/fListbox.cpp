@@ -20,6 +20,8 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "fListbox.h"
@@ -44,18 +46,6 @@ namespace Forms
 		pBorder = true;
 		pSelectedIndex = -1;
 		pScrollbarSize = 16;
-
-		scr = gcnew Scrollbar();
-		ResizeScrollbar();
-		scr->MinValue = 0;
-		scr->Value = 0;
-		this->Controls->Add(scr);
-	}
-
-	void Listbox::ResizeScrollbar()
-	{
-		scr->Size = Drawing::Size(pScrollbarSize, Size.Height);
-		scr->Location = Point(Size.Width - pScrollbarSize, 0);
 	}
 
 	void Listbox::OnPaint()
@@ -77,13 +67,6 @@ namespace Forms
 
 	void Listbox::OnMouseDown(GTA::MouseEventArgs^ e)
 	{
-		int pos = this->PointToClient(e->PixelLocation).Y - 2;
-		int id = -1;
-		if (pos >= 0) {
-			id = scr->Value + pos / int(Font->GetLineHeight(FontScaling::Pixel));
-			if (id >= Items->Count) id = -1;
-			if (id >= 0) SelectedIndex = id;
-		}
 		Control::OnMouseDown(e);
 	}
 

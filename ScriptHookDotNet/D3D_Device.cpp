@@ -80,7 +80,7 @@ namespace GTA
 
 		if (hr != S_OK)
 		{
-			NetHook::Log(String::Format("[ImGuiIV] Failed to create texture from memory. HResult: {0}", hr));
+			NetHook::Log(String::Format("[SHDN] Failed to create texture from memory. HResult: {0}", hr));
 
 			textureWidth = 0;
 			textureHeight = 0;
@@ -100,9 +100,8 @@ namespace GTA
 		if (callingScript)
 		{
 			GTA::Script^ script = (GTA::Script^)callingScript;
-			VLOG(String::Format("[Direct3D::NewTextureInternal] Successfully got calling script {0}!", script->Name));
-			script->Textures->Add(ptr);
-			NetHook::VerboseLog(String::Format("Assigned texture {0} to current script!", ptr));
+			VLOG(String::Format("[Direct3D::NewTextureInternal] Successfully got calling script {0}! Trying to assign texture {1}...", script->Name, ptr));
+			IVSDKDotNet::Manager::ManagerScript::GetInstance()->Direct3D9_RegisterScriptTexture(script->Name, ptr);
 		}
 		else
 		{
@@ -113,9 +112,8 @@ namespace GTA
 
 			if (script)
 			{
-				VLOG(String::Format("[Direct3D::NewTextureInternal] Successfully got calling script {0} via legacy method!", script->Name));
-				script->Textures->Add(ptr);
-				NetHook::VerboseLog(String::Format("Assigned texture {0} to current script!", ptr));
+				VLOG(String::Format("[Direct3D::NewTextureInternal] Successfully got calling script {0} via legacy method! Trying to assign texture {1}...", script->Name, ptr));
+				IVSDKDotNet::Manager::ManagerScript::GetInstance()->Direct3D9_RegisterScriptTexture(script->Name, ptr);
 			}
 			else
 				WRITE_TO_DEBUG_OUTPUT("[Direct3D::NewTextureInternal] Failed to get calling script via legacy method! Not in an ideal state right now...");

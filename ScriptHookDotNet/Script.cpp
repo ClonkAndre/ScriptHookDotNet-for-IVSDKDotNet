@@ -41,22 +41,25 @@ namespace GTA
 	// - - - Constructor - - -
 	Script::Script()
 	{
-		// Get full path without file extension
-		pFullPath = System::IO::Path::GetFullPath(String::Format(".\\scripts\\{0}", Name->Split(gcnew array<String^> { "." }, StringSplitOptions::None)[0]));
-
-		// Get filename with extension
-		pFilename = System::IO::Path::GetFileName(pFullPath) + ".net.dll";
-
-		// Get filename without extension
-		pFilenameWithoutExtension = System::IO::Path::GetFileName(pFullPath);
-
 		// Late Initialize this script
-		int errorId = LateInitializeScript(this);
+		int errorId = LateInitializeScript(this, pFullPath);
 
 		if (errorId != 0)
-			WRITE_TO_DEBUG_OUTPUT(String::Format("Failed to late initialize script {0}! Error ID: {1}", pFilename, errorId));
+		{
+			WRITE_TO_DEBUG_OUTPUT(String::Format("Failed to late initialize script {0}! Note that this name might not be the same as the filename. Error ID: {1}", GetType()->Name, errorId));
+		}
 		else
+		{
+			// Set script details we got from the IV-SDK .NET Manager
+
+			// Get filename with extension
+			pFilename = System::IO::Path::GetFileName(pFullPath);
+
+			// Get filename without extension
+			pFilenameWithoutExtension = System::IO::Path::GetFileName(pFullPath)->Replace(".net.dll", "");
+
 			VLOG(String::Format("Successfully late initialized script {0}.", pFilename));
+		}
 
 		// Set the current constructing script to this script
 		IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_SetCurrentScript((int)ScriptEvent::ctor, this);
@@ -76,11 +79,14 @@ namespace GTA
 		ScriptCommands = gcnew List<BoundScriptCommandItem>();
 		ConsoleCommands = gcnew List<BoundCommandItem>();
 		ActionQueue = gcnew Queue<ScriptAction>();
-		Textures = gcnew List<IntPtr>();
 
 		// Settings
-		pSettings = gcnew SettingsFile(pFullPath + ".ini");
-		pSettings->Load();
+		String^ settingsFilePath = String::Format("{0}\\scripts\\{1}.ini", IVSDKDotNet::IVGame::GameStartupPath, pFilenameWithoutExtension);
+		if (File::Exists(settingsFilePath))
+		{
+			pSettings = gcnew SettingsFile(settingsFilePath);
+			pSettings->Load();
+		}
 
 		// Other
 		FormHost = gcnew GTA::Forms::FormHost(this);
@@ -184,6 +190,8 @@ namespace GTA
 		BlockWait = true;
 
 		// TODO: Figure out how to make the script wait
+		
+
 
 		bWaiting = false;
 		BlockWait = false;

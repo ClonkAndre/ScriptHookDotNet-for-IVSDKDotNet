@@ -20,20 +20,27 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "fImagebox.h"
 
 #include "Font.h"
+#include "Texture.h"
 #include "Graphics.h"
 
 #pragma managed
 
-namespace GTA {
-namespace Forms {
+namespace GTA
+{
+namespace Forms
+{
 
-	void Imagebox::OnPaint(GTA::GraphicsEventArgs^ e) {
-
+	void Imagebox::OnPaint(GTA::GraphicsEventArgs^ e)
+	{
+		if isNotNULL(Image)
+			IVSDKDotNet::ImGuiIV::Image(IntPtr(Image->GetInternalPointer(true)), System::Numerics::Vector2(Size.Width, Size.Height));
 	}
 
 }

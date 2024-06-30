@@ -31,7 +31,6 @@ namespace Forms
 	public ref class Textbox : public GTA::Forms::Control
 	{
 	private:
-		int pCursorPos;
 		int pMaxLength;
 		bool pBorder;
 
@@ -39,7 +38,6 @@ namespace Forms
 		Textbox()
 		{
 			BackColor = Drawing::Color::FromArgb(50, 255, 255, 255);
-			pCursorPos = 0;
 			pMaxLength = -1;
 			pBorder = true;
 		}

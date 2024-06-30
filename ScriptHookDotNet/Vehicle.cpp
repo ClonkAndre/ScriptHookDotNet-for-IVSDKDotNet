@@ -347,7 +347,7 @@ namespace GTA
 	int Vehicle::PassengerSeats::get()
 	{
 		NON_EXISTING_CHECK(0);
-		u32 val;
+		int val;
 		IVSDKDotNet::Native::Natives::GET_MAXIMUM_NUMBER_OF_PASSENGERS(pHandle, val);
 		return (int)val;
 	}

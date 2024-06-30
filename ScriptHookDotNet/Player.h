@@ -39,8 +39,6 @@ namespace GTA{
 		[NonSerializedAttribute]
 		value::PlayerSkin^ pSkin;
 
-		//int GetCharHandleFromID(int PlayerID);
-
 	internal:
 
 		property int PedHandle{

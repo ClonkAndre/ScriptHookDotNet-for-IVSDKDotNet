@@ -23,38 +23,34 @@
 #pragma once
 #pragma managed
 
-namespace GTA {
-namespace base {
+namespace GTA
+{
+namespace base
+{
 
 	CLASS_ATTRIBUTES
 	[System::SerializableAttribute]
-	public ref class HandleObject abstract :
-		base::Object,
-		base::iHandleObject,
-		System::IEquatable<HandleObject^> {
-
+	public ref class HandleObject abstract : base::Object, base::iHandleObject, System::IEquatable<HandleObject^>
+	{
 	protected:
 		[System::ComponentModel::EditorBrowsableAttribute(EditorBrowsableState::Never)]
 		int pHandle;
 
 	internal:
-
-		HandleObject(int Handle) {
+		HandleObject(int Handle)
+		{
 			pHandle = Handle;
+			UID = Handle;
 		}
 
-		property int Handle { 
-			virtual int get() = base::iHandleObject::Handle::get {
+	public:
+		property int Handle
+		{
+			virtual int get() = base::iHandleObject::Handle::get
+			{
 				return pHandle;
 			}
 		}
-
-	private:
-
-		[System::NonSerializedAttribute]
-		System::Object^ pMetadata;
-
-	public:
 
 		/// <summary>
 		/// Allows you to store Metadata on an object. Metadata can be read back as long as the object exists. 
@@ -62,11 +58,12 @@ namespace base {
 		/// </summary>
 		/// <param name="ValueName">Name of the stored Metadata.</param>
 		[System::Runtime::CompilerServices::Dynamic]
-		property System::Object^ Metadata {
+		property System::Object^ Metadata
+		{
 			virtual System::Object^ get();
 		}
 
-		
+	public:
 		/// <summary>
 		/// Read only explicit local OR global Metadata from the object.
 		/// </summary>
@@ -77,7 +74,6 @@ namespace base {
 		[System::ComponentModel::EditorBrowsableAttribute(EditorBrowsableState::Never)]
 		T GetMetadata(System::String^ ValueName, bool Global);
 
-		
 		/// <summary>
 		/// Read Metadata from the object. The Metadata may be local or global. Local Metadtata has preference.
 		/// </summary>
@@ -115,26 +111,34 @@ namespace base {
 		[System::ComponentModel::EditorBrowsableAttribute(EditorBrowsableState::Never)]
 		void SetMetadata(System::String^ ValueName, bool Global, T Value);
 
-		virtual bool Equals(base::HandleObject^ obj) {
+		virtual bool Equals(base::HandleObject^ obj)
+		{
 			if (Object::ReferenceEquals(obj,nullptr)) return false;
 			return (pHandle == obj->Handle);
 		}
-		virtual bool Equals(base::iHandleObject^ obj) {
+		virtual bool Equals(base::iHandleObject^ obj)
+		{
 			if (Object::ReferenceEquals(obj,nullptr)) return false;
 			return (pHandle == obj->Handle);
 		}
-		static bool operator == ( HandleObject^ left, HandleObject^ right ) {
+		static bool operator == ( HandleObject^ left, HandleObject^ right )
+		{
 			if (Object::ReferenceEquals(left,nullptr)) return Object::ReferenceEquals(right,nullptr);
 			return left->Equals(right);
 		}
-		static bool operator != ( HandleObject^ left, HandleObject^ right ) {
+		static bool operator != ( HandleObject^ left, HandleObject^ right )
+		{
 			return !(left == right);
 		}
 
-		virtual int GetHashCode() override {
+		virtual int GetHashCode() override
+		{
 			return pHandle;
 		}
 
+	private:
+		[System::NonSerializedAttribute]
+		System::Object^ pMetadata;
 	};
 
 }

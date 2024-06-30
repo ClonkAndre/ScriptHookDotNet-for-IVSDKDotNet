@@ -191,11 +191,13 @@ namespace GTA
 			usingFallbackFont = true;
 		}
 
+		IVSDKDotNet::Enums::eResult fontAddResult;
+
 		float height = Graphics::ConvertY(pHeight, pScaling, FontScaling::Pixel);
-		if (IVSDKDotNet::ImGuiIV::AddFontFromFile(pFullPath, height, pInternalPointer))
+		if (IVSDKDotNet::ImGuiIV::AddFontFromFile(pFullPath, height, pInternalPointer, fontAddResult))
 			NetHook::VerboseLog(String::Format("Successfully added font {0} with height {1}!", usingFallbackFont ? "public-sans.regular" : pFontFamilyName, height));
 		else
-			WRITE_TO_DEBUG_OUTPUT(String::Format("Could not add font file {0}! Font might already be added or an unknown error occured.", pFontFamilyName));
+			WRITE_TO_DEBUG_OUTPUT(String::Format("Could not add font file {0}! Reason: {1}", pFontFamilyName, fontAddResult));
 	}
 
 	int Font::GetInternalPointer(bool retrieveNew)

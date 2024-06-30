@@ -20,12 +20,16 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #pragma once
 
 #ifdef DEBUG
-#define VERBOSE IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_VerboseLoggingEnabled()
+#define VERBOSE	IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_VerboseLoggingEnabled()
+#define VERBOSENATIVECALL IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_NativeCallLoggingEnabled()
 #else
 #define VERBOSE false
+#define VERBOSENATIVECALL false
 #endif
 
 namespace GTA
@@ -121,43 +125,13 @@ namespace GTA
 		ref class VehicleExtra;
 		ref class Weapon;
 		ref class WeaponCollection;
-		
-	}
-	namespace VertexFormats
-	{
-		interface class iVertexFormat;
-		value class TransformedColored;
-		value class TransformedColoredTextured;
-	}
-}
-namespace unmanaged
-{
-	ref class MemoryAccess;
-
-	namespace Native
-	{
-		class Function;
 	}
 }
 
 typedef unsigned int u32;
 typedef int i32;
 
-typedef unsigned short u16;
-typedef short i16;
-
-typedef unsigned char u8;
-typedef char i8, ch;
-
-typedef wchar_t wch;
-
 typedef float f32;
-typedef double f64;
-
-typedef bool b8;
-typedef unsigned int b32;
-
-typedef void* ptr;
 
 #define Vector3ToGTAVector3(vec) GTA::Vector3(vec.X, vec.Y, vec.Z)
 #define GTAVector3ToVector3(vec) System::Numerics::Vector3(vec.X, vec.Y, vec.Z)
@@ -172,25 +146,18 @@ typedef void* ptr;
 
 #define GetNameOfCallingScript() System::Reflection::Assembly::GetCallingAssembly()->GetName()->Name->Replace(".net", "")
 #define GetCallingScript() IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_GetScriptByName(GetNameOfCallingScript())
-#define LateInitializeScript(obj) IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_LateInitializeScript(GetNameOfCallingScript(), obj)
+#define LateInitializeScript(obj, assemblyFullPath) IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_LateInitializeScript(GetType()->FullName, obj, assemblyFullPath)
 
 #define GetCurrentScript(ofEvent) (GTA::Script^)IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_GetCurrentScript((int)ofEvent);
 
-//#define catchScriptErrors(Script,CodeLocation,onCatch)	\
-//	catch(System::Exception^ ex) { onCatch } \
-//		catch(...) { onCatch } 
-//#define catchErrors(LogMessage,onCatch)	\
-//	catch(System::Exception^ ex) { GTA::NetHook::Log( LogMessage + ":" ,ex); onCatch } \
-//	catch(...) { GTA::NetHook::Log( LogMessage + "!" ); onCatch } 
-
-
-#ifdef DEBUG
 #define NON_EXISTING_MESSAGE(object) NonExistingObjectException::DEFAULT_MESSAGE + " (" + object->GetType()->Name + " " + object->UID.ToString() + ")" 
-#else
-#define NON_EXISTING_MESSAGE(object)
-#endif
+//#ifdef DEBUG
+//#define NON_EXISTING_MESSAGE(object) NonExistingObjectException::DEFAULT_MESSAGE + " (" + object->GetType()->Name + " " + object->UID.ToString() + ")" 
+//#else
+//#define NON_EXISTING_MESSAGE(object)
+//#endif
 
-// Non existing checks (The no return defines mean that this define does not return a value! It will still return out of the method)
+// Non existing checks (The NO_RETURN defines mean that this define does not return a value! It will still return out of the method)
 #define OBJECT_NON_EXISTING_CHECK(object,returns) if (!object->Exists()) { throw gcnew NonExistingObjectException( NON_EXISTING_MESSAGE(object) ); return returns; }
 #define OBJECT_NON_EXISTING_CHECK_ALLOW_NULL(object,returns) if ((object->Handle != 0) && (!object->Exists())) { throw gcnew NonExistingObjectException( NON_EXISTING_MESSAGE(object) ); return returns; }
 #define OBJECT_NON_EXISTING_CHECK_RELAXED(object,returns) if (!object->Exists()) return returns
@@ -219,6 +186,7 @@ typedef void* ptr;
 #define WHILE_LOG(sender) if (VERBOSE) GTA::NetHook::Log("IN WHILE LOOP: " + sender)
 
 #define WRITE_TO_DEBUG_OUTPUT(text) if (VERBOSE && System::Diagnostics::Debugger::IsAttached) System::Diagnostics::Debugger::Log(0, "ScriptHookDotNet", text + "\n")
+#define LOG_NATIVE_CALL_TO_DEBUG_OUTPUT(text) if (VERBOSENATIVECALL && System::Diagnostics::Debugger::IsAttached) System::Diagnostics::Debugger::Log(0, "ScriptHookDotNet Native Call", text + "\n")
 #define LOG_STACK_TRACE() if (VERBOSE) WRITE_TO_DEBUG_OUTPUT((gcnew System::Diagnostics::StackTrace())->ToString())
 
 #else
@@ -230,6 +198,7 @@ typedef void* ptr;
 #define WHILE_LOG(sender)
 
 #define WRITE_TO_DEBUG_OUTPUT(text)
+#define LOG_NATIVE_CALL_TO_DEBUG_OUTPUT(text)
 #define LOG_STACK_TRACE()
 
 #endif

@@ -47,7 +47,9 @@ namespace GTA
 	Model::Model(String^ ModelName)
 	{
 		pName = ModelName;
-		pHash = IVSDKDotNet::Native::Natives::GET_HASH_KEY(ModelName);
+		
+		//pHash = IVSDKDotNet::Native::Natives::GET_HASH_KEY(ModelName);
+		pHash = (int)IVSDKDotNet::RAGE::AtStringHash(ModelName);
 	}
 
 	// - - - Properties, Methods and Functions - - -
