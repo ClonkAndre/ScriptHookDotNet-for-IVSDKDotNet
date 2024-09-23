@@ -61,7 +61,7 @@ namespace GTA
 
 	int Ped::MemoryAddress::get()
 	{
-		IVSDKDotNet::IVPed^ ped = CCL::GTAIV::NativeWorld::GetPedInstaceFromHandle(pHandle);
+		IVSDKDotNet::IVPed^ ped = CCL::GTAIV::NativeWorld::GetPedInstanceFromHandle(pHandle);
 
 		if (!ped)
 			return 0;

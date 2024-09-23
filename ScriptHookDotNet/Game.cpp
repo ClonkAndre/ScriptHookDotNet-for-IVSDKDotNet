@@ -340,19 +340,19 @@ namespace GTA
 
 	int Game::GetIntegerStatistic(IntegerStatistic stat)
 	{
-		return IVSDKDotNet::Native::Natives::GET_INT_STAT((u32)stat);
+		return IVSDKDotNet::Native::Natives::GET_INT_STAT((int)stat);
 	}
 	void Game::SetIntegerStatistic(IntegerStatistic stat, int value)
 	{
-		IVSDKDotNet::Native::Natives::SET_INT_STAT((u32)stat, value);
+		IVSDKDotNet::Native::Natives::SET_INT_STAT((int)stat, value);
 	}
 	float Game::GetFloatStatistic(FloatStatistic stat)
 	{
-		return IVSDKDotNet::Native::Natives::GET_FLOAT_STAT((u32)stat);
+		return IVSDKDotNet::Native::Natives::GET_FLOAT_STAT((int)stat);
 	}
 	void Game::SetFloatStatistic(FloatStatistic stat, float value)
 	{
-		IVSDKDotNet::Native::Natives::SET_FLOAT_STAT((u32)stat, value);
+		IVSDKDotNet::Native::Natives::SET_FLOAT_STAT((int)stat, value);
 	}
 
 	bool Game::isScriptRunning(String^ ScriptName)
