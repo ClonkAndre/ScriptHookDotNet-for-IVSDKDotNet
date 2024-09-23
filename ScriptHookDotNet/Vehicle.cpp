@@ -48,7 +48,7 @@ namespace GTA
 	// - - - Properties, Methods and Functions - - -
 	int Vehicle::MemoryAddress::get()
 	{
-		IVSDKDotNet::IVVehicle^ veh = CCL::GTAIV::NativeWorld::GetVehicleInstaceFromHandle(pHandle);
+		IVSDKDotNet::IVVehicle^ veh = CCL::GTAIV::NativeWorld::GetVehicleInstanceFromHandle(pHandle);
 
 		if (!veh)
 			return 0;
@@ -131,7 +131,7 @@ namespace GTA
 	{
 		NON_EXISTING_CHECK(0.0f);
 
-		IVSDKDotNet::IVVehicle^ veh = CCL::GTAIV::NativeWorld::GetVehicleInstaceFromHandle(pHandle);
+		IVSDKDotNet::IVVehicle^ veh = CCL::GTAIV::NativeWorld::GetVehicleInstanceFromHandle(pHandle);
 
 		if (!veh)
 			return 0.0f;
@@ -314,7 +314,7 @@ namespace GTA
 	{
 		NON_EXISTING_CHECK(false);
 
-		IVSDKDotNet::IVVehicle^ veh = CCL::GTAIV::NativeWorld::GetVehicleInstaceFromHandle(pHandle);
+		IVSDKDotNet::IVVehicle^ veh = CCL::GTAIV::NativeWorld::GetVehicleInstanceFromHandle(pHandle);
 
 		if (!veh)
 			return false;
@@ -739,12 +739,12 @@ namespace GTA
 		if (offset == 0)
 			return;
 
-		IVSDKDotNet::IVVehicle^ veh = CCL::GTAIV::NativeWorld::GetVehicleInstaceFromHandle(pHandle);
+		IVSDKDotNet::IVVehicle^ veh = CCL::GTAIV::NativeWorld::GetVehicleInstanceFromHandle(pHandle);
 
 		if (!veh)
 			return;
 
-		*(float*)(veh->GetUIntPtr().ToUInt32() + offset) = 1000;
+		*(float*)(veh->GetUIntPtr().ToUInt32() + offset) = 1000.0F;
 		IVSDKDotNet::Native::Natives::FIX_CAR_TYRE(pHandle, (u32)wheel);
 	}
 

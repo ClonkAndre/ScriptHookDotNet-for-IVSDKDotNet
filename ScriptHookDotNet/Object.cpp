@@ -46,7 +46,7 @@ namespace GTA
 	// - - - Properties, Methods and Functions - - -
 	int GTA::Object::MemoryAddress::get()
 	{
-		IVSDKDotNet::IVObject^ obj = CCL::GTAIV::NativeWorld::GetObjectInstaceFromHandle(pHandle);
+		IVSDKDotNet::IVObject^ obj = CCL::GTAIV::NativeWorld::GetObjectInstanceFromHandle(pHandle);
 
 		if (!obj)
 			return 0;
