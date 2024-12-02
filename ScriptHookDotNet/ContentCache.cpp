@@ -255,7 +255,7 @@ namespace GTA
 		//	// Get the handle
 		//	int handle = (int)pool->GetIndex(ptr);
 
-		//	if (Handle != handle)
+		//	if (handle != Handle)
 		//		continue;
 
 		//	// Check if entity exists
@@ -264,8 +264,6 @@ namespace GTA
 
 		//	return gcnew GTA::Object(handle);
 		//}
-
-		//return nullptr;
 
 		GTA::Object^ x;
 		if (ObjectCache->TryGetValue(Handle, x))

@@ -409,6 +409,12 @@ namespace GTA
 			Key = key;
 			Delegate = deleg;
 		}
+
+	public:
+		virtual String^ ToString() override
+		{
+			return Key.ToString();
+		}
 	};
 	public value class BoundCommandItem
 	{
@@ -422,6 +428,15 @@ namespace GTA
 			Command = command->ToLower();
 			Delegate = deleg;
 		}
+
+	public:
+		virtual String^ ToString() override
+		{
+			if (String::IsNullOrEmpty(CommandPretty))
+				return GetType()->Name;
+
+			return CommandPretty;
+		}
 	};
 	public value class BoundScriptCommandItem
 	{
@@ -432,6 +447,15 @@ namespace GTA
 		{
 			Command = command->ToLower();
 			Delegate = deleg;
+		}
+
+	public:
+		virtual String^ ToString() override
+		{
+			if (String::IsNullOrEmpty(Command))
+				return GetType()->Name;
+
+			return Command;
 		}
 	};
 

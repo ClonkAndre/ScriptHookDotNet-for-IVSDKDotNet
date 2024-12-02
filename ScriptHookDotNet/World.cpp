@@ -250,12 +250,10 @@ namespace GTA
 	}
 	array<int>^ World::GetValidObjectHandles(GTA::Model Model)
 	{
+		IVSDKDotNet::IVPool^ pool = IVSDKDotNet::IVPools::GetObjectPool();
+
 		List<int>^ list = gcnew List<int>();
 
-		u32 model = 0;
-		int findmodel = Model.Hash;
-
-		IVSDKDotNet::IVPool^ pool = IVSDKDotNet::IVPools::GetObjectPool();
 		for (int i = 0; i < pool->Count; i++)
 		{
 			UIntPtr ptr = pool->Get(i);
@@ -272,10 +270,14 @@ namespace GTA
 				continue;
 
 			// Get the entity model
+			u32 model;
 			IVSDKDotNet::Native::Natives::GET_OBJECT_MODEL(handle, model);
 
+			if (model == 0)
+				continue;
+
 			// Compare and add
-			if ((model != 0) && ((findmodel == 0) || (findmodel == model)))
+			if (Model.Hash == 0 || Model.Hash == model)
 				list->Add(handle);
 		}
 
@@ -411,12 +413,19 @@ namespace GTA
 	array<GTA::Object^>^ World::GetAllObjects(GTA::Model Model)
 	{
 		array<int>^ handles = GetValidObjectHandles(Model);
-		array<GTA::Object^>^ list = gcnew array<GTA::Object^>(handles->Length);
+		List<GTA::Object^>^ arr = gcnew List<GTA::Object^>();
+
 		for (int i = 0; i < handles->Length; i++)
 		{
-			list[i] = ContentCache::GetObject(handles[i]);
+			GTA::Object^ obj = ContentCache::GetObject(handles[i]);
+
+			if (!obj)
+				continue;
+
+			arr->Add(obj);
 		}
-		return list;
+
+		return arr->ToArray();
 	}
 	array<GTA::Object^>^ World::GetAllObjects()
 	{
@@ -655,7 +664,6 @@ namespace GTA
 
 		return ContentCache::GetVehicle(car);
 	}
-
 	Vehicle^ World::CreateVehicle(GTA::Model Model, Vector3 Position)
 	{
 		if (!Model.isVehicle)

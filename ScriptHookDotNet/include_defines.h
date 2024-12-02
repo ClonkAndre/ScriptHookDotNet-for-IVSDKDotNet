@@ -148,7 +148,9 @@ typedef float f32;
 #define GetCallingScript() IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_GetScriptByName(GetNameOfCallingScript())
 #define LateInitializeScript(obj, assemblyFullPath) IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_LateInitializeScript(GetType()->FullName, obj, assemblyFullPath)
 
+#define GetManagerScript() IVSDKDotNet::Manager::ManagerScript::GetInstance()
 #define GetCurrentScript(ofEvent) (GTA::Script^)IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_GetCurrentScript((int)ofEvent);
+#define GetCurrentThreadID() System::Threading::Thread::CurrentThread->ManagedThreadId
 
 #define NON_EXISTING_MESSAGE(object) NonExistingObjectException::DEFAULT_MESSAGE + " (" + object->GetType()->Name + " " + object->UID.ToString() + ")" 
 //#ifdef DEBUG

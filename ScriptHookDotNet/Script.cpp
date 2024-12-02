@@ -62,7 +62,7 @@ namespace GTA
 		}
 
 		// Set the current constructing script to this script
-		IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_SetCurrentScript((int)ScriptEvent::ctor, this);
+		GetManagerScript()->SHDN_SetCurrentScript((int)ScriptEvent::ctor, this);
 
 		BlockWait = true;
 		bWaiting = false;
@@ -189,9 +189,7 @@ namespace GTA
 		bWaiting = true;
 		BlockWait = true;
 
-		// TODO: Figure out how to make the script wait
-		
-
+		GetManagerScript()->WaitInScript(GUID, ms);
 
 		bWaiting = false;
 		BlockWait = false;
@@ -231,7 +229,7 @@ namespace GTA
 	}
 	void Script::Abort()
 	{
-		IVSDKDotNet::Manager::ManagerScript::GetInstance()->AbortScript(GUID);
+		GetManagerScript()->AbortScript(GUID);
 	}
 
 	void Script::SendScriptCommand(Guid ScriptGUID, String^ Command, ... array<System::Object^>^ Parameter)

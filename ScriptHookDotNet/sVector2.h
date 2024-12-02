@@ -62,6 +62,15 @@ namespace GTA {
 		/// <param name="y">Initial value for the Y component of the vector.</param>
 		Vector2( float x, float y );	
 
+		static Vector2 ToGTA(System::Numerics::Vector2 value)
+		{
+			return Vector2(value.X, value.Y);
+		}
+		System::Numerics::Vector2 ToNumerics()
+		{
+			return System::Numerics::Vector2(X, Y);
+		}
+
 		/// <summary>
 		/// Calculates the length of the vector.
 		/// </summary>

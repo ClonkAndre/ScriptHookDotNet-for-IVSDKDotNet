@@ -148,7 +148,10 @@
     <Reference Include="ClonksCodingLib.GTAIV">
       <HintPath>..\..\ClonksCodingLib.GTAIV\ClonksCodingLib.GTAIV\ClonksCodingLib.GTAIV\bin\x86\Release\ClonksCodingLib.GTAIV.dll</HintPath>
     </Reference>
-    <Reference Include="IVSDKDotNetWrapper">
+    <Reference Include="IVSDKDotNetWrapper" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      <HintPath>..\..\IVSDKDotNet\Debug\IVSDKDotNetWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="IVSDKDotNetWrapper" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       <HintPath>..\..\IVSDKDotNet\Release\IVSDKDotNetWrapper.dll</HintPath>
     </Reference>
     <Reference Include="System">

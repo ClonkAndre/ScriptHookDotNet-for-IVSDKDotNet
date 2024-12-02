@@ -42,7 +42,6 @@ namespace GTA
 	public ref class Script abstract
 	{
 	private:
-		SettingsFile^ pSettings;
 		System::DateTime NextTick;
 		Dictionary<String^,System::Object^>^ metadata;
 		value::Resources^ pResources;
@@ -119,7 +118,8 @@ namespace GTA
 			int get();
 		}
 		
-	protected:
+	public:
+		SettingsFile^ pSettings;
 
 		/// <summary>
 		/// Access the settings file of the script.

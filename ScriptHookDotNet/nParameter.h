@@ -33,6 +33,7 @@ namespace GTA
 		{
 			var_void,
 			var_int,
+			var_uint,
 			var_float,
 			var_bool,
 			var_string,
@@ -111,6 +112,7 @@ namespace GTA
 			Parameter(bool value);
 			Parameter(float value);
 			Parameter(int value);
+			Parameter(uint32_t value);
 
 			void Set(vtype type, Object^ value);
 			void SetTargetType(vtype type);
@@ -131,6 +133,7 @@ namespace GTA
 			void SetValue(bool value);
 			void SetValue(float value);
 			void SetValue(int value);
+			void SetValue(uint32_t value);
 
 			property vtype TargetType
 			{
@@ -150,6 +153,7 @@ namespace GTA
 			}
 
 			static operator Parameter ^ (int source);
+			static operator Parameter ^ (uint32_t source);
 			static operator Parameter ^ (float source);
 			static operator Parameter ^ (double source);
 			static operator Parameter ^ (bool source);
@@ -174,7 +178,7 @@ namespace GTA
 
 		CLASS_ATTRIBUTES
 		[SerializableAttribute]
-		public ref class Pointer sealed : public Parameter
+		public ref class Pointer : public Parameter
 		{
 		internal:
 			Pointer()
@@ -190,6 +194,7 @@ namespace GTA
 			Pointer(System::Type^ type);
 
 			static operator Pointer ^ (int source);
+			static operator Pointer ^ (uint32_t source);
 			static operator Pointer ^ (float source);
 			static operator Pointer ^ (double source);
 			static operator Pointer ^ (bool source);
@@ -207,6 +212,7 @@ namespace GTA
 			static operator Pointer ^ (System::Type^ type);
 
 			static operator int(Pointer^ source);
+			static operator uint32_t(Pointer^ source);
 			static operator float(Pointer^ source);
 			static operator double(Pointer^ source);
 			static operator bool(Pointer^ source);

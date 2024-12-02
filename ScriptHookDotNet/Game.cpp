@@ -299,7 +299,7 @@ namespace GTA
 
 	void Game::DisplayText(String^ Text, int Duration)
 	{
-		IVSDKDotNet::IVGame::ShowSubtitleMessage(Text, (u32)Duration);
+		IVSDKDotNet::Manager::ManagerScript::GetInstance()->SHDN_ShowMessage(Text, Duration);
 	}
 	void Game::DisplayText(String^ Text)
 	{
@@ -507,6 +507,8 @@ namespace GTA
 	void Game::WaitInCurrentScript(int ms)
 	{
 		// TODO
+		GetManagerScript()->WaitInScript(System::Guid::Empty, ms);
+
 		//Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
 		//if isNotNULL(scr) { 
 		//	scr->Wait(ms);
