@@ -1,0 +1,2848 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ClonksCodingLib.GTAIV</name>
+    </assembly>
+    <members>
+        <member name="P:CCL.GTAIV.PedAnimationController.IsValid">
+            <summary>
+            Gets if this <see cref="T:CCL.GTAIV.PedAnimationController"/> is valid or not.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.PedAnimationController.Empty">
+            <summary>
+            Returns an invalid <see cref="T:CCL.GTAIV.PedAnimationController"/> which cannot be used to play any animations on a <see cref="T:IVSDKDotNet.IVPed"/>.
+            </summary>
+            <returns>An invalid <see cref="T:CCL.GTAIV.PedAnimationController"/>.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.ExtendedIVSave">
+            <summary>
+            Helper class which lets you save custom data to the current save file using unused global variables within the <see cref="P:IVSDKDotNet.IVTheScripts.GlobalVariables"/> array.
+            
+            <para><b>Some examples:</b></para>
+            <para>
+            
+            <b>Saving data to the current save file</b><br/>
+            First you need to add a key to the save file using this function: <see cref="M:CCL.GTAIV.ExtendedIVSave.AddKey(System.String)"/>.<br/>
+            The "key" parameter of this function should be the name of your script for example "TestScript".<br/>
+            The function returns <see langword="true"/> if the key got added sucessfully, and <see langword="false"/> if it was unable to add for example if the key already exists.
+            
+            <br/><br/>
+            Now that you added a key to the save file, you add a custom value of any type to it using the <see cref="M:CCL.GTAIV.ExtendedIVSave.SetValueForKey(System.String,System.Object)"/> function.<br/>
+            The "key" parameter of this function will be the same as your current script ("TestScript" in this example), and the "value" parameter will be the custom data you want to store.<br/>
+            For example, if you want to save a variable of type <see cref="T:System.String"/> (string testVariable = "Test string";) you give the <see cref="M:CCL.GTAIV.ExtendedIVSave.SetValueForKey(System.String,System.Object)"/> function your "testVariable" variable.
+            
+            </para>
+            <para>
+            
+            <b>Reading data from the current save file</b><br/>
+            To read data from the save file use this function: <see cref="M:CCL.GTAIV.ExtendedIVSave.GetValueFromKey``1(System.String)"/>.<br/>
+            The "key" parameter of this function should be the name of your script ("TestScript" in this example).<br/>
+            The "<typeparamref name="T"/>" generic type will be the type of the data you saved. For example, if we want to retrieve the "testVariable" we saved, we do this: ExtendedIVSave.GetValueFromKey&lt;<see cref="T:System.String"/>&gt;("TestScript");
+            
+            </para>
+            <para>
+            
+            <b>Removing data from the current save file</b><br/>
+            To remove data from the save file use this function: <see cref="M:CCL.GTAIV.ExtendedIVSave.RemoveKey(System.String)"/>.<br/>
+            The "key" parameter of this function should be the name of your script ("TestScript" in this example).
+            
+            </para>
+            <para>
+            
+            - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -<br/>
+            In this example we only stored a single <see cref="T:System.String"/> object in the save file.<br/>
+            You could now store a <see cref="T:System.Collections.Generic.List`1"/> using <see cref="M:CCL.GTAIV.ExtendedIVSave.SetValueForKey(System.String,System.Object)"/> to store multiple stuff in one key.
+            
+            </para>
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.ExtendedIVSave.GetSaveDataDictionary">
+            <summary>
+            Gets the raw string that is currently saved in the <see cref="P:IVSDKDotNet.IVTheScripts.GlobalVariables"/> array at the current index and converts it to a <see cref="T:System.Collections.Generic.Dictionary`2"/> where all the custom save data is stored in.
+            </summary>
+            <returns>The <see cref="T:System.Collections.Generic.Dictionary`2"/> where all the data is stored in.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.ExtendedIVSave.DoesSaveDataExists">
+            <summary>
+            Checks if the current save file has any custom save data stored in it.
+            </summary>
+            <returns>True if there is custom data attached to the current save file. Otherwise, false. Add new data with the <see cref="M:CCL.GTAIV.ExtendedIVSave.AddKey(System.String)"/> function.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.ExtendedIVSave.DoesKeyExists(System.String)">
+            <summary>
+            Checks if a key exists in the data dictionary saved within the current save file.
+            </summary>
+            <param name="key">The name of the key.</param>
+            <returns>True if the key exists in the data dictionary saved within the current save file. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.ExtendedIVSave.AddKey(System.String)">
+            <summary>
+            Adds a new key to the data dictionary saved within the current save file.
+            </summary>
+            <param name="key">The name of the key to add.</param>
+            <returns>True if the <paramref name="key"/> was added in the data dictionary saved within the current save file. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.ExtendedIVSave.RemoveKey(System.String)">
+            <summary>
+            Removes a key from the data dictionary saved within the current save file.
+            </summary>
+            <param name="key">The name of the key to remove.</param>
+            <returns>True if the key was removed from the data dictionary saved within the current save file. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.ExtendedIVSave.GetValueFromKey``1(System.String)">
+            <summary>
+            Gets the value from a key within the current save file.
+            </summary>
+            <typeparam name="T">The type of the value that is stored in the current save file that you want to retrieve.</typeparam>
+            <param name="key">The name of the key to get the value from.</param>
+            <returns>The value of type <typeparamref name="T"/> stored within the <paramref name="key"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.ExtendedIVSave.SetValueForKey(System.String,System.Object)">
+            <summary>
+            Sets a value of a key within the current save file.
+            </summary>
+            <param name="key">The name of the key to store the value in.</param>
+            <param name="value">The object to store within that key.</param>
+            <returns>True if the value was set within the <paramref name="key"/>. Otherwise, false.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.ShootMode">
+            <summary>
+            Shoot modes
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.Side">
+            <summary>
+            Left, Right or None.
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.PedGender">
+            <summary>
+            Contains ped genders.
+            </summary>
+        </member>
+        <member name="F:CCL.GTAIV.PedGender.Unknown">
+            <summary>
+            Unknown gender. You will only see this appearing when <see cref="T:IVSDKDotNet.IVPed"/> would be <see langword="null"/> for example.
+            </summary>
+        </member>
+        <member name="F:CCL.GTAIV.PedGender.Male">
+            <summary>
+            Ped is a male.
+            </summary>
+        </member>
+        <member name="F:CCL.GTAIV.PedGender.Female">
+            <summary>
+            Ped is a female.
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.AnimationFlags">
+            <summary>
+            Flags that can be used to play animations.
+            </summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.None">
+            <summary>None.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.StayAtNewPosition">
+            <summary>Don't come back to initial position after animation ends, we use this for animations that result in position change for the ped, for example the land and roll animation</summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.Unknown02">
+            <summary>Unknown.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.Unknown03">
+            <summary>Unknown.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.ReturnToOriginalPosition">
+            <summary>Not well tested but this might make the ped return to its original position.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.Loop">
+            <summary>This loops the animation.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.FreezeAtLastFrame">
+            <summary>The ped will play the animation, and then freezes in the last frame of the animation.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.SwitchToIdleAnimAfterEnd">
+            <summary>Seems that makes the ped reset to standing idle animation after the animation ends.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.Unknown08">
+            <summary>Unknown.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.PlayInUpperBodyOnly">
+            <summary>Plays the animation only in the upper body of the ped. Useful for when playing animation in cars.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.RemoveSound">
+            <summary>Removes the sound of the animation. Some animations have sound while others dont.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.Unknown11">
+            <summary>Unknown.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.Unknown12">
+            <summary>Unknown.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.AnimationFlags.PlayInUpperBodyWithWalk">
+            <summary>This makes the ped able to walk while an animation in playing in its upper body.</summary>
+        </member>
+        <member name="T:CCL.GTAIV.Episode">
+            <summary>
+            Contains all common episodes that are in GTA IV.
+            </summary>
+        </member>
+        <member name="F:CCL.GTAIV.Episode.IV">
+            <summary>GTA IV</summary>
+        </member>
+        <member name="F:CCL.GTAIV.Episode.TLaD">
+            <summary>The Lost and Damned</summary>
+        </member>
+        <member name="F:CCL.GTAIV.Episode.TBoGT">
+            <summary>The Ballad of Gay Tony</summary>
+        </member>
+        <member name="T:CCL.GTAIV.NetworkGameMode">
+            <summary>
+            Contains all common game modes that are in GTA IV and its Episodes.
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.GroundType">
+            <summary>
+            Contains ground types. Mainly used for the <see cref="M:CCL.GTAIV.NativeWorld.GetGroundZ(System.Numerics.Vector3,CCL.GTAIV.GroundType)"/> functions.
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.ControllerButton">
+            <summary>
+            Controller buttons.
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.GameKey">
+            <summary>
+            Game keys.
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.BlipIcon">
+            <summary>
+            Contains blip icons. Might miss episode icons.
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.VehicleIndicator">
+            <summary>
+            The indicators of a <see cref="T:IVSDKDotNet.IVVehicle"/>.
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.CameraShakeType">
+            <summary>
+            Camera shake types.
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.CameraShakeBehaviour">
+            <summary>
+            Camera shake behaviours.
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.VehicleSeat">
+            <summary>
+            The seats of a vehicle.
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.RopeDeploymentState">
+            <summary>
+            <see cref="T:CCL.GTAIV.Rope"/> states!
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.AttachedTo">
+            <summary>
+            Attach to information
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.DayState">
+            <summary>
+            Contains day states. 
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.Extensions.FloatExtensions">
+            <summary>
+            Contains extensions for the <see cref="T:System.Single"/> struct.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.Extensions.FloatExtensions.InBetween(System.Single,System.Single,System.Single)">
+            <summary>
+            Checks if the <see cref="T:System.Single"/> value is in between <paramref name="min"/> and <paramref name="max"/>.
+            </summary>
+            <param name="value">The value to check for.</param>
+            <param name="min">The minimum <see cref="T:System.Single"/> value.</param>
+            <param name="max">The maximum <see cref="T:System.Single"/> value.</param>
+            <returns><see langword="true"/> if the <see cref="T:System.Single"/> value is in between <paramref name="min"/> and <paramref name="max"/>. Otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.Extensions.FloatExtensions.Lerp(System.Single,System.Single,System.Single)">
+            <summary>
+            Performs a linear interpolation between two floats based on the given weighting.
+            </summary>
+            <param name="a">Start</param>
+            <param name="b">End</param>
+            <param name="t">Weighting</param>
+            <returns>The lerped <see cref="T:System.Single"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.Extensions.FloatExtensions.EaseInOut(System.Single,System.Single,System.Single)">
+            <summary>
+            Eases in and out the <see cref="T:System.Single"/> value smoothly, meaning that the animation starts slowly, accelerates, then decelerates towards the end.
+            </summary>
+            <param name="t">The value that should be eased.</param>
+            <param name="accelerationAmount">The acceleration amount.</param>
+            <param name="decelerationAmount">The deceleration amount.</param>
+            <returns>The eased value.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.Extensions.FloatExtensions.EaseIn(System.Single,System.Single)">
+            <summary>
+            Eases in the given <see cref="T:System.Single"/> value smoothly, meaning that the animation starts slowly and then accelerates.
+            </summary>
+            <param name="t">The value that should be eased.</param>
+            <param name="amount">The acceleration amount.</param>
+            <returns>The eased value.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.Extensions.FloatExtensions.EaseOut(System.Single,System.Single)">
+            <summary>
+            Eases out the given <see cref="T:System.Single"/> value smoothly, meaning that the animation decelerates towards the end.
+            </summary>
+            <param name="t">The value that should be eased.</param>
+            <param name="amount">The deceleration amount.</param>
+            <returns>The eased value.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.IVObjectExtensions">
+            <summary>
+            Contains extensions for the <see cref="T:IVSDKDotNet.IVObject"/> class.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.IVObjectExtensions.GetHandle(IVSDKDotNet.IVObject)">
+            <summary>
+            Gets the handle for this <see cref="T:IVSDKDotNet.IVObject"/>.
+            <para>Can be used for calling native functions like <see cref="M:IVSDKDotNet.Native.Natives.DOES_OBJECT_EXIST(System.Int32)"/> which requires a ped handle.</para>
+            </summary>
+            <param name="obj"></param>
+            <returns>If successful, the handle of this <see cref="T:IVSDKDotNet.IVObject"/> is returned. Otherwise, 0.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.IVObjectExtensions.Exists(IVSDKDotNet.IVObject)">
+            <summary>
+            Checks if this <see cref="T:IVSDKDotNet.IVObject"/> exists.
+            </summary>
+            <param name="obj"></param>
+            <returns>True if this <see cref="T:IVSDKDotNet.IVObject"/> exists. Otherwise, false.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.ColorExtensions">
+            <summary>
+            Contains extensions for the <see cref="T:System.Drawing.Color"/> struct.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.ColorExtensions.ToRgba(System.Drawing.Color)">
+            <summary>
+            Converts the given <see cref="T:System.Drawing.Color"/> struct to a 32-bit RGBA value for GTA IV.
+            </summary>
+            <param name="color"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CCL.GTAIV.ColorExtensions.RandomARGB(System.Drawing.Color)">
+            <summary>
+            Gives a random ARGB <see cref="T:System.Drawing.Color"/>.
+            </summary>
+            <param name="color"></param>
+            <returns>The random <see cref="T:System.Drawing.Color"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.ColorExtensions.RandomRGB(System.Drawing.Color)">
+            <summary>
+            Gives a random RGB <see cref="T:System.Drawing.Color"/>.
+            </summary>
+            <param name="color"></param>
+            <returns>The random <see cref="T:System.Drawing.Color"/>.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.IVPedExtensions">
+            <summary>
+            Contains extensions for the <see cref="T:IVSDKDotNet.IVPed"/> class.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.IVPedExtensions.AddAmmoToChar(IVSDKDotNet.IVPed,IVSDKDotNet.Enums.eWeaponType,System.Int32)">
+            <summary>
+            Adds ammo to the given <paramref name="weapon"/> for this <see cref="T:IVSDKDotNet.IVPed"/>.
+            </summary>
+            <param name="ped"></param>
+            <param name="weapon">The weapon to fill up the ammo.</param>
+            <param name="amount">The amount of ammo to fill up.</param>
+        </member>
+        <member name="M:CCL.GTAIV.IVPedExtensions.AddArmourToChar(IVSDKDotNet.IVPed,System.Int32)">
+            <summary>
+            Adds armour to this <see cref="T:IVSDKDotNet.IVPed"/>.
+            </summary>
+            <param name="ped"></param>
+            <param name="amount">The amount of armour to fill up.</param>
+        </member>
+        <member name="M:CCL.GTAIV.IVPedExtensions.PreventRagdoll(IVSDKDotNet.IVPed,System.Boolean)">
+            <summary>
+            Sets if this <see cref="T:IVSDKDotNet.IVPed"/> can ragdoll.
+            </summary>
+            <param name="ped"></param>
+            <param name="value">Can ragdoll or not.</param>
+        </member>
+        <member name="M:CCL.GTAIV.IVPedExtensions.GetHandle(IVSDKDotNet.IVPed)">
+            <summary>
+            Gets the handle for this <see cref="T:IVSDKDotNet.IVPed"/>.
+            <para>Can be used for calling native functions like <see cref="M:IVSDKDotNet.Native.Natives.EXPLODE_CHAR_HEAD(System.Int32)"/> which requires a ped handle.</para>
+            </summary>
+            <param name="ped"></param>
+            <returns>If successful, the handle of this <see cref="T:IVSDKDotNet.IVPed"/> is returned. Otherwise, 0.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.IVPedExtensions.Exists(IVSDKDotNet.IVPed)">
+            <summary>
+            Checks if this <see cref="T:IVSDKDotNet.IVPed"/> exists.
+            </summary>
+            <param name="ped"></param>
+            <returns>True if this <see cref="T:IVSDKDotNet.IVPed"/> exists. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.IVPedExtensions.GetModelRect3D(IVSDKDotNet.IVPed)">
+            <summary>
+            Gets the <see cref="T:CCL.GTAIV.Rectangle3D"/> (or bounds) of this <see cref="T:IVSDKDotNet.IVPed"/> with their current model.
+            </summary>
+            <param name="ped"></param>
+            <returns>If successful, the <see cref="T:CCL.GTAIV.Rectangle3D"/> of this <see cref="T:IVSDKDotNet.IVPed"/> is returned. Otherwise, <see cref="M:CCL.GTAIV.Rectangle3D.Empty"/> is returned.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.IVPedExtensions.AreAnyCharsNearChar(IVSDKDotNet.IVPed,System.Single)">
+            <summary>
+            Gets if there are any chars near this <see cref="T:IVSDKDotNet.IVPed"/>.
+            </summary>
+            <param name="ped"></param>
+            <param name="radius">The radius in which to search for.</param>
+            <returns>True if there are any chars in the area around this <see cref="T:IVSDKDotNet.IVPed"/>. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.IVPedExtensions.IsInVehicle(IVSDKDotNet.IVPed)">
+            <summary>
+            Gets if the <see cref="T:IVSDKDotNet.IVPed"/> is sitting in any vehicle.
+            </summary>
+            <param name="ped"></param>
+            <returns>True if this <see cref="T:IVSDKDotNet.IVPed"/> is sitting in any vehicle. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.IVPedExtensions.GetCharModel(IVSDKDotNet.IVPed)">
+            <summary>
+            Gets the model of this <see cref="T:IVSDKDotNet.IVPed"/>.
+            </summary>
+            <param name="ped"></param>
+            <returns>The model of this <see cref="T:IVSDKDotNet.IVPed"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.IVPedExtensions.GetCharGender(IVSDKDotNet.IVPed)">
+            <summary>
+            Gets the gender of this <see cref="T:IVSDKDotNet.IVPed"/>.
+            </summary>
+            <param name="ped"></param>
+            <returns>One of the 3 items in the <see cref="T:CCL.GTAIV.PedGender"/> enum.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.IVPedExtensions.GetPedType(IVSDKDotNet.IVPed)">
+            <summary>
+            Gets the <see cref="T:IVSDKDotNet.Enums.ePedType"/> of this <see cref="T:IVSDKDotNet.IVPed"/>.
+            </summary>
+            <param name="ped"></param>
+            <returns>The <see cref="T:IVSDKDotNet.Enums.ePedType"/>. Warning: Can also return <see cref="F:IVSDKDotNet.Enums.ePedType.PED_TYPE_CIV_MALE"/> on error.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.IVPedExtensions.GetHeightAboveGround(IVSDKDotNet.IVPed)">
+            <summary>
+            Gets the height above ground of this <see cref="T:IVSDKDotNet.IVPed"/>.
+            </summary>
+            <param name="ped"></param>
+            <returns>The height above ground value.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.IVPedExtensions.AttachBlip(IVSDKDotNet.IVPed)">
+            <summary>
+            Attaches a <see cref="T:CCL.GTAIV.NativeBlip"/> to this <see cref="T:IVSDKDotNet.IVPed"/>.
+            </summary>
+            <param name="ped"></param>
+            <returns>If successful, the attached <see cref="T:CCL.GTAIV.NativeBlip"/> is returned. Otherwise, <see langword="null"/>.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.IVPlayerInfoExtensions">
+            <summary>
+            Contains extensions for the <see cref="T:IVSDKDotNet.IVPlayerInfo"/> class.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.IVPlayerInfoExtensions.SetMoney(IVSDKDotNet.IVPlayerInfo,System.Int32)">
+            <summary>
+            Sets the money of the player to the given amount.
+            </summary>
+            <param name="info"></param>
+            <param name="amount">The new amount.</param>
+        </member>
+        <member name="M:CCL.GTAIV.IVPlayerInfoExtensions.AddMoney(IVSDKDotNet.IVPlayerInfo,System.Int32)">
+            <summary>
+            Adds money to the current player money.
+            </summary>
+            <param name="info"></param>
+            <param name="amount">The amount to add.</param>
+        </member>
+        <member name="M:CCL.GTAIV.IVPlayerInfoExtensions.RemoveMoney(IVSDKDotNet.IVPlayerInfo,System.Int32)">
+            <summary>
+            Removes the money of the player by the given amount.
+            </summary>
+            <param name="info"></param>
+            <param name="amount">The amount to remove.</param>
+        </member>
+        <member name="M:CCL.GTAIV.IVPlayerInfoExtensions.GetMoney(IVSDKDotNet.IVPlayerInfo)">
+            <summary>
+            Gets the money amount of the player.
+            </summary>
+            <param name="info"></param>
+            <returns>The amount of money the player has.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.IVVehicleExtensions">
+            <summary>
+            Contains extensions for the <see cref="T:IVSDKDotNet.IVVehicle"/> class.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.IVVehicleExtensions.GetHandle(IVSDKDotNet.IVVehicle)">
+            <summary>
+            Gets the handle for this <see cref="T:IVSDKDotNet.IVVehicle"/>.
+            <para>Can be used for calling native functions like <see cref="M:IVSDKDotNet.Native.Natives.IS_CAR_DEAD(System.Int32)"/> which requires a vehicle handle.</para>
+            </summary>
+            <param name="veh"></param>
+            <returns>If successful, the handle of this <see cref="T:IVSDKDotNet.IVVehicle"/> is returned. Otherwise, 0.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.IVVehicleExtensions.Exists(IVSDKDotNet.IVVehicle)">
+            <summary>
+            Checks if this <see cref="T:IVSDKDotNet.IVVehicle"/> exists.
+            </summary>
+            <param name="veh"></param>
+            <returns>True if this <see cref="T:IVSDKDotNet.IVVehicle"/> exists. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.IVVehicleExtensions.GetModelRect3D(IVSDKDotNet.IVVehicle)">
+            <summary>
+            Gets the <see cref="T:CCL.GTAIV.Rectangle3D"/> (or bounds) of this <see cref="T:IVSDKDotNet.IVVehicle"/> with their current model.
+            </summary>
+            <param name="veh"></param>
+            <returns>If successful, the <see cref="T:CCL.GTAIV.Rectangle3D"/> of this <see cref="T:IVSDKDotNet.IVVehicle"/> is returned. Otherwise, <see cref="M:CCL.GTAIV.Rectangle3D.Empty"/> is returned.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.IVVehicleExtensions.AttachBlip(IVSDKDotNet.IVVehicle)">
+            <summary>
+            Attaches a <see cref="T:CCL.GTAIV.NativeBlip"/> to this <see cref="T:IVSDKDotNet.IVVehicle"/>.
+            </summary>
+            <param name="veh"></param>
+            <returns>If successful, the attached <see cref="T:CCL.GTAIV.NativeBlip"/> is returned. Otherwise, <see langword="null"/>.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.VectorExtensions">
+            <summary>
+            Contains extensions for the <see cref="T:System.Numerics.Vector2"/> or <see cref="T:System.Numerics.Vector3"/> structs.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.VectorExtensions.RandomXYZ(System.Numerics.Vector3)">
+            <summary>
+            Returns a <see cref="T:System.Numerics.Vector3"/> with random X, Y and Z values.
+            </summary>
+            <param name="vec"></param>
+            <returns>A <see cref="T:System.Numerics.Vector3"/> with random X, Y and Z values.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.VectorExtensions.RandomXY(System.Numerics.Vector3)">
+            <summary>
+            Returns a <see cref="T:System.Numerics.Vector3"/> with random X and Y values.
+            </summary>
+            <param name="vec"></param>
+            <returns>A <see cref="T:System.Numerics.Vector3"/> with random X and Y values.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.VectorExtensions.MoveTowards(System.Numerics.Vector3,System.Numerics.Vector3,System.Single)">
+            <summary>
+            Calculate a position between the points specified by this <see cref="T:System.Numerics.Vector3"/> and <paramref name="target"/>, moving no farther than the distance specified by <paramref name="maxDistanceDelta"/>.
+            </summary>
+            <param name="vec">The position to move from.</param>
+            <param name="target">The position to move towards.</param>
+            <param name="maxDistanceDelta">Distance to move per call.</param>
+            <returns>The new position.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.VectorExtensions.LookAtYaw(System.Numerics.Vector3,System.Numerics.Vector3)">
+            <summary>
+            Calculates the yaw (Look Left/Right) angle from this <see cref="T:System.Numerics.Vector3"/> and the given <paramref name="targetPos"/>.
+            </summary>
+            <param name="vec"></param>
+            <param name="targetPos">The target pos to look at.</param>
+            <returns>The calculated yaw angle.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.VectorExtensions.Around(System.Numerics.Vector3,System.Single)">
+            <summary>
+            Gets a position around this <see cref="T:System.Numerics.Vector3"/> by the given <paramref name="distance"/>.
+            </summary>
+            <param name="vec"></param>
+            <param name="distance">The around distance.</param>
+            <returns>The position around the current <see cref="T:System.Numerics.Vector3"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.VectorExtensions.ToVector2(System.Numerics.Vector3)">
+            <summary>
+            Converts this <see cref="T:System.Numerics.Vector3"/> to a <see cref="T:System.Numerics.Vector2"/>.
+            </summary>
+            <param name="vec"></param>
+            <returns>The new <see cref="T:System.Numerics.Vector2"/>.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.HandleObject">
+            <summary>
+            A <see cref="T:CCL.GTAIV.HandleObject"/> is an entity which has a <b>handle</b> like the <see cref="T:IVSDKDotNet.IVPed"/>, <see cref="T:IVSDKDotNet.IVVehicle"/> or the <see cref="T:CCL.GTAIV.NativeBlip"/>.<br/>
+            Most native functions require a <b>handle</b> like the <see cref="M:IVSDKDotNet.Native.Natives.DOES_CHAR_EXIST(System.Int32)"/> native, which requries the <b>handle</b> of a <see cref="T:IVSDKDotNet.IVPed"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.HandleObject.IsDeleted">
+            <summary>
+            Gets if this native object was deleted.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.HandleObject.IsValid">
+            <summary>
+            Returns <see langword="true"/> if this handle object was not deleted and the <see cref="P:CCL.GTAIV.HandleObject.Handle"/> is not 0.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.HandleObject.Handle">
+            <summary>
+            Gets the handle of this native object.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.HandleObject.Delete">
+            <summary>
+            Deletes this native object.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.HandleObject.Exists">
+            <summary>
+            Checks if this native object still exists.
+            </summary>
+            <returns>True if native object exists. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.HandleObject.GetHashCode">
+            <summary>
+            Gets the handle of this native object.
+            </summary>
+            <returns>The handle of this native object.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.IVAnimSet">
+            <summary>
+            Represents a GTA IV animation set with all the animation names inside it.
+            </summary>
+        </member>
+        <member name="F:CCL.GTAIV.IVAnimSet.Name">
+            <summary>
+            Gets the name of this animation set.
+            </summary>
+        </member>
+        <member name="F:CCL.GTAIV.IVAnimSet.AnimNames">
+            <summary>
+            Gets the collection of animation names inside the animation set.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.IVAnimSet.#ctor(System.String,System.String[])">
+            <summary>
+            Creates a new <see cref="T:CCL.GTAIV.IVAnimSet"/>.
+            </summary>
+            <param name="animSetName">The name of the animation set.</param>
+            <param name="animNames">The collection of animation names inside the animation set.</param>
+        </member>
+        <member name="T:CCL.GTAIV.CoronaHelper">
+            <summary>
+            Some corona helper functions.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.CoronaHelper.RenderCorona(System.Int32,System.Numerics.Vector3,System.Drawing.Color,System.Single)">
+            <summary>
+            Renders a corona in the world.
+            </summary>
+            <param name="id">The id of the corona.</param>
+            <param name="pos">The position of the corona.</param>
+            <param name="color">The color of the corona.</param>
+            <param name="size">The size of the corona.</param>
+        </member>
+        <member name="M:CCL.GTAIV.CoronaHelper.RenderCorona(System.Numerics.Vector3,System.Drawing.Color,System.Single)">
+            <summary>
+            Renders a corona in the world.
+            </summary>
+            <param name="pos">The position of the corona.</param>
+            <param name="color">The color of the corona.</param>
+            <param name="size">The size of the corona.</param>
+        </member>
+        <member name="T:CCL.GTAIV.ImGuiHelper">
+            <summary>
+            Contains some helper functions for ImGui.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.ImGuiHelper.ConvertKeyToImGuiKey(System.Windows.Forms.Keys)">
+            <summary>
+            Tries to convert the given <paramref name="key"/> to an <see cref="T:IVSDKDotNet.Enums.eImGuiKey"/> key.
+            </summary>
+            <param name="key">The key you want to convert to a <see cref="T:IVSDKDotNet.Enums.eImGuiKey"/> key.</param>
+            <returns>The converted key. Can return <see cref="F:IVSDKDotNet.Enums.eImGuiKey.ImGuiKey_None"/> if the given <paramref name="key"/> could not be converted.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.ImGuiHelper.ConvertKeyToImGuiKey(System.String)">
+            <summary>
+            Tries to convert the given <paramref name="key"/> to an <see cref="T:IVSDKDotNet.Enums.eImGuiKey"/> key.
+            </summary>
+            <param name="key">The name of the key you want to convert to a <see cref="T:IVSDKDotNet.Enums.eImGuiKey"/> key.</param>
+            <returns>The converted key. Can return <see cref="F:IVSDKDotNet.Enums.eImGuiKey.ImGuiKey_None"/> if the given <paramref name="key"/> could not be converted.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.ImGuiHelper.IsKeyPressed(System.String,System.Boolean)">
+            <summary>
+            Helper function which checks if a key is pressed.
+            <para>
+            This also allows you to check if a key was pressed with a modifier key.<br/>
+            Example <b>without</b> modifier: Passing "<b>P</b>" to <paramref name="key"/> would check if "<b>P</b>" was pressed.<br/>
+            Example <b>with</b> modifier: Passing "<b>LControlKey+P</b>" to <paramref name="key"/> would check if "<b>P</b>" was pressed with "<b>LControlKey</b>".<br/>
+            </para>
+            </summary>
+            <param name="key">The key that you want to check.</param>
+            <param name="repeat">If set to <see langword="true"/>, this function keeps returning <see langword="true"/> if the specified <paramref name="key"/> is currently pressed. Otherwise it will only return <see langword="true"/> once.</param>
+            <returns><see langword="true"/> if the specified <paramref name="key"/> was pressed. Otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.LightHelper">
+            <summary>
+            Some light helper functions.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.LightHelper.AddPointLight(System.Numerics.Vector3,System.Drawing.Color,System.Single,System.Single,System.Boolean,System.UIntPtr)">
+            <summary>
+            Adds a point light to the world.
+            </summary>
+            <param name="pos">The light position in the world.</param>
+            <param name="color">The color of the light.</param>
+            <param name="intensity">The light intensity.</param>
+            <param name="range">The light range.</param>
+            <param name="castShadow">If the light casts a shadow.</param>
+            <param name="lightId">If you want the light to cast a shadow, you should give it the pointer of the player ped. Otherwise this can be <see cref="F:System.UIntPtr.Zero"/>.</param>
+        </member>
+        <member name="M:CCL.GTAIV.LightHelper.AddSpotLight(System.Numerics.Vector3,System.Numerics.Vector3,System.Drawing.Color,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.UIntPtr)">
+            <summary>
+            Adds a spot light to the world.
+            </summary>
+            <param name="source">The light source position.</param>
+            <param name="target">The target position the light should be pointing at.</param>
+            <param name="color">The color of the light.</param>
+            <param name="intensity">The light intensity.</param>
+            <param name="range">The light range.</param>
+            <param name="innerConeAngle">The inner cone angle of the spot light.</param>
+            <param name="outerConeAngle">The outer cone angle of the spot light.</param>
+            <param name="volIntensity">If you want the light to be volumetric, you can set the intensity (brightness) here.</param>
+            <param name="volSizeScale">The scale of the volume (1.0f means the same radius as the light).</param>
+            <param name="lightId">The id of the light. This can be <see cref="F:System.UIntPtr.Zero"/>, but you can also give it the pointer of the player ped.</param>
+        </member>
+        <member name="T:CCL.GTAIV.Mods.ZMenuIV">
+            <summary>
+            Exposes some functions of ZMenuIV.
+            <para>
+            Supported versions<br/>
+            - 23.02.02.2
+            </para>
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.Mods.ZMenuIV.IsZMenuPresent">
+            <summary>
+            Gets if ZMenuIV is present.
+            </summary>
+            <returns><see langword="true"/> if it is. Otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.Mods.ZMenuIV.GetZMenuVersion(System.UInt32@,System.UInt32@)">
+            <summary>
+            Gets the version of the installed ZMenuIV.
+            <para>Could return something like this: 211017 major, 1 minor = 21.10.17.1</para>
+            </summary>
+            <param name="puiMajorVersion">
+            The major version of ZMenuIV.
+            <para>e.g.: 211017 = [21.10.17].1</para>
+            </param>
+            <param name="puiMinorVersion">
+            The minor version of ZMenuIV.
+            <para>e.g.: 1 = 21.10.17.[1]</para>
+            </param>
+            <returns><see langword="true"/> if the function was successful at getting the current version. Otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="P:CCL.GTAIV.Mods.ZMenuIV.FirstPersonViewEnabled">
+            <summary>
+            Gets or sets if the first person option is enabled.
+            <para>
+            <b>Note</b>: When you try to set this to <see langword="true"/>, without first manually enabling first person view in the menu,
+            first person view will not actually get activated.
+            </para>
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.Mods.ZMenuIV.ToggleFirstPersonView">
+            <summary>
+            Toggles the first person view on or off.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Mods.ZMenuIV.GTAVRadarEnabled">
+            <summary>
+            Gets or sets if the GTA V Radar is enabled.
+            <para>
+            <b>Note</b>: When you try to set this to <see langword="true"/>, the radar will not get updated correctly.
+            </para>
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Mods.ZMenuIV.SelectedGTAVHudStyle">
+            <summary>
+            Gets or sets the selected GTA V Hud Style.
+            <para>
+            <b>Note</b>: When you try to set this to another style, this new style might not be applied correctly.
+            </para>
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.Mods.ZMenuIV.ToggleGTAVRadar">
+            <summary>
+            Toggles the GTA V Radar on or off.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.Mods.ZMenuIV.ToggleNextGTAVRadarStyle">
+            <summary>
+            Toggles the next GTA V Radar Style.
+            <para><b>Warning</b>: Should be called from within the <see cref="E:IVSDKDotNet.Script.Tick"/> event.</para>
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.NativeBlip">
+            <summary>
+            Gives you easy access to native functions that involve blips.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.Position">
+            <summary>
+            Gets the position of this <see cref="T:CCL.GTAIV.NativeBlip"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.Color">
+            <summary>
+            Gets or sets the <see cref="T:IVSDKDotNet.Enums.eBlipColor"/> of this <see cref="T:CCL.GTAIV.NativeBlip"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.Display">
+            <summary>
+            Gets or set the <see cref="T:IVSDKDotNet.Enums.eBlipDisplay"/> type of this <see cref="T:CCL.GTAIV.NativeBlip"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.Icon">
+            <summary>
+            Gets or sets the <see cref="T:CCL.GTAIV.BlipIcon"/> of this <see cref="T:CCL.GTAIV.NativeBlip"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.Type">
+            <summary>
+            Gets the <see cref="T:IVSDKDotNet.Enums.eBlipType"/> of this <see cref="T:CCL.GTAIV.NativeBlip"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.Priority">
+            <summary>
+            Sets the priority of this <see cref="T:CCL.GTAIV.NativeBlip"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.Friendly">
+            <summary>
+            If set to false, this <see cref="T:CCL.GTAIV.NativeBlip"/> will be displayed as a enemy blip.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.ShowOnlyWhenNear">
+            <summary>
+            Gets or sets if this <see cref="T:CCL.GTAIV.NativeBlip"/> will only shop up when the player is near it.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.RouteActive">
+            <summary>
+            Sets if there is an active route on the radar to this <see cref="T:CCL.GTAIV.NativeBlip"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.FlashBlip">
+            <summary>
+            Sets if this <see cref="T:CCL.GTAIV.NativeBlip"/> should flash.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.FlashBlip2">
+            <summary>
+            Sets if this <see cref="T:CCL.GTAIV.NativeBlip"/> should flash. This is the same as <see cref="P:CCL.GTAIV.NativeBlip.FlashBlip"/> but it flashes "in reverse".
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.Scale">
+            <summary>
+            Sets the scale of this <see cref="T:CCL.GTAIV.NativeBlip"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.Transparency">
+            <summary>
+            Sets the transparency of this <see cref="T:CCL.GTAIV.NativeBlip"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeBlip.Name">
+            <summary>
+            Sets the name of this <see cref="T:CCL.GTAIV.NativeBlip"/>.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeBlip.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of the <see cref="T:CCL.GTAIV.NativeBlip"/> class with an existing handle.
+            </summary>
+            <param name="handle">The handle of an already existing blip.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeBlip.Delete">
+            <inheritdoc/>
+        </member>
+        <member name="M:CCL.GTAIV.NativeBlip.SetColorRGB(System.Drawing.Color)">
+            <summary>
+            Changes the blip colour to be the given <paramref name="color"/>.
+            </summary>
+            <param name="color">The new color.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeBlip.Exists">
+            <inheritdoc/>
+        </member>
+        <member name="M:CCL.GTAIV.NativeBlip.GetAttachedItemHandle">
+            <summary>
+            Gets the handle of the object this <see cref="T:CCL.GTAIV.NativeBlip"/> is attached to.
+            </summary>
+            <returns>The handle this <see cref="T:CCL.GTAIV.NativeBlip"/> is attached to..</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeBlip.GetWaypoint">
+            <summary>
+            Tries to get the waypoint blip. Might actually not really be that efficient.
+            </summary>
+            <returns>If successful, the waypoint blip is returned. Otherwise, <see langword="null"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeBlip.AddBlipGangTerritory(System.Numerics.Vector2,System.Drawing.SizeF,System.Drawing.Color)">
+            <summary>
+            This adds a rectangle to the radar and map in the pause menu as seen in the TLAD Own The City multiplayer game mode.
+            </summary>
+            <param name="location">The start location of the blip.</param>
+            <param name="size">The size of the blip.</param>
+            <param name="color">The color of the blip.</param>
+            <returns>If successful, the <see cref="T:CCL.GTAIV.NativeBlip"/> is returned. Otherwise, <see langword="null"/>.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.NativeCamera">
+            <summary>
+            Gives you easy access to native functions that involve cameras.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCamera.Position">
+            <summary>
+            Gets or sets the position of this <see cref="T:CCL.GTAIV.NativeCamera"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCamera.Offset">
+            <summary>
+            Sets the attach offset position of this <see cref="T:CCL.GTAIV.NativeCamera"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCamera.Rotation">
+            <summary>
+            Gets or sets the rotation of this <see cref="T:CCL.GTAIV.NativeCamera"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCamera.Direction">
+            <summary>
+            Gets the direction of this <see cref="T:CCL.GTAIV.NativeCamera"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCamera.FOV">
+            <summary>
+            Gets or sets the FOV of this <see cref="T:CCL.GTAIV.NativeCamera"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCamera.NearClip">
+            <summary>
+            Gets or sets near clip of this <see cref="T:CCL.GTAIV.NativeCamera"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCamera.FarDoF">
+            <summary>
+            Gets or sets the far DoF of this <see cref="T:CCL.GTAIV.NativeCamera"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCamera.NearDoF">
+            <summary>
+            Gets or sets the near DoF of this <see cref="T:CCL.GTAIV.NativeCamera"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCamera.IsActive">
+            <summary>
+            Gets if this <see cref="T:CCL.GTAIV.NativeCamera"/> is active.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCamera.IsPropagating">
+            <summary>
+            Gets or sets if this <see cref="T:CCL.GTAIV.NativeCamera"/> is propagating.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCamera.AttachOffsetIsRelative">
+            <summary>
+            Sets if the <see cref="P:CCL.GTAIV.NativeCamera.Offset"/> of this <see cref="T:CCL.GTAIV.NativeCamera"/> is relative.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCamera.State">
+            <summary>
+            Gets or sets the state of this <see cref="T:CCL.GTAIV.NativeCamera"/>.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of the <see cref="T:CCL.GTAIV.NativeCamera"/> class with an existing handle.
+            </summary>
+            <param name="handle">The handle of an already existing camera.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.Delete">
+            <inheritdoc/>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.Activate">
+            <summary>
+            Activates the camera.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.Deactivate">
+            <summary>
+            Deactivates the camera.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.SetDoFFocusPoint(System.Numerics.Vector3,System.Single)">
+            <summary>
+            Sets the depth of field focus point (Not sure if it actually works).
+            </summary>
+            <param name="pos">The focus point.</param>
+            <param name="unk">Undocumented.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.Shake(CCL.GTAIV.CameraShakeType,CCL.GTAIV.CameraShakeBehaviour,System.Int32,System.Single,System.Single,System.Single)">
+            <summary>
+            Shakes the camera with the given attributes.
+            </summary>
+            <param name="shakeType">The shake type.</param>
+            <param name="shakeBehaviour">The shake behaviour.</param>
+            <param name="shakeDuration">The shake duration in milliseconds.</param>
+            <param name="shakeAmplitude">The shake amplitude.</param>
+            <param name="shakeFrequency">The shake frequency.</param>
+            <param name="unknown1">Unknown. Usually 0.0f, Sometimes (rarely) up to 0.9f.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.SetDrunkEffect(System.Single,System.Int32)">
+            <summary>
+            Adds a drunk effect on this <see cref="T:CCL.GTAIV.NativeCamera"/>.
+            </summary>
+            <param name="intensity">The intensity of the drunk effect.</param>
+            <param name="time">How long the drunk effect will last for.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.PointAtCoord(System.Numerics.Vector3)">
+            <summary>
+            Points the camera at the given position.
+            </summary>
+            <param name="pos">The position to point at.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.PointAtPed(System.Int32)">
+            <summary>
+            Points the camera at the given ped.
+            </summary>
+            <param name="pedHandle">The handle of the ped to point at.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.PointAtVehicle(System.Int32)">
+            <summary>
+            Points the camera at the given vehicle.
+            </summary>
+            <param name="vehicleHandle">The handle of the vehicle to point at.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.PointAtObject(System.Int32)">
+            <summary>
+            Points the camera at the given object.
+            </summary>
+            <param name="objectHandle">The handle of the object to point at.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.PointAtCam(System.Int32)">
+            <summary>
+            Points the camera at the given camera.
+            </summary>
+            <param name="camHandle">The handle of the camera to point at.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.Unpoint">
+            <summary>
+            Unpoints the camera.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.AttachToVehicle(System.Int32)">
+            <summary>
+            Attaches the camera to the given vehicle.
+            </summary>
+            <param name="vehicleHandle">The handle of the vehicle.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.AttachToObject(System.Int32)">
+            <summary>
+            Attaches the camera to the given object.
+            </summary>
+            <param name="objectHandle">The handle of the object.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.AttachToPed(System.Int32)">
+            <summary>
+            Attaches the camera to the given ped.
+            </summary>
+            <param name="pedHandle">The handle of the ped.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.AttachToViewport(System.Int32)">
+            <summary>
+            Attaches the camera to the given viewport.
+            </summary>
+            <param name="viewportHandle">The handle of the viewport.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.Unattach">
+            <summary>
+            Detaches the camera.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.Exists">
+            <inheritdoc/>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.IsSphereVisible(System.Numerics.Vector3,System.Single)">
+            <summary>
+            Checks if the given position is visible on screen.
+            </summary>
+            <param name="pos">Target position.</param>
+            <param name="radius">Unknown.</param>
+            <returns>True if the position is visible. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.Create(IVSDKDotNet.Enums.eCamType)">
+            <summary>
+            Creates a new camera.
+            </summary>
+            <param name="type">The camera type. Usually <see cref="F:IVSDKDotNet.Enums.eCamType.CAM_SCRIPTED"/>.</param>
+            <returns>If successful, the newly created camera is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.Create">
+            <summary>
+            Creates a new camera of type <see cref="F:IVSDKDotNet.Enums.eCamType.CAM_SCRIPTED"/>.
+            </summary>
+            <returns>If successful, the newly created camera is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.GetGameCam">
+            <summary>
+            Gets the game camera.
+            </summary>
+            <returns>If successful, the game camera is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.GetGameCamChild">
+            <summary>
+            Gets the games camera child.
+            </summary>
+            <returns>If successful, the games camera child is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.GetDebugCam">
+            <summary>
+            Gets the debug camera.
+            </summary>
+            <returns>If successful, the debug camera is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.GetCinematicCam">
+            <summary>
+            Gets the cinematic camera.
+            </summary>
+            <returns>If successful, the cinematic camera is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.GetFreeCam">
+            <summary>
+            Gets the free camera.
+            </summary>
+            <returns>If successful, the free camera is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.GetScriptCam">
+            <summary>
+            Gets the script camera.
+            </summary>
+            <returns>If successful, the script camera is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCamera.GetScriptDrawCam">
+            <summary>
+            Gets the script draw camera.
+            </summary>
+            <returns>If successful, the script draw camera is returned. Otherwise, false.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.NativeCheckpoint">
+            <summary>
+            Gives you easy access to native functions that involve checkpoints.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCheckpoint.Visible">
+            <summary>
+            Gets or sets if this checkpoint should be visible.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCheckpoint.Position">
+            <summary>
+            Gets or sets the position of this checkpoint.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCheckpoint.Radius">
+            <summary>
+            Gets or sets the radius of this checkpoint.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeCheckpoint.Color">
+            <summary>
+            Gets or sets the color of this checkpoint.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCheckpoint.#ctor(IVSDKDotNet.Script,System.Numerics.Vector3,System.Single,System.Drawing.Color)">
+            <summary>
+            Creates a new checkpoint.
+            </summary>
+            <param name="createFor">The script needed for drawing this checkpoint.</param>
+            <param name="pos">The position of this checkpoint.</param>
+            <param name="radius">The radius of this checkpoint.</param>
+            <param name="color">The color of this checkpoint.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the createFor parameter is null.</exception>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCheckpoint.#ctor(IVSDKDotNet.Script)">
+            <summary>
+            Creates a new checkpoint.
+            </summary>
+            <param name="createFor">The script needed for drawing this checkpoint.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the createFor parameter is null.</exception>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCheckpoint.PlaceOnGroundProperly">
+            <summary>
+            Places this checkpoint on the ground properly.
+            <para>Does only work properly if the area is loaded.</para>
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCheckpoint.DrawCheckpoint(System.Numerics.Vector3,System.Single,System.Drawing.Color)">
+            <summary>
+            Draws a checkpoint at the given coords, the given radius and color in the world.
+            </summary>
+            <param name="pos">The position where to draw the checkpoint.</param>
+            <param name="radius">The radius of the checkpoint.</param>
+            <param name="color">The color of the checkpoint.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCheckpoint.IsInside(IVSDKDotNet.IVVehicle,System.Boolean)">
+            <summary>
+            Checks if the given <see cref="T:IVSDKDotNet.IVVehicle"/> is inside this checkpoint.
+            </summary>
+            <param name="veh">The given <see cref="T:IVSDKDotNet.IVVehicle"/> to check for.</param>
+            <param name="ignoreZCoordinate">Sets if the Z coordinate of the given <see cref="T:IVSDKDotNet.IVVehicle"/> should be ignored. If set to <see langword="true"/>, this function will return <see langword="true"/> when the <see cref="T:IVSDKDotNet.IVVehicle"/> is inside the checkpoint no matter the current height.</param>
+            <returns>True if the given <see cref="T:IVSDKDotNet.IVVehicle"/> is inside this checkpoint. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCheckpoint.IsInside(IVSDKDotNet.IVPed,System.Boolean)">
+            <summary>
+            Checks if the given <see cref="T:IVSDKDotNet.IVPed"/> is inside this checkpoint.
+            </summary>
+            <param name="ped">The given <see cref="T:IVSDKDotNet.IVPed"/> to check for.</param>
+            <param name="ignoreZCoordinate">Sets if the Z coordinate of the given <see cref="T:IVSDKDotNet.IVPed"/> should be ignored. If set to <see langword="true"/>, this function will return <see langword="true"/> when the <see cref="T:IVSDKDotNet.IVPed"/> is inside the checkpoint no matter the current height.</param>
+            <returns>True if the given <see cref="T:IVSDKDotNet.IVPed"/> is inside this checkpoint. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeCheckpoint.IsInside(System.Numerics.Vector3,System.Boolean)">
+            <summary>
+            Checks if the given position is inside this checkpoint.
+            </summary>
+            <param name="pos">The given position to check for.</param>
+            <param name="ignoreZCoordinate">Sets if the Z coordinate of the given <see cref="T:System.Numerics.Vector3"/> should be ignored. If set to <see langword="true"/>, this function will return <see langword="true"/> when the <see cref="T:System.Numerics.Vector3"/> is inside the checkpoint no matter the current height.</param>
+            <returns>True if the given position is inside this checkpoint. Otherwise, false.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.NativeControls">
+            <summary>
+            Gives you easy access to native functions that involve controls.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeControls.IsUsingJoypad">
+            <summary>
+            Gets if a joypad is being used.
+            </summary>
+            <returns>True if using a joypad.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeControls.IsUsingController">
+            <summary>
+            Gets if a controller is being used.
+            </summary>
+            <returns>True if using a controller.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeControls.IsControllerButtonPressed(System.UInt32,CCL.GTAIV.ControllerButton)">
+            <summary>
+            Gets if the given controller button was pressed.
+            </summary>
+            <param name="padIndex">Target controller. Default is 0.</param>
+            <param name="button">Target button.</param>
+            <returns>True if the given controller button was pressed. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeControls.GetPressedControllerButton(System.UInt32)">
+            <summary>
+            Gets the currently pressed controller key.
+            </summary>
+            <param name="padIndex">Target controller. Default is 0.</param>
+            <returns>The pressed controller key. Returns <see cref="F:CCL.GTAIV.ControllerButton.NONE"/> if no button was pressed.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeControls.IsGameKeyPressed(System.UInt32,CCL.GTAIV.GameKey)">
+            <summary>
+            Gets if the given game key is pressed.
+            </summary>
+            <param name="padIndex">Target controller. Default is 0.</param>
+            <param name="key">Target key.</param>
+            <returns>True if the given key was pressed. Otherwise, false.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.NativeDrawing">
+            <summary>
+            Gives you easy access to native functions that involve drawing.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeDrawing.CoordToScreen(System.Numerics.Vector3)">
+            <summary>
+            Projects the given <see cref="T:System.Numerics.Vector3"/> position in the world to a <see cref="T:System.Numerics.Vector2"/> screen position.
+            </summary>
+            <param name="pos">The world pos to project.</param>
+            <returns>The projected world position of <paramref name="pos"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeDrawing.DisplayText(System.Numerics.Vector2,System.String,System.Drawing.Color,System.Single,System.Boolean)">
+            <summary>
+            Draws some text on the screen using native functions.
+            </summary>
+            <param name="pos">The position of the text to be drawn on screen.</param>
+            <param name="str">The string to display.</param>
+            <param name="color">The color of the text.</param>
+            <param name="size">The size of the text.</param>
+            <param name="centeredText">If the text should be centered or not.</param>
+        </member>
+        <member name="T:CCL.GTAIV.NativeGame">
+            <summary>
+            Gives you easy access to native functions that are all about the game.
+            </summary>
+        </member>
+        <member name="F:CCL.GTAIV.NativeGame.IV_GameScripts">
+            <summary>A collection of all GTA IV sco script names. Taken from version 1080 of GTA IV.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.NativeGame.IV_MP_GameScripts">
+            <summary>A collection of all GTA IV Multiplayer sco script names. Taken from version 1080 of GTA IV.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.NativeGame.TBOGT_GameScripts">
+            <summary>A collection of all TBoGT sco script names. Taken from version 1080 of GTA IV.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.NativeGame.TBOGT_MP_GameScripts">
+            <summary>A collection of all TBoGT Multiplayer sco script names. Taken from version 1080 of GTA IV.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.NativeGame.TLAD_GameScripts">
+            <summary>A collection of all TLaD sco script names. Taken from version 1080 of GTA IV.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.NativeGame.TLAD_MP_GameScripts">
+            <summary>A collection of all TLaD Multiplayer sco script names. Taken from version 1080 of GTA IV.</summary>
+        </member>
+        <member name="F:CCL.GTAIV.NativeGame.IV_Animations">
+            <summary>A collection of all GTA IV Ped Animation sets and all the animations inside that set.</summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.CurrentEpisode">
+            <summary>
+            Gets the current episode.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.IsMultiplayer">
+            <summary>
+            Gets if the game is in multiplayer.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.IsRankedMultiplayer">
+            <summary>
+            Gets if the game is in ranked multiplayer.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.NetworkMode">
+            <summary>
+            Gets the current network mode.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.NetworkGameMode">
+            <summary>
+            Gets the current game mode.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.PlayerCount">
+            <summary>
+            Gets the number of players.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.GameTime">
+            <summary>
+            Gets how many players there are currently.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.FrameTime">
+            <summary>
+            Gets the frame time.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.FPS">
+            <summary>
+            Gets the fps based on the frame time.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.RadioStation">
+            <summary>
+            Gets or sets the current radio station.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.IsMinigameInProgress">
+            <summary>
+            Gets or sets if a minigame is currently in progress.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.AllowEmergencyServices">
+            <summary>
+            Sets if emergency services are allowed.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.DisableMaxAmmoLimit">
+            <summary>
+            Sets if the max ammo cap is disabled.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.MadDrivers">
+            <summary>
+            Sets if mad drivers should be switched on.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.RadarZoom">
+            <summary>
+            Sets the zoom of the radar.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.TimeScale">
+            <summary>
+            Sets the time scale.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGame.WantedMultiplier">
+            <summary>
+            Sets the wanted multiplier.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.DoAutoSave">
+            <summary>
+            Does an auto save.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.ShowSaveMenu">
+            <summary>
+            Shows the save menu.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.PlayAudioEvent(System.String)">
+            <summary>
+            Plays an audio event with the given name.
+            </summary>
+            <param name="eventName">The name of the event.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.PlayCreditsMusic">
+            <summary>
+            Starts playing the credits music.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.StopCreditsMusic">
+            <summary>
+            Stops playing the credits music.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.PreviewRingtone(System.Int32)">
+            <summary>
+            Previews a ringtone with the given id.
+            </summary>
+            <param name="ringtoneId">The ringtone id to preview.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.StopRingtonePreview">
+            <summary>
+            Stops the current ringtone preview.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.Pause">
+            <summary>
+            Pauses the game. Used when you open the Games for Windows Live overlay.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.Unpause">
+            <summary>
+            Unpauses the game.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.RequestScript(System.String)">
+            <summary>
+            Requests a game script (sco).
+            </summary>
+            <param name="name">The script name without extension.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.MarkScriptAsNoLongerNeeded(System.String)">
+            <summary>
+            Marks a game script (sco) as no longer needed.
+            </summary>
+            <param name="name">The script name without extension.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.TerminateScriptsWithThisName(System.String)">
+            <summary>
+            Terminates all game scripts (sco) with the given name.
+            </summary>
+            <param name="name">The script name without extension.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.DisplayCustomHelpMessage(System.String,System.Boolean,System.Boolean,System.String)">
+            <summary>
+            Displays a custom help message at the top left of the screen.
+            </summary>
+            <param name="text">The text you want to display.</param>
+            <param name="noSound">If the message should display without any sound.</param>
+            <param name="forever">If the message should be visible all the time. Make sure to call <see cref="M:IVSDKDotNet.Native.Natives.CLEAR_HELP"/> once you're done.</param>
+            <param name="targetReplacementGXT">
+            This method works by replacing the text of an unused GXT entry to show your own custom <paramref name="text"/>.<br/>
+            If you like to specify which GXT entry should be replaced, you can do that here.<br/>
+            This can be useful to check if a help message is currently being displayed by using <see cref="M:IVSDKDotNet.Native.Natives.IS_THIS_HELP_MESSAGE_BEING_DISPLAYED(System.String)"/>.
+            </param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.StartNewScript(System.String,System.UInt32)">
+            <summary>
+            Starts a new game script (sco).
+            </summary>
+            <param name="name">The script name without extension.</param>
+            <param name="stackSize">Usually 1024?</param>
+            <returns>Unknown.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.GetScriptInstances(System.String)">
+            <summary>
+            Gets how many game scripts (sco) are running.
+            </summary>
+            <param name="name">The script name without extension.</param>
+            <returns>The number of scripts running.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.DoesScriptExists(System.String)">
+            <summary>
+            Checks if the given game script (sco) exists.
+            </summary>
+            <param name="name">The script name without extension.</param>
+            <returns>True if the script exists. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.IsScriptRunning(System.String)">
+            <summary>
+            Gets if the game script (sco) is running.
+            </summary>
+            <param name="name">The script name without extension.</param>
+            <returns>True if the script is running. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.HasScriptLoaded(System.String)">
+            <summary>
+            Gets if the game script (sco) is loaded.
+            </summary>
+            <param name="name">The script name without extension.</param>
+            <returns>True if the script is loaded. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGame.GenerateHash(System.String)">
+            <summary>
+            Generates a hash from the given string.
+            <para>Useful for getting the hash for a model from the model's name.</para>
+            </summary>
+            <param name="str">The string to generate the hash from.</param>
+            <returns>The hash from the given string.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.NativeGroup">
+            <summary>
+            Gives you easy access to native functions that involve groups.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGroup.Leader">
+            <summary>
+            Gets or sets the leader of this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGroup.MemberCount">
+            <summary>
+            Gets how members this <see cref="T:CCL.GTAIV.NativeGroup"/> has.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGroup.MaxMemberCount">
+            <summary>
+            Gets how members a <see cref="T:CCL.GTAIV.NativeGroup"/> can have in it.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGroup.SeparationRange">
+            <summary>
+            Sets the separation range of the peds in this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGroup.FollowStatus">
+            <summary>
+            Sets the follow status of the peds in this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            <para>
+            Mostly 1 in sco scripts.
+            </para>
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGroup.Formation">
+            <summary>
+            Gets or sets the formation of the peds in this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            <para>
+            Mostly 0 in sco scripts but can go up to 3.
+            </para>
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeGroup.FormationSpacing">
+            <summary>
+            Gets or sets the formating spacing of the peds in this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of the <see cref="T:CCL.GTAIV.NativeGroup"/> class with an existing handle.
+            </summary>
+            <param name="handle">The handle of an already existing group.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.Exists">
+            <inheritdoc/>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.AddMember(IVSDKDotNet.IVPed,System.Boolean)">
+            <summary>
+            Adds a <see cref="T:IVSDKDotNet.IVPed"/> to this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+            <param name="ped">The <see cref="T:IVSDKDotNet.IVPed"/> to add.</param>
+            <param name="neverLeave">Sets if the <see cref="T:IVSDKDotNet.IVPed"/> should never leave the group.</param>
+            <returns>True if the ped got added. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.AddMember(System.Int32,System.Boolean)">
+            <summary>
+            Adds a ped to this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+            <param name="ped">The ped to add.</param>
+            <param name="neverLeave">Sets if the ped should never leave the group.</param>
+            <returns>True if the ped got added. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.AddMember(IVSDKDotNet.IVPed)">
+            <summary>
+            Adds a <see cref="T:IVSDKDotNet.IVPed"/> to this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+            <param name="ped">The <see cref="T:IVSDKDotNet.IVPed"/> to add.</param>
+            <returns>True if the ped got added. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.AddMember(System.Int32)">
+            <summary>
+            Adds a ped to this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+            <param name="ped">The ped to add.</param>
+            <returns>True if the ped got added. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.GetMember(System.Int32)">
+            <summary>
+            Gets a group member by its index.
+            </summary>
+            <param name="index">The index</param>
+            <returns></returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.IsLeader(IVSDKDotNet.IVPed)">
+            <summary>
+            Checks if the <see cref="T:IVSDKDotNet.IVPed"/> is the leader of this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+            <param name="ped">The <see cref="T:IVSDKDotNet.IVPed"/> to check for.</param>
+            <returns>True if this <see cref="T:IVSDKDotNet.IVPed"/> is the leader. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.IsLeader(System.Int32)">
+            <summary>
+            Checks if the ped is the leader of this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+            <param name="ped">The ped to check for.</param>
+            <returns>True if this ped is the leader. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.IsMember(IVSDKDotNet.IVPed)">
+            <summary>
+            Checks if the <see cref="T:IVSDKDotNet.IVPed"/> is a member of this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+            <param name="ped">The <see cref="T:IVSDKDotNet.IVPed"/> to check for.</param>
+            <returns>True if this <see cref="T:IVSDKDotNet.IVPed"/> is a member. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.IsMember(System.Int32)">
+            <summary>
+            Checks if the ped is a member of this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+            <param name="ped">The ped to check for.</param>
+            <returns>True if this ped is a member. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.ToArray(System.Boolean)">
+            <summary>
+            Returns an array of every member of this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+            <param name="includeLeader">If this array should include the leader of this <see cref="T:CCL.GTAIV.NativeGroup"/>.</param>
+            <returns>An array of every members of this <see cref="T:CCL.GTAIV.NativeGroup"/>. <see langword="null"/> if this <see cref="T:CCL.GTAIV.NativeGroup"/> does not exists anymore.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.ToList(System.Boolean)">
+            <summary>
+            Returns a list of every member of this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+            <param name="includeLeader">If this list should include the leader of this <see cref="T:CCL.GTAIV.NativeGroup"/>.</param>
+            <returns>A list of every members of this <see cref="T:CCL.GTAIV.NativeGroup"/>. <see langword="null"/> if this <see cref="T:CCL.GTAIV.NativeGroup"/> does not exists anymore.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.Create">
+            <summary>
+            Creates a new <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+            <returns>If successful, the newly created <see cref="T:CCL.GTAIV.NativeGroup"/> is returned. Otherwise, <see langword="null"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.Delete">
+            <inheritdoc/>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.RemoveMember(IVSDKDotNet.IVPed)">
+            <summary>
+            Removes a <see cref="T:IVSDKDotNet.IVPed"/> from this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+            <param name="ped">The <see cref="T:IVSDKDotNet.IVPed"/> to remove.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.RemoveMember(System.Int32)">
+            <summary>
+            Removes a member by its index from this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+            <param name="index">The index from which to remove the member.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.RemoveAllMembers">
+            <summary>
+            Removes all members from this <see cref="T:CCL.GTAIV.NativeGroup"/>.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.EnterVehicle(IVSDKDotNet.IVVehicle,System.Boolean,System.Boolean)">
+            <summary>
+            Makes all the group members of this <see cref="T:CCL.GTAIV.NativeGroup"/> enter a <see cref="T:IVSDKDotNet.IVVehicle"/>.
+            </summary>
+            <param name="veh">The <see cref="T:IVSDKDotNet.IVVehicle"/> the members should enter.</param>
+            <param name="withLeader">If the leader <see cref="T:IVSDKDotNet.IVPed"/> should enter too.</param>
+            <param name="keepCurrentDriver">If the current driver <see cref="T:IVSDKDotNet.IVPed"/> of the <see cref="T:IVSDKDotNet.IVVehicle"/> should be keept.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeGroup.EnterVehicle(System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            Makes all the group members of this <see cref="T:CCL.GTAIV.NativeGroup"/> enter a <see cref="T:IVSDKDotNet.IVVehicle"/>.
+            </summary>
+            <param name="veh">The vehicle the members should enter.</param>
+            <param name="withLeader">If the leader <see cref="T:IVSDKDotNet.IVPed"/> should enter too.</param>
+            <param name="keepCurrentDriver">If the current driver <see cref="T:IVSDKDotNet.IVPed"/> of the <see cref="T:IVSDKDotNet.IVVehicle"/> should be keept.</param>
+        </member>
+        <member name="T:CCL.GTAIV.NativeLight">
+            <summary>
+            Gives you easy access to native functions that involve lights.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeLight.Visible">
+            <summary>
+            Gets or sets if this light should be visible.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeLight.Position">
+            <summary>
+            Gets or sets the position of this light.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeLight.Radius">
+            <summary>
+            Gets or sets the radius of this light.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeLight.Intensity">
+            <summary>
+            Gets or sets the intensity of this light.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeLight.Color">
+            <summary>
+            Gets or sets the color of this light.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeLight.#ctor(IVSDKDotNet.Script,System.Numerics.Vector3,System.Single,System.Single,System.Drawing.Color)">
+            <summary>
+            Creates a new light.
+            </summary>
+            <param name="createFor">The script needed for drawing this light.</param>
+            <param name="pos">The position of this light.</param>
+            <param name="radius">The radius of this light.</param>
+            <param name="intensity">The intensity of this light.</param>
+            <param name="color">The color of this light.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the createFor parameter is null.</exception>
+        </member>
+        <member name="M:CCL.GTAIV.NativeLight.#ctor(IVSDKDotNet.Script)">
+            <summary>
+            Creates a new light.
+            </summary>
+            <param name="createFor">The script needed for drawing this light.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the createFor parameter is null.</exception>
+        </member>
+        <member name="T:CCL.GTAIV.NativeModel">
+            <summary>
+            Gives you easy access to native functions that involve models.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeModel.IsValid">
+            <summary>
+            Checks if the model is valid (<see cref="P:CCL.GTAIV.NativeModel.Hash"/> is not 0).
+            </summary>
+            <returns>True if the model is valid. Otherwise, false.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.NativePed">
+            <summary>
+            Gives you easy access to native functions that involve peds.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativePed.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of the <see cref="T:CCL.GTAIV.NativePed"/> class with an existing handle.
+            </summary>
+            <param name="handle">The handle of an already existing ped.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativePed.Delete">
+            <inheritdoc/>
+        </member>
+        <member name="M:CCL.GTAIV.NativePed.Exists">
+            <inheritdoc/>
+        </member>
+        <member name="T:CCL.GTAIV.NativePickup">
+            <summary>
+            Gives you easy access to native functions that involve pickups.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativePickup.Position">
+            <summary>
+            Gets the position of this <see cref="T:CCL.GTAIV.NativePickup"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativePickup.HasBeenCollected">
+            <summary>
+            Gets if this <see cref="T:CCL.GTAIV.NativePickup"/> has been collected.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativePickup.DoNotSpawnParkedCarsOnTop">
+            <summary>
+            Sets if parked cars can spawn on top of this <see cref="T:CCL.GTAIV.NativePickup"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativePickup.CollectableByCar">
+            <summary>
+            Sets if this <see cref="T:CCL.GTAIV.NativePickup"/> can be collected by car.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativePickup.RoomHash">
+            <summary>
+            Gets the current room hash of the <see cref="T:CCL.GTAIV.NativePickup"/>.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of the <see cref="T:CCL.GTAIV.NativePickup"/> class with an existing handle.
+            </summary>
+            <param name="handle">The handle of an already existing pickup.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.Delete">
+            <inheritdoc/>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.AddSimpleBlip">
+            <summary>
+            Adds a simple blip for this <see cref="T:CCL.GTAIV.NativePickup"/>.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.RenderWeaponPickupsBigger(System.Boolean)">
+            <summary>
+            Sets if weapon pickups should be rendered bigger in-game.
+            </summary>
+            <param name="value">True, weapon pickups will render bigger. False, weapon pickups will not render bigger.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.SetPickupsFixCars(System.Boolean)">
+            <summary>
+            Sets if pickups fix cars.
+            </summary>
+            <param name="value">True, pickups will fix cars. False, pickups will not fix cars.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.SetAllPickupsOfTypeCollectableByCar(IVSDKDotNet.Enums.ePickupType,System.Boolean)">
+            <summary>
+            Sets if pickups of the given type can be collected by car.
+            </summary>
+            <param name="type">The pickup type this should apply on.</param>
+            <param name="value">True if pickups of given type will be collectable by car. False if pickups of given type will not be collectable by car.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.SetAlwaysDisplayWeaponPickupMessage(System.Boolean)">
+            <summary>
+            Probably sets the message that will be displayed when the game asks you to replace the current weapon with the new weapon.
+            </summary>
+            <param name="value">True if the message should always display. Otherwise, false.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.RemoveAllPickupsOfType(IVSDKDotNet.Enums.ePickupType)">
+            <summary>
+            Removes all pickups of the given type.
+            </summary>
+            <param name="type">The target type.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.Exists">
+            <inheritdoc/>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.HasPlayerCollectedPickup(System.Int32)">
+            <summary>
+            Gets if the pickup has been collected by the given player.
+            </summary>
+            <param name="playerIndex">The player to check on.</param>
+            <returns>True if the given player has collected the pickup. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.AttachBlip">
+            <summary>
+            Attaches a <see cref="T:CCL.GTAIV.NativeBlip"/> to this <see cref="T:CCL.GTAIV.NativePickup"/>.
+            </summary>
+            <returns>If successful, the attached <see cref="T:CCL.GTAIV.NativeBlip"/> is returned. Otherwise, <see langword="null"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.GetSafePickupPositionAtPos(System.Numerics.Vector3)">
+            <summary>
+            Gets a safe position for a pickup from the given position.
+            </summary>
+            <param name="targetPos">Target position to get a safe pickup position from.</param>
+            <returns>The safe position.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.IsAnyPickupAtPos(System.Numerics.Vector3)">
+            <summary>
+            Gets if any pickup is at the given position.
+            </summary>
+            <param name="pos">Target position to check for.</param>
+            <returns>True if there is any pickup at the position. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.IsMoneyPickupAtPos(System.Numerics.Vector3)">
+            <summary>
+            Gets if any money pickup is at the given position.
+            </summary>
+            <param name="pos">Target position to check for.</param>
+            <returns>True if there is any money pickup at the position. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.CreatePickup(IVSDKDotNet.Enums.ePickupModel,IVSDKDotNet.Enums.ePickupType,System.Numerics.Vector3)">
+            <summary>
+            Creates a pickup at the given location.
+            </summary>
+            <param name="model">The pickup model.</param>
+            <param name="type">The pickup type.</param>
+            <param name="pos">The pickup location.</param>
+            <returns>If successful, the newly created pickup is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.CreatePickup(IVSDKDotNet.Enums.ePickupModel,IVSDKDotNet.Enums.ePickupType,System.Numerics.Vector3,System.Numerics.Vector3)">
+            <summary>
+            Creates a pickup at the given location and rotation.
+            </summary>
+            <param name="model">The pickup model.</param>
+            <param name="type">The pickup type.</param>
+            <param name="pos">The pickup location.</param>
+            <param name="rot">The pickup rotation.</param>
+            <returns>If successful, the newly created pickup is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.CreateWeaponPickup(IVSDKDotNet.Enums.ePickupModel,IVSDKDotNet.Enums.ePickupType,System.UInt32,System.Numerics.Vector3)">
+            <summary>
+            Creates a weapon pickup at the given location with the given ammo.
+            </summary>
+            <param name="model">The pickup model.</param>
+            <param name="ammo">The pickup ammo amount.</param>
+            <param name="type">The pickup type.</param>
+            <param name="pos">The pickup location.</param>
+            <returns>If successful, the newly created pickup is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativePickup.CreateMoneyPickup(System.Numerics.Vector3,System.UInt32)">
+            <summary>
+            Creates a money pickup at the given location with the given amount.
+            </summary>
+            <param name="pos">The pickup position.</param>
+            <param name="amount">The money amount.</param>
+            <returns>If successful, the newly created pickup is returned. Otherwise, false.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.NativeRoom">
+            <summary>
+            Gives you easy access to native functions that involve rooms or interiors.
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.NativeFire">
+            <summary>
+            Gives you easy access to native functions that involve fire.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeFire.Position">
+            <summary>
+            Gets the position of this <see cref="T:CCL.GTAIV.NativeFire"/>.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeFire.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of the <see cref="T:CCL.GTAIV.NativeFire"/> class with an existing handle.
+            </summary>
+            <param name="handle">The handle of an already existing fire.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeFire.Delete">
+            <inheritdoc/>
+        </member>
+        <member name="M:CCL.GTAIV.NativeFire.Exists">
+            <inheritdoc/>
+        </member>
+        <member name="M:CCL.GTAIV.NativeFire.IsFireExtinguished">
+            <summary>
+            Checks if this <see cref="T:CCL.GTAIV.NativeFire"/> is extinguished.
+            </summary>
+            <returns>True if extinguished. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeFire.GetNumberOfFiresInRange(System.Numerics.Vector3,System.Single)">
+            <summary>
+            Gets the number of fires that are within this <paramref name="range"/> at the given <paramref name="pos"/>.
+            </summary>
+            <param name="pos">The position.</param>
+            <param name="range">The range.</param>
+            <returns>The number of fires.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeFire.GetNumberOfFiresInArea(System.Numerics.Vector3,System.Numerics.Vector3)">
+            <summary>
+            Gets the number of fires that are within this area.
+            </summary>
+            <param name="pos1">Position 1</param>
+            <param name="pos2">Position 2</param>
+            <returns>The number of fires.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeFire.StartFire(System.Numerics.Vector3,System.UInt32,System.UInt32)">
+            <summary>
+            Starts a new fire at the given <paramref name="position"/>.
+            </summary>
+            <param name="position">The position of the fire.</param>
+            <param name="numGenerationsAllowed">Undocumented. Usually 5.</param>
+            <param name="strength">The strength of the fire. Usually 3.</param>
+            <returns>If successful, the newly created fire is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeFire.StartCharFire(IVSDKDotNet.IVPed)">
+            <summary>
+            Starts a new char fire for the specified <paramref name="ped"/>.
+            </summary>
+            <param name="ped">The <see cref="T:IVSDKDotNet.IVPed"/> who should be set on fire.</param>
+            <returns>If successful, the newly created fire is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeFire.StartCarFire(IVSDKDotNet.IVVehicle)">
+            <summary>
+            Starts a new car fire for the specified <paramref name="veh"/>.
+            </summary>
+            <param name="veh">The <see cref="T:IVSDKDotNet.IVVehicle"/> who should be set on fire.</param>
+            <returns>If successful, the newly created fire is returned. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeFire.StartObjectFire(IVSDKDotNet.IVObject)">
+            <summary>
+            Starts a new object fire for the specified <paramref name="obj"/>.
+            </summary>
+            <param name="obj">The <see cref="T:IVSDKDotNet.IVObject"/> that should be set on fire.</param>
+            <returns>If successful, the newly created fire is returned. Otherwise, false.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.NativeTaskSequence">
+            <summary>
+            Allows you to perform a sequence of tasks on a <see cref="T:IVSDKDotNet.IVPed"/>.
+            </summary>
+        </member>
+        <member name="F:CCL.GTAIV.NativeTaskSequence.TargetPedHandle">
+            <summary>
+            The handle of the <see cref="T:IVSDKDotNet.IVPed"/> this sequence was performed on.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeTaskSequence.Handle">
+            <summary>
+            The handle of the created sequence.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeTaskSequence.Closed">
+            <summary>
+            Gets if this sequence is closed.<br/>
+            A closed sequence cannot be started again.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeTaskSequence.AddTask">
+            <summary>
+            Allows you to add tasks to this sequence.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeTaskSequence.#ctor">
+            <summary>
+            Creates a new instance of the <see cref="T:CCL.GTAIV.NativeTaskSequence"/> class and opens a new sequence task.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeTaskSequence.Perform(System.Int32,System.Boolean)">
+            <summary>
+            Starts performing the added tasks in this sequence on the <paramref name="handle"/>.
+            </summary>
+            <param name="handle">The handle to perform the sequence on.</param>
+            <param name="clearTargetTasksAndBlockEventsBeforeRun">If the current tasks of the target ped should be cleared, and if the ped should block permanent events before performing the sequence.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeTaskSequence.Perform(IVSDKDotNet.IVPed,System.Boolean)">
+            <summary>
+            Starts performing the added tasks in this sequence on the <paramref name="target"/>.
+            </summary>
+            <param name="target">The <see cref="T:IVSDKDotNet.IVPed"/> to perform the sequence on.</param>
+            <param name="clearTargetTasksAndBlockEventsBeforeRun">If the current tasks of the <paramref name="target"/> should be cleared, and if the <paramref name="target"/> should block permanent events before performing the sequence.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeTaskSequence.GetProgress">
+            <summary>
+            Gets the progress of this sequence for the <see cref="T:IVSDKDotNet.IVPed"/> given in the <see cref="M:CCL.GTAIV.NativeTaskSequence.Perform(IVSDKDotNet.IVPed,System.Boolean)"/> method.
+            </summary>
+            <returns>
+            <b>-1</b> if no sequence is currently active on the <see cref="T:IVSDKDotNet.IVPed"/> (or if the sequence completed).<br/>
+            Otherwise return the number of the currently active task (Zero based).
+            
+            <para>
+            <b>- - - Example - - -</b><br/>
+            You've added the following tasks to this sequence:<br/>
+            - (<b>0</b>) <see cref="M:CCL.GTAIV.PedTaskController.UseMobilePhone"/>,<br/>
+            - (<b>1</b>) <see cref="M:CCL.GTAIV.PedTaskController.RunTo(System.Numerics.Vector3)"/>,<br/>
+            - (<b>2</b>) <see cref="M:CCL.GTAIV.PedTaskController.HandsUp(System.UInt32)"/><br/>
+            Now if the <see cref="T:IVSDKDotNet.IVPed"/> reached the <see cref="M:CCL.GTAIV.PedTaskController.HandsUp(System.UInt32)"/> task, this function would return <b>2</b>.
+            </para>
+            
+            </returns>
+        </member>
+        <member name="T:CCL.GTAIV.NativeWorld">
+            <summary>
+            Gives you easy access to native functions that involve the world.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeWorld.PedDensity">
+            <summary>
+            Sets the ped density.
+            <para>0.0 is off, 1.0 is default, 2.0 is twice as much as normal, etc.</para>
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeWorld.CarDensity">
+            <summary>
+            Sets the car density.
+            <para>0.0 is off, 1.0 is default, 2.0 is twice as much as normal, etc</para>
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeWorld.ParkedCarDensity">
+            <summary>
+            Sets the parked car density.
+            <para>0.0 is off, 1.0 is default, 2.0 is twice as much as normal, etc</para>
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeWorld.RandomCarDensity">
+            <summary>
+            Sets the random car density.
+            <para>0.0 is off, 1.0 is default, 2.0 is twice as much as normal, etc</para>
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeWorld.AllowRandomTrains">
+            <summary>
+            Sets if random trains are allowed to appear.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeWorld.AllowRandomBoats">
+            <summary>
+            Sets if random boats are allowed to appear.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeWorld.AllowAmbientPlanes">
+            <summary>
+            Sets if ambient planes are allowed to appear.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeWorld.AllowGarbageTrucks">
+            <summary>
+            Sets if garbage trucks are allowed to appear.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeWorld.GravityEnabled">
+            <summary>
+            Sets if the gravity should be enabled or not. Some things in the world might not be affected by setting this to <see langword="false"/>.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeWorld.CurrentWeather">
+            <summary>
+            Gets or sets the current weather in the world.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeWorld.CurrentDayTime">
+            <summary>
+            Gets or set the current day time in the world.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.NativeWorld.CurrentDate">
+            <summary>
+            Gets the current date in the world.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.MuteGameworldAndPositionedRadioForTV(System.Boolean)">
+            <summary>
+            This function mutes almost all sounds in the game. Some "front end" sounds, like info beeps and cell phone beeps, car radios, cutscenes, and the TV aren't affected. 
+            </summary>
+            <param name="mute">Sets if the world should be muted or not.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.AddExplosion(System.Numerics.Vector3)">
+            <summary>
+            Creates an explosion at the given postition.
+            </summary>
+            <param name="pos">The explosion position.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.AddExplosion(System.Numerics.Vector3,IVSDKDotNet.Enums.eExplosion,System.Single)">
+            <summary>
+            Creates an explosion at the given postition.
+            </summary>
+            <param name="pos">The explosion position.</param>
+            <param name="type">The explosion type.</param>
+            <param name="radius">The explosion radius.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.AddExplosion(System.Numerics.Vector3,IVSDKDotNet.Enums.eExplosion,System.Single,System.Boolean,System.Boolean,System.Single)">
+            <summary>
+            Creates an explosion at the given postition.
+            </summary>
+            <param name="pos">The explosion position.</param>
+            <param name="type">The explosion type.</param>
+            <param name="radius">The explosion radius.</param>
+            <param name="playSound">Sets if the explosion plays sound.</param>
+            <param name="noVisual">Sets if the explosion should be invisible.</param>
+            <param name="camShake">Sets how much the cam will shake.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.SetDoorState(System.UInt32,System.Numerics.Vector3,System.Boolean,System.Single)">
+            <summary>
+            Sets the state of the closest door with the given model.
+            </summary>
+            <param name="model">Model of the nearby door.</param>
+            <param name="pos">Position close to the door.</param>
+            <param name="locked">The door cannot be moved when locked.</param>
+            <param name="angle">The current door angle. 0 is closed, 1 is open, -1 is open to the other direction.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.LoadEnvironmentNow(System.Numerics.Vector3,System.Boolean)">
+            <summary>
+            Loads the environment at the given position.
+            <para>Warning: Can cause a freeze for a few seconds.</para>
+            </summary>
+            <param name="pos">The target position.</param>
+            <param name="alsoLoadAllObjectsNow">
+            If the <see cref="M:IVSDKDotNet.Native.Natives.LOAD_ALL_OBJECTS_NOW"/> native should be called before the <see cref="M:IVSDKDotNet.Native.Natives.LOAD_SCENE(System.Numerics.Vector3)"/> native is called.
+            <para>I dont think it is necessary to set it to <see langword="true"/> as the <see cref="M:IVSDKDotNet.Native.Natives.LOAD_SCENE(System.Numerics.Vector3)"/> native already load all the objects.</para>
+            </param>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.OneDayForward">
+            <summary>
+            Goes to the next day.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.OneDayBack">
+            <summary>
+            Goes back one day.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.UnlockDayTime">
+            <summary>
+            The time of day will be released.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.GetClosestPed(System.Numerics.Vector3,System.Single,System.Int32,System.Int32)">
+            <summary>
+            Doesn't always work so well.
+            </summary>
+            <param name="position">The postition to search for peds.</param>
+            <param name="radius">The radius to search for the closest ped.</param>
+            <param name="unk1">Undocumented. Usually 0 or 1.</param>
+            <param name="unk2">Undocumented. Usually 0 or 1.</param>
+            <returns>If successful, the closest <see cref="T:IVSDKDotNet.IVPed"/> is returned. Otherwise, null.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.GetPedInstanceFromHandle(System.Int32)">
+            <summary>
+            Gets the <see cref="T:IVSDKDotNet.IVPed"/> instance from the given <paramref name="pedHandle"/>.
+            </summary>
+            <param name="pedHandle">The ped handle to get the <see cref="T:IVSDKDotNet.IVPed"/> instance from.</param>
+            <returns>If successful the <see cref="T:IVSDKDotNet.IVPed"/> is returned. Otherwise, null.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.GetVehicleInstanceFromHandle(System.Int32)">
+            <summary>
+            Gets the <see cref="T:IVSDKDotNet.IVVehicle"/> instance from the given <paramref name="vehicleHandle"/>.
+            </summary>
+            <param name="vehicleHandle">The vehicle handle to get the <see cref="T:IVSDKDotNet.IVVehicle"/> instance from.</param>
+            <returns>If successful the <see cref="T:IVSDKDotNet.IVVehicle"/> is returned. Otherwise, null.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.GetObjectInstanceFromHandle(System.Int32)">
+            <summary>
+            Gets the <see cref="T:IVSDKDotNet.IVObject"/> instance from the given <paramref name="objectHandle"/>.
+            </summary>
+            <param name="objectHandle">The object handle to get the <see cref="T:IVSDKDotNet.IVObject"/> instance from.</param>
+            <returns>If successful the <see cref="T:IVSDKDotNet.IVObject"/> is returned. Otherwise, null.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.GetZoneName(System.Numerics.Vector3)">
+            <summary>
+            Gets the name of the current zone at this position.
+            </summary>
+            <param name="pos">The position to get the zone name of.</param>
+            <returns>The name of the zone.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.GetInfoZoneName(System.Numerics.Vector3)">
+            <summary>
+            Gets the name of the current info zone at this position.
+            </summary>
+            <param name="pos">The position to get the info zone name of.</param>
+            <returns>The name of the info zone.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.GetStreetName(System.Numerics.Vector3)">
+            <summary>
+            This gets the street name at the given position.
+            </summary>
+            <param name="pos">The target position to get the street name from.</param>
+            <returns>The street name.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.GetStreetName(System.Numerics.Vector3,System.String@)">
+            <summary>
+            This gets the street name at the given position.
+            </summary>
+            <param name="pos">The target position to get the street name from.</param>
+            <param name="name1">Not guaranteed to have something in it.</param>
+            <returns>Guaranteed to return something.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.GetPositionOnStreet(System.Numerics.Vector3,System.Single)">
+            <summary>
+            Gets the next position on street at the given <paramref name="pos"/>.
+            </summary>
+            <param name="pos">The position to get the next street position from.</param>
+            <param name="radius">The radius to check for if the new position if obscured by a mission entity. If the position is obscured, this function will check for the next nearest position on street.</param>
+            <returns>The position.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.IsPositionVisibleOnScreen(System.Numerics.Vector3,System.Single)">
+            <summary>
+            Checks if the given position is visible on screen.
+            </summary>
+            <param name="pos">The position to check for.</param>
+            <param name="radius">Unknown.</param>
+            <returns><see langword="true"/> if visible. Otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.GetDayState">
+            <summary>
+            Get the current state of the day.
+            <para>Example: Returns <see cref="F:CCL.GTAIV.DayState.Night"/> if it's currently in the middle of the night.</para>
+            </summary>
+            <returns>One of the elements within the <see cref="T:CCL.GTAIV.DayState"/> enum.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.SpawnPed(System.String,IVSDKDotNet.IVMatrix,System.Int32@,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a new ped with the given model name at the given position.
+            </summary>
+            <param name="modelName">The model name of the ped.</param>
+            <param name="position">The position of the ped.</param>
+            <param name="handle">Returns the handle of the ped if the function succeeded. The handle can be used with all sorts of native functions that want the handle of a ped.</param>
+            <param name="addToWorld">Sets if the ped should be added to the world.</param>
+            <param name="setAsMissionPed">Sets if the ped should be marked as a mission ped. This will prevent the ped from despawning.</param>
+            <returns>If successful, the newly created <see cref="T:IVSDKDotNet.IVPed"/> is returned. Otherwise, null.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.SpawnPed(System.String,System.Numerics.Vector3,System.Int32@,System.Boolean)">
+            <summary>
+            Creates a new ped with the given model name at the given position.
+            </summary>
+            <param name="modelName">The model name of the ped.</param>
+            <param name="position">The position of the ped.</param>
+            <param name="handle">Returns the handle of the ped if the function succeeded. The handle can be used with all sorts of native functions that want the handle of a ped.</param>
+            <param name="setAsMissionPed">Sets if the ped should be marked as a mission ped. This will prevent the ped from despawning.</param>
+            <returns>If successful, the newly created <see cref="T:IVSDKDotNet.IVPed"/> is returned. Otherwise, null.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.SpawnPed(System.UInt32,IVSDKDotNet.IVMatrix,System.Int32@,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a new ped with the given model hash at the given position.
+            </summary>
+            <param name="model">The model hash of the ped.</param>
+            <param name="position">The position of the ped.</param>
+            <param name="handle">Returns the handle of the ped if the function succeeded. The handle can be used with all sorts of native functions that want the handle of a ped.</param>
+            <param name="addToWorld">Sets if the ped should be added to the world.</param>
+            <param name="setAsMissionPed">Sets if the ped should be marked as a mission ped. This will prevent the ped from despawning.</param>
+            <returns>If successful, the newly created <see cref="T:IVSDKDotNet.IVPed"/> is returned. Otherwise, null.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.SpawnPed(System.UInt32,System.Numerics.Vector3,System.Int32@,System.Boolean)">
+            <summary>
+            Creates a new ped with the given model hash at the given position.
+            </summary>
+            <param name="model">The model hash of the ped.</param>
+            <param name="position">The position of the ped.</param>
+            <param name="handle">Returns the handle of the ped if the function succeeded. The handle can be used with all sorts of native functions that want the handle of a ped.</param>
+            <param name="setAsMissionPed">Sets if the ped should be marked as a mission ped. This will prevent the ped from despawning. Default is false.</param>
+            <returns>If successful, the newly created <see cref="T:IVSDKDotNet.IVPed"/> is returned. Otherwise, null.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.SpawnVehicle(System.String,IVSDKDotNet.IVMatrix,System.Int32@,System.Boolean)">
+            <summary>
+            Creates a new vehicle with the given model name at the given position.
+            </summary>
+            <param name="modelName">The model name of the vehicle.</param>
+            <param name="position">The position of the vehicle.</param>
+            <param name="handle">Returns the handle of the vehicle if the function succeeded. The handle can be used with all sorts of native functions that want the handle of a vehicle.</param>
+            <param name="setAsMissionVehicle">Sets if the vehicle should be marked as a mission vehicle. This will prevent the vehicle from despawning.</param>
+            <returns>If successful, the newly created <see cref="T:IVSDKDotNet.IVVehicle"/> is returned. Otherwise, null.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.SpawnVehicle(System.String,System.Numerics.Vector3,System.Int32@,System.Boolean)">
+            <summary>
+            Creates a new vehicle with the given model name at the given position.
+            </summary>
+            <param name="modelName">The model name of the vehicle.</param>
+            <param name="position">The position of the vehicle.</param>
+            <param name="handle">Returns the handle of the vehicle if the function succeeded. The handle can be used with all sorts of native functions that want the handle of a vehicle.</param>
+            <param name="setAsMissionVehicle">Sets if the vehicle should be marked as a mission vehicle. This will prevent the vehicle from despawning.</param>
+            <returns>If successful, the newly created <see cref="T:IVSDKDotNet.IVVehicle"/> is returned. Otherwise, null.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.SpawnVehicle(System.UInt32,IVSDKDotNet.IVMatrix,System.Int32@,System.Boolean)">
+            <summary>
+            Creates a new vehicle with the given model hash at the given position.
+            </summary>
+            <param name="model">The model hash of the vehicle.</param>
+            <param name="position">The position of the vehicle.</param>
+            <param name="handle">Returns the handle of the vehicle if the function succeeded. The handle can be used with all sorts of native functions that want the handle of a vehicle.</param>
+            <param name="setAsMissionVehicle">Sets if the vehicle should be marked as a mission vehicle. This will prevent the vehicle from despawning.</param>
+            <returns>If successful, the newly created <see cref="T:IVSDKDotNet.IVVehicle"/> is returned. Otherwise, null.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.NativeWorld.SpawnVehicle(System.UInt32,System.Numerics.Vector3,System.Int32@,System.Boolean)">
+            <summary>
+            Creates a new vehicle with the given model hash at the given position.
+            </summary>
+            <param name="model">The model hash of the vehicle.</param>
+            <param name="position">The position of the vehicle.</param>
+            <param name="handle">Returns the handle of the vehicle if the function succeeded. The handle can be used with all sorts of native functions that want the handle of a vehicle.</param>
+            <param name="setAsMissionVehicle">Sets if the vehicle should be marked as a mission vehicle. This will prevent the vehicle from despawning.</param>
+            <returns>If successful, the newly created <see cref="T:IVSDKDotNet.IVVehicle"/> is returned. Otherwise, null.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.NewsScrollbar">
+            <summary>
+            Stuff for the news scrollbar in The Triangle, south of Star Junction.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.NewsScrollbar.AddStringToNewsScrollbar(System.String)">
+            <summary>
+            This method adds a string to the news scrollbar as seen in The Triangle, south of Star Junction.<br/>
+            It's recommended to call <see cref="M:CCL.GTAIV.NewsScrollbar.ClearNewsScrollbar"/> before calling this function. If you don't, the string will be added next to the previous one that was created.
+            </summary>
+            <param name="str">The string to add to the news scrollbar.</param>
+        </member>
+        <member name="M:CCL.GTAIV.NewsScrollbar.ClearNewsScrollbar">
+            <summary>
+            This method removes all text from the news scrollbar as seen in The Triangle, south of Star Junction.
+            </summary>
+        </member>
+        <member name="T:CCL.GTAIV.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Properties.Resources.IV_MP_Scripts">
+             <summary>
+               Looks up a localized string similar to carsteal
+            coop_bombdbase
+            coop_drugfac
+            coop_swatasslt
+            deathmatch_cr
+            freemode_cr
+            initialnet
+            mpcellphone
+            mpcellphonecalling
+            mpcellphonemain
+            mpcellphonenetwork
+            mpcellphoneparty
+            network_main
+            network_startup
+            party_mode
+            races_cr
+            roving_cr
+            speechcontrol_net
+            tm_base
+            tm_vip
+            txtlnkmiss_net
+            .
+             </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Properties.Resources.IV_Scripts">
+             <summary>
+               Looks up a localized string similar to advanced_car_actions
+            ambairpotarea
+            ambatmq
+            ambbar
+            ambbarrier
+            ambbeggar
+            ambblkhawk
+            ambbouncer
+            ambbridgepatrol
+            ambbusker
+            ambcabaret
+            ambcargoholddoors
+            ambchurchdoors
+            ambclublights
+            ambcomedyclub
+            ambcontrolloader
+            ambcontrolmain
+            ambdealer
+            ambdebug
+            ambfloater
+            ambgerry3doorlock
+            ambhelicopter
+            ambhomelandcordon
+            ambhomelandfed
+            ambhomelandsirens
+            ambhotel
+            ambinternetcafe
+            ambjerseydocksgates
+            ambjimslocks
+            ambliftdoors
+            ambnightclubext
+            ambpimpnpros
+            ambpoledancer
+            ambpolrdblk
+            ambpreacher
+            amb [rest of string was truncated]&quot;;.
+             </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Properties.Resources.TBOGT_MP_Scripts">
+             <summary>
+               Looks up a localized string similar to basejumplauncher_mp
+            debug_net
+            e2_deathmatch
+            e2_freemode
+            e2_party_mode
+            e2_quickdm
+            e2_races
+            initialnet
+            mpcellphone
+            mpcellphonecalling
+            mpcellphonemain
+            mpcellphonenetwork
+            mpcellphoneparty
+            network_main
+            network_session_net
+            network_startup
+            parachutelauncher_mp
+            parachute_player_mp
+            speechcontrol_net
+            .
+             </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Properties.Resources.TBOGT_Scripts">
+             <summary>
+               Looks up a localized string similar to ability_backup
+            ability_bomb
+            ability_gun_car
+            ability_vehicle
+            advanced_car_actions
+            air_hockey
+            air_hockey_trigger
+            ambairpotarea
+            ambatmq
+            ambbar
+            ambbarrier
+            ambbeggar
+            ambblkhawk
+            ambbouncer
+            ambbridgepatrol
+            ambbusker
+            ambcabaret
+            ambcargoholddoors
+            ambchurchdoors
+            ambclublights
+            ambcomedyclub
+            ambcontrolloader
+            ambcontrolmain
+            ambdealer
+            ambdebug
+            ambdrinking
+            ambfloater
+            ambfoodeating
+            ambfunfair
+            ambgerry3doorlock
+            ambhelicopter
+            ambhomelandcordon
+            ambhotel
+            ambinternetcafe
+            ambjerseydocksgates
+            am [rest of string was truncated]&quot;;.
+             </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Properties.Resources.TLAD_MP_Scripts">
+             <summary>
+               Looks up a localized string similar to car_dmge_wdgt_net
+            car_rec_wdgt_net
+            creator_debug_net
+            debug_net
+            drawrect_debug_net
+            drawsprit_debug_net
+            drawtext_debug_net
+            e1_chapter
+            e1_chopper
+            e1_deathmatch
+            e1_destroyvan
+            e1_freemode
+            e1_mostwanted
+            e1_party_mode
+            e1_quickdm
+            e1_races
+            e1_turfwar
+            initialnet
+            locates_debug_net
+            locates_widget_net
+            mpcellphone
+            mpcellphonecalling
+            mpcellphonemain
+            mpcellphonenetwork
+            mpcellphoneparty
+            network_main
+            network_session_net
+            network_startup
+            offset_widget_net
+            places_debug_net
+            races_debug_net
+            scrguide [rest of string was truncated]&quot;;.
+             </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Properties.Resources.TLAD_Scripts">
+             <summary>
+               Looks up a localized string similar to ability_backup
+            ability_bomb
+            ability_gun_car
+            ability_stats
+            ability_vehicle
+            abil_weap_pickup
+            advanced_car_actions
+            air_hockey
+            air_hockey_trigger
+            ambairpotarea
+            ambatmq
+            ambbar
+            ambbarrier
+            ambbeggar
+            ambblkhawk
+            ambbouncer
+            ambbridgepatrol
+            ambbusker
+            ambcabaret
+            ambcargoholddoors
+            ambchurchdoors
+            ambclubhouse
+            ambclublights
+            ambcomedyclub
+            ambcontrolloader
+            ambcontrolmain
+            ambdealer
+            ambfloater
+            ambgentlemansclub
+            ambgerry3doorlock
+            ambhelicopter
+            ambhomelandcordon
+            ambhomelandfed
+            ambhomelandsirens
+             [rest of string was truncated]&quot;;.
+             </summary>
+        </member>
+        <member name="T:CCL.GTAIV.Rope">
+            <summary>
+            Allows you to create a <see cref="T:CCL.GTAIV.Rope"/> within the game world.
+            <para>
+            <b>WARNING:</b> For this to work correctly, you need to make sure you have the model "cj_e1_rope" in GTA IV because it does not exist there.<br/>
+            It does exists in TLAD and TBOGT. In TBOGT this model is also called "<b>cj_e1_rope</b>".<br/>
+            You can also change the model if you like, but this is basically the best rope model you can find and it's from Rockstar.
+            </para>
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Rope.RopeObjects">
+            <summary>
+            A collection of all current objects that make up the rope.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Rope.RopeModel">
+            <summary>
+            Gets the model hash of the model that this <see cref="T:CCL.GTAIV.Rope"/> was created with.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Rope.RopeModelSize">
+            <summary>
+            Gets the size of the rope model this <see cref="T:CCL.GTAIV.Rope"/> was created with.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Rope.IsAttached">
+            <summary>
+            Gets if this <see cref="T:CCL.GTAIV.Rope"/> is attached somewhere.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Rope.AttachOffset">
+            <summary>
+            Gets or sets the attachment offset.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Rope.CurrentDeploymentState">
+            <summary>
+            Gets the currently deployment state of the <see cref="T:CCL.GTAIV.Rope"/>.
+            <para>
+            
+            - <see cref="F:CCL.GTAIV.RopeDeploymentState.Instant"/><br/>
+            This basically means that the <see cref="T:CCL.GTAIV.Rope"/> instantly reached the ground without using any animation which makes it look like it is being deployed from a helicopter or something.
+            
+            </para>
+            <para>
+            
+            - <see cref="F:CCL.GTAIV.RopeDeploymentState.Deploying"/><br/>
+            This is set when the <see cref="T:CCL.GTAIV.Rope"/> is currently playing its deployment animation from the starting point to the ground.<br/>
+            Will be <see cref="F:CCL.GTAIV.RopeDeploymentState.Deployed"/> if the animation is done.
+            
+            </para>
+            <para>
+            
+            - <see cref="F:CCL.GTAIV.RopeDeploymentState.Undeploying"/><br/>
+            This is set when the <see cref="T:CCL.GTAIV.Rope"/> is currently playing its undeployment animation from the ground back to the starting point.<br/>
+            Will be <see cref="F:CCL.GTAIV.RopeDeploymentState.Undeployed"/> if the animation is done.
+            
+            </para>
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Rope.DeploymentAnimEasingValue">
+            <summary>
+            Gets or sets the easing value for the <see cref="T:CCL.GTAIV.Rope"/> animations.
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Rope.WindFrequency">
+            <summary>
+            Gets or set the frequency of the wind effect for the <see cref="T:CCL.GTAIV.Rope"/>.
+            <para>The default is: 0.015f</para>
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Rope.WindAmplitude">
+            <summary>
+            Gets or set the amplitude of the wind effect for the <see cref="T:CCL.GTAIV.Rope"/>.
+            <para>The default is: 0.025f</para>
+            </summary>
+        </member>
+        <member name="P:CCL.GTAIV.Rope.ShowRopePoints">
+            <summary>
+            This visually shows where all the rope objects are connected to each other. Useful for debugging.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.Rope.AttachToVehicle(System.Int32)">
+            <summary>
+            This attaches the <see cref="T:CCL.GTAIV.Rope"/> to the given vehicle.
+            </summary>
+            <param name="handle">The handle of the vehicle to attach the <see cref="T:CCL.GTAIV.Rope"/> to.</param>
+        </member>
+        <member name="M:CCL.GTAIV.Rope.AttachToPed(System.Int32)">
+            <summary>
+            This attaches the <see cref="T:CCL.GTAIV.Rope"/> to the given ped.
+            </summary>
+            <param name="handle">The handle of the ped to attach the <see cref="T:CCL.GTAIV.Rope"/> to.</param>
+        </member>
+        <member name="M:CCL.GTAIV.Rope.Detach">
+            <summary>
+            Detaches the <see cref="T:CCL.GTAIV.Rope"/> from everything.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.Rope.Delete">
+            <summary>
+            Deletes this <see cref="T:CCL.GTAIV.Rope"/>.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.Rope.StartDeploying">
+            <summary>
+            Starts the deployment animation which makes it look like the <see cref="T:CCL.GTAIV.Rope"/> is currently being deployed from a Helicopter.
+            <para>
+            Sets the <see cref="P:CCL.GTAIV.Rope.CurrentDeploymentState"/> to <see cref="F:CCL.GTAIV.RopeDeploymentState.Deploying"/>.
+            </para>
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.Rope.StartUndeploying">
+            <summary>
+            Starts the undeployment animation which makes it look like the <see cref="T:CCL.GTAIV.Rope"/> is currently being undeployed from a Helicopter.
+            <para>
+            Sets the <see cref="P:CCL.GTAIV.Rope.CurrentDeploymentState"/> to <see cref="F:CCL.GTAIV.RopeDeploymentState.Undeploying"/>.
+            </para>
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.Rope.Process(System.Numerics.Vector3)">
+            <summary>
+            Processes all the rope logic like movement, animation and wind effect.
+            </summary>
+            <param name="overridePos">If you want to override the position the rope was originally created at you can do this here.</param>
+        </member>
+        <member name="M:CCL.GTAIV.Rope.GetAttachmentInfo(CCL.GTAIV.AttachedTo@,System.Int32@)">
+            <summary>
+            Gets information about what the <see cref="T:CCL.GTAIV.Rope"/> is currently attached to.
+            </summary>
+            <param name="attachedTo">To what the <see cref="T:CCL.GTAIV.Rope"/> is currently attached to.</param>
+            <param name="attachedObjectHandle">The handle of the entity the <see cref="T:CCL.GTAIV.Rope"/> is currently attached to.</param>
+            <returns><see langword="true"/> if the <see cref="T:CCL.GTAIV.Rope"/> is currently attached somewhere. Otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.Rope.GetRopeStartingPos">
+            <summary>
+            Gets the starting position of the first rope object.
+            </summary>
+            <returns>The starting position of the first rope object.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.Rope.GetRopeEndPos">
+            <summary>
+            Gets the position of the last rope object.
+            </summary>
+            <returns>The position of the last rope object.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.Rope.Create(System.Numerics.Vector3,CCL.GTAIV.RopeDeploymentState,System.String)">
+            <summary>
+            Creates a new <see cref="T:CCL.GTAIV.Rope"/> in the world.
+            </summary>
+            <param name="startPos">The position where to spawn the <see cref="T:CCL.GTAIV.Rope"/>.</param>
+            <param name="startingState">Determines the starting state of the <see cref="T:CCL.GTAIV.Rope"/>. Default is <see cref="F:CCL.GTAIV.RopeDeploymentState.Instant"/>, which means the <see cref="T:CCL.GTAIV.Rope"/> instantly reached the ground without using any animations.</param>
+            <param name="model">The model to use for the <see cref="T:CCL.GTAIV.Rope"/>. Default and recommended is "cj_e1_rope" WHICH NEEDS TO EXIST IN YOUR GAME! OTHERWISE THIS WILL ALWAYS RETURN NULL!</param>
+            <returns>
+            The created <see cref="T:CCL.GTAIV.Rope"/> if successful.
+            <para>
+            Otherwise <see langword="null"/> if:<br/>
+            - The given <paramref name="model"/> does not exist within the game (THIS WILL ALSO THROW AN EXCEPTION!).<br/>
+            - The <paramref name="startPos"/> is below the ground position at this position.
+            </para>
+            </returns>
+            <exception cref="T:System.Exception">Thrown when the given <paramref name="model"/> does not exists within the game.</exception>
+        </member>
+        <member name="M:CCL.GTAIV.Rectangle3D.#ctor(System.Numerics.Vector3,System.Numerics.Vector3)">
+            <summary>
+            Creates a new <see cref="T:CCL.GTAIV.Rectangle3D"/>.
+            </summary>
+            <param name="center">The center/initial position.</param>
+            <param name="size">The size of this <see cref="T:CCL.GTAIV.Rectangle3D"/>.</param>
+        </member>
+        <member name="M:CCL.GTAIV.Rectangle3D.Visualize(System.Single,System.Single)">
+            <summary>
+            Visualizes the bounds of this <see cref="T:CCL.GTAIV.Rectangle3D"/>. This needs to be called in a loop, like from your <see cref="E:IVSDKDotNet.Script.Tick"/> event.<br/>
+            The center of the <see cref="T:CCL.GTAIV.Rectangle3D"/> is gonna be orange, and the corners are gonne be magenta.
+            </summary>
+            <param name="centerSize">The size of the corona that represents the <see cref="P:CCL.GTAIV.Rectangle3D.Center"/> of this <see cref="T:CCL.GTAIV.Rectangle3D"/>.</param>
+            <param name="cornerSize">The size of the corona that represents the corners of this <see cref="T:CCL.GTAIV.Rectangle3D"/>.</param>
+        </member>
+        <member name="M:CCL.GTAIV.Rectangle3D.Intersects(CCL.GTAIV.Rectangle3D)">
+            <summary>
+            Checks if the given <see cref="T:CCL.GTAIV.Rectangle3D"/> is intersects with this <see cref="T:CCL.GTAIV.Rectangle3D"/>.
+            </summary>
+            <param name="bounds">The <see cref="T:CCL.GTAIV.Rectangle3D"/> to check.</param>
+            <returns>True if they intersect. Otherwise, false.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.Rectangle3D.Empty">
+            <summary>
+            Returns an empty <see cref="T:CCL.GTAIV.Rectangle3D"/>.
+            </summary>
+            <returns>An empty <see cref="T:CCL.GTAIV.Rectangle3D"/>.</returns>
+        </member>
+        <member name="T:CCL.GTAIV.PedTaskController">
+            <summary>
+            Gives you easy access to some native function tasks for a <see cref="T:IVSDKDotNet.IVPed"/>.
+            </summary>
+        </member>
+        <member name="F:CCL.GTAIV.PedTaskController.MAX_DURATION">
+            <summary>1 Hour</summary>
+        </member>
+        <member name="P:CCL.GTAIV.PedTaskController.IsValid">
+            <summary>
+            Gets if this <see cref="T:CCL.GTAIV.PedTaskController"/> is valid or not.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.PedTaskController.Empty">
+            <summary>
+            Returns an invalid <see cref="T:CCL.GTAIV.PedTaskController"/> which cannot be used to perfom any tasks on a <see cref="T:IVSDKDotNet.IVPed"/>.
+            </summary>
+            <returns>An invalid <see cref="T:CCL.GTAIV.PedTaskController"/>.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.PedTaskController.FromHandle(System.Int32)">
+            <summary>
+            Creates a new <see cref="T:CCL.GTAIV.PedTaskController"/> from an existing ped <paramref name="handle"/>.
+            </summary>
+            <param name="handle">The handle from an existing ped.</param>
+            <returns>The newly created <see cref="T:CCL.GTAIV.PedTaskController"/> if successful. Otherwise, an invalid <see cref="T:CCL.GTAIV.PedTaskController"/> is returned if the <paramref name="handle"/> is 0.</returns>
+        </member>
+        <member name="M:CCL.GTAIV.PedTaskController.SetAlwaysKeepTask(System.Boolean)">
+            <summary>
+            Sets if the <see cref="T:IVSDKDotNet.IVPed"/> should keep a task.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.PedTaskController.StartScenario(System.String,System.Numerics.Vector3)">
+            <summary>
+            Example scenario: Vehicle_LookingInBoot
+            <para>Check out <b>Scenarios.dat</b> file inside the <b>common -> data</b> folder for more scenarios.</para>
+            </summary>
+            <param name="scenarioName">The name of the scenario to start.</param>
+            <param name="pos">The position of the scenario to start?</param>
+        </member>
+        <member name="T:CCL.GTAIV.Win32.Win32Natives">
+            <summary>
+            Some native Win32 and helper functions.
+            </summary>
+        </member>
+        <member name="M:CCL.GTAIV.Win32.Win32Natives.GetModuleHandle(System.String,System.Int32)">
+            <summary>
+            Gets the base address of a module by the given <paramref name="moduleName"/> and subtracts it by the given <paramref name="subtract"/> value.
+            </summary>
+            <param name="moduleName">
+            The name of the module to get the base address of.
+            <para><b>Example</b>: IVSDKDotNet.asi</para>
+            </param>
+            <param name="subtract">
+            Subtracts the base address by the given value.
+            <para><b>Example for dll files</b>: 0x10000000</para>
+            <para><b>Example for exe files</b>: 0x40000000</para>
+            </param>
+            <returns>The subtracted base address of the module. Otherwise, <see cref="F:System.IntPtr.Zero"/>.</returns>
+        </member>
+    </members>
+</doc>

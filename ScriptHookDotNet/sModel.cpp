@@ -86,7 +86,6 @@ namespace GTA
 
 		IVSDKDotNet::Native::Natives::REQUEST_MODEL(pHash);
 	}
-
 	bool Model::LoadToMemoryNow(int timeout)
 	{
 		if (pHash == 0)
@@ -97,7 +96,31 @@ namespace GTA
 		if (isInMemory)
 			return true;
 
-		IVSDKDotNet::IVStreaming::LoadAllRequestedModels(false);
+		DateTime maxtime;
+		if (timeout >= 0)
+			maxtime = DateTime::Now + TimeSpan::FromMilliseconds(timeout);
+		else
+			maxtime = DateTime::MaxValue;
+
+		while (!isInMemory)
+		{
+			Game::WaitInCurrentScript(0);
+
+			IVSDKDotNet::IVStreaming::ScriptRequestModel(pHash);
+
+			// Timeout. Force model to load if current thread is the main thread
+			if (DateTime::Now > maxtime)
+			{
+				if (GetManagerScript()->GetMainThreadID() == GetCurrentThreadID())
+				{
+					IVSDKDotNet::IVStreaming::LoadAllRequestedModels(false);
+					return true;
+				}
+
+				return false;
+			}
+		}
+
 		return true;
 	}
 	void Model::LoadCollisionDataToMemory()

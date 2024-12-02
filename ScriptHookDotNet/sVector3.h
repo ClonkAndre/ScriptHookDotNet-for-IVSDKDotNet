@@ -80,6 +80,14 @@ namespace GTA {
 		/// <param name="z">Initial value for the Z component of the vector.</param>
 		Vector3( float x, float y, float z );	
 
+		static Vector3 ToGTA(System::Numerics::Vector3 value)
+		{
+			return Vector3(value.X, value.Y, value.Z);
+		}
+		System::Numerics::Vector3 ToNumerics()
+		{
+			return System::Numerics::Vector3(X, Y, Z);
+		}
 
 		/// <summary>
 		/// Calculates the length of the vector.

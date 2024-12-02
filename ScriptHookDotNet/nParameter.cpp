@@ -51,6 +51,8 @@ namespace GTA
 		{
 			if (type == int::typeid)
 				return vtype::var_int;
+			else if (type == UInt32::typeid)
+				return vtype::var_uint;
 			else if (type == float::typeid)
 				return vtype::var_float;
 			else if (type == bool::typeid)
@@ -100,6 +102,10 @@ namespace GTA
 			Value = value;
 		}
 		Parameter::Parameter(int value)
+		{
+			SetValue(value);
+		}
+		Parameter::Parameter(uint32_t value)
 		{
 			SetValue(value);
 		}
@@ -178,6 +184,10 @@ namespace GTA
 		{
 			Set(vtype::var_int, value);
 		}
+		void Parameter::SetValue(uint32_t value)
+		{
+			Set(vtype::var_uint, value);
+		}
 		void Parameter::SetValue(float value)
 		{
 			Set(vtype::var_float, value);
@@ -245,6 +255,12 @@ namespace GTA
 		}
 
 		Parameter::operator Parameter ^ (int source)
+		{
+			Parameter^ p = gcnew Parameter();
+			p->SetValue(source);
+			return p;
+		}
+		Parameter::operator Parameter ^ (uint32_t source)
 		{
 			Parameter^ p = gcnew Parameter();
 			p->SetValue(source);
@@ -360,6 +376,12 @@ namespace GTA
 			p->SetValue(source);
 			return p;
 		}
+		Pointer::operator Pointer ^ (uint32_t source)
+		{
+			Pointer^ p = gcnew Pointer();
+			p->SetValue(source);
+			return p;
+		}
 		Pointer::operator Pointer ^ (float source)
 		{
 			Pointer^ p = gcnew Pointer();
@@ -455,6 +477,22 @@ namespace GTA
 		{
 			if (source->TargetType == vtype::var_int)
 				return Convert::ToInt32(source->Value);
+			if (source->TargetType == vtype::var_uint)
+				return Convert::ToUInt32(source->Value);
+			if (source->TargetType == vtype::var_float)
+				return (int)Convert::ToSingle(source->Value);
+			if (source->TargetType == vtype::var_bool)
+				return Convert::ToBoolean(source->Value) ? 1 : 0;
+
+			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to integer");
+			return 0;
+		}
+		Pointer::operator uint32_t(Pointer^ source)
+		{
+			if (source->TargetType == vtype::var_uint)
+				return Convert::ToUInt32(source->Value);
+			if (source->TargetType == vtype::var_int)
+				return Convert::ToInt32(source->Value);
 			if (source->TargetType == vtype::var_float)
 				return (int)Convert::ToSingle(source->Value);
 			if (source->TargetType == vtype::var_bool)
@@ -469,6 +507,8 @@ namespace GTA
 				return Convert::ToSingle(source->Value);
 			if (source->TargetType == vtype::var_int)
 				return (float)Convert::ToInt32(source->Value);
+			if (source->TargetType == vtype::var_uint)
+				return (float)Convert::ToUInt32(source->Value);
 
 			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to float");
 			return 0.0f;
@@ -479,6 +519,8 @@ namespace GTA
 				return (double)Convert::ToSingle(source->Value);
 			if (source->TargetType == vtype::var_int)
 				return (double)Convert::ToInt32(source->Value);
+			if (source->TargetType == vtype::var_uint)
+				return (double)Convert::ToUInt32(source->Value);
 
 			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to float");
 			return 0.0;
@@ -489,6 +531,8 @@ namespace GTA
 				return Convert::ToBoolean(source->Value);
 			if (source->TargetType == vtype::var_int)
 				return Convert::ToInt32(source->Value) != 0;
+			if (source->TargetType == vtype::var_uint)
+				return Convert::ToUInt32(source->Value) != 0;
 
 			throw gcnew InvalidCastException("Invalid cast from Native.Pointer of type " + GetTypeName(source->TargetType) + " to bool");
 			return 0;

@@ -29,7 +29,6 @@
 #include "nParameter.h"
 #include "nTemplate.h"
 
-//#include "sModel.h"
 #include "Object.h"
 #include "Ped.h"
 #include "Vehicle.h"
@@ -96,7 +95,7 @@ namespace GTA
 				Parameter^ param = Arguments[i];
 
 				// If parameter is a pointer, set the object at index X to nullptr
-				if (param->GetType() == Pointer::typeid)
+				if (/*param->GetType() == Pointer::typeid*/ param->isPointer)
 				{
 					args[i] = nullptr;
 					continue;
@@ -146,7 +145,12 @@ namespace GTA
 					// Basic types
 					case vtype::var_int:
 						{
-						args[i] = Convert::ToInt32(param->Value);
+							args[i] = Convert::ToInt32(param->Value);
+						}
+						break;
+					case vtype::var_uint:
+						{
+							args[i] = Convert::ToUInt32(param->Value);
 						}
 						break;
 					case vtype::var_float:
@@ -186,9 +190,24 @@ namespace GTA
 
 			}
 
-			// Result
-			LOG_NATIVE_CALL_TO_DEBUG_OUTPUT(String::Format("About to call native function '{0}'", Name));
-			System::Object^ r = IVSDKDotNet::Native::Function::Call<System::Object^>(Name, args);
+			LOG_NATIVE_CALL_TO_DEBUG_OUTPUT(String::Format("About to call native function '{0}' with '{1}' arguments.", Name, args->Length));
+
+			// Check how to invoke the native
+			System::Object^ nativeResult = IVSDKDotNet::Native::Function::Call<System::Object^>(Name, args);
+
+			//if (GetManagerScript()->GetMainThreadID() == GetCurrentThreadID())
+			//{
+			//	// Invoke directly
+			//	LOG_NATIVE_CALL_TO_DEBUG_OUTPUT(String::Format("Calling native function '{0}' directly as the current thread is the main thread.", Name));
+			//	nativeResult = IVSDKDotNet::Native::Function::Call<System::Object^>(Name, args);
+			//}
+			//else
+			//{
+			//	// Queue to be executed on main thread
+			//	LOG_NATIVE_CALL_TO_DEBUG_OUTPUT(String::Format("Queueing native function '{0}' as the current thread is NOT the main thread.", Name));
+			//	nativeResult = GetManagerScript()->DispatchNativeCall(Name, args);
+			//}
+
 			LOG_NATIVE_CALL_TO_DEBUG_OUTPUT(String::Format("Just called the native function '{0}'", Name));
 
 			// Set new argument values if they are pointers
@@ -196,14 +215,23 @@ namespace GTA
 			{
 				Parameter^ param = Arguments[i];
 
-				if (param->GetType() == Pointer::typeid)
+				if (param->Value == nullptr)
+				{
+					WRITE_TO_DEBUG_OUTPUT("NULLPTR");
+				}
+				else
+				{
+					WRITE_TO_DEBUG_OUTPUT(param->Value->ToString());
+				}
+
+				if (/*param->GetType() == Pointer::typeid*/ param->isPointer)
 					Arguments[i]->Set(param->TargetType, args[i]);
 			}
 
-			if (!r)
+			if (!nativeResult)
 				return T();
 
-			return (T)ConvertReturnTypeToExpectedType(r, T::typeid);
+			return (T)ConvertReturnTypeToExpectedType(nativeResult, T::typeid);
 		}
 
 		void Function::Call(String^ Name, ... array<Parameter^>^ Arguments)

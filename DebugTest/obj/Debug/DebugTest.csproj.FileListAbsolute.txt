@@ -1,0 +1,16 @@
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\bin\Debug\DebugTest.net.dll
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\bin\Debug\DebugTest.net.pdb
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\bin\Debug\ScriptHookDotNet.dll
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\bin\Debug\ClonksCodingLib.GTAIV.dll
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\bin\Debug\IVSDKDotNetWrapper.dll
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\bin\Debug\ScriptHookDotNet.pdb
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\bin\Debug\ScriptHookDotNet.xml
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\bin\Debug\ClonksCodingLib.GTAIV.pdb
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\bin\Debug\ClonksCodingLib.GTAIV.xml
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\bin\Debug\IVSDKDotNetWrapper.pdb
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\bin\Debug\IVSDKDotNetWrapper.xml
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\obj\Debug\DebugTest.csproj.AssemblyReference.cache
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\obj\Debug\DebugTest.csproj.CoreCompileInputs.cache
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\obj\Debug\DebugTest.csproj.Up2Date
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\obj\Debug\DebugTest.net.dll
+C:\Users\Napal\Documents\GitHub\GTAIV\ScriptHookDotNet-for-IVSDKDotNet\DebugTest\obj\Debug\DebugTest.net.pdb

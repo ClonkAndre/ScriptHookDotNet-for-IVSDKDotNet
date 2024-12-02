@@ -77,6 +77,15 @@ namespace GTA {
 		/// <param name="w">The W component of the quaternion.</param>
 		Quaternion( Vector3 value, float w );
 
+		static Quaternion ToGTA(System::Numerics::Quaternion value)
+		{
+			return Quaternion(value.X, value.Y, value.Z, value.W);
+		}
+		System::Numerics::Quaternion ToNumerics()
+		{
+			return System::Numerics::Quaternion(X, Y, Z, W);
+		}
+
 		/// <summary>
 		/// Gets the identity <see cref="Quaternion"/> (0, 0, 0, 1).
 		/// </summary>

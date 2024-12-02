@@ -93,6 +93,15 @@ namespace GTA {
 		/// <param name="w">Initial value for the W component of the vector.</param>
 		Vector4( float x, float y, float z, float w );	
 
+		static Vector4 ToGTA(System::Numerics::Vector4 value)
+		{
+			return Vector4(value.X, value.Y, value.Z, value.W);
+		}
+		System::Numerics::Vector4 ToNumerics()
+		{
+			return System::Numerics::Vector4(X, Y, Z, W);
+		}
+
 		/// <summary>
 		/// Calculates the length of the vector.
 		/// </summary>
