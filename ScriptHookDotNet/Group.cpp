@@ -39,10 +39,10 @@ namespace GTA
 
 	// - - - Constructor - - -
 	Group::Group(int Handle)
-		: HandleObject(Handle)
+		: HandleObject(Handle, HandleType::Group)
 	{
 	}
-	Group::Group(Ped^ Leader) : HandleObject(0)
+	Group::Group(Ped^ Leader) : HandleObject(0, HandleType::Group)
 	{
 		int g;
 		IVSDKDotNet::Native::Natives::CREATE_GROUP(false, g, true);

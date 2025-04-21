@@ -37,10 +37,11 @@ namespace base
 		int pHandle;
 
 	internal:
-		HandleObject(int Handle)
+		HandleObject(int Handle, HandleType type)
 		{
 			pHandle = Handle;
 			UID = Handle;
+			Type = type;
 		}
 
 	public:

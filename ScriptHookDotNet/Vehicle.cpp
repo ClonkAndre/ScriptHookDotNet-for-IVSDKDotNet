@@ -41,7 +41,7 @@ namespace GTA
 
 	// - - - Constructor - - -
 	Vehicle::Vehicle(int handle)
-		:HandleObject(handle)
+		:HandleObject(handle, HandleType::Vehicle)
 	{
 	}
 

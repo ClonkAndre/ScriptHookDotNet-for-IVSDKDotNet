@@ -33,7 +33,7 @@ namespace GTA
 
 	// - - - Constructor - - -
 	ScriptedFire::ScriptedFire(int Handle)
-		:HandleObject(Handle)
+		:HandleObject(Handle, HandleType::ScriptedFire)
 	{
 	}
 

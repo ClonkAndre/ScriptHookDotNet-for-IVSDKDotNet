@@ -33,9 +33,10 @@ namespace GTA
 		public base::iDeletable,
 		public base::iAddressableObject
 	{
-	internal:
+	public:
 		Blip(int Handle);
-
+	
+	internal:
 		virtual bool InternalCheckExists() override;
 
 	public:

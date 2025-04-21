@@ -25,82 +25,79 @@
 
 namespace GTA
 {
+
+	// TODO: Continue with the cleanup
+	//		 Figure something out with the metadata stuff
+
 	CLASS_ATTRIBUTES
 	public ref class ContentCache sealed
 	{
 	public:
-
 		static const int MAX_FIRES = 100;
-
-		static Dictionary<int,Player^>^ PlayerCache = gcnew Dictionary<int,Player^>();
-		static Dictionary<int,Ped^>^ PedCache = gcnew Dictionary<int,Ped^>();
-		static Dictionary<int,Vehicle^>^ VehicleCache = gcnew Dictionary<int,Vehicle^>();
-		static Dictionary<int,GTA::Object^>^ ObjectCache = gcnew Dictionary<int,GTA::Object^>();
-		static Dictionary<int,Pickup^>^ PickupCache = gcnew Dictionary<int,Pickup^>();
-		static Dictionary<int,Group^>^ GroupCache = gcnew Dictionary<int,Group^>();
-		static Dictionary<int,Blip^>^ BlipCache = gcnew Dictionary<int,Blip^>();
-		static Dictionary<int,Camera^>^ CameraCache = gcnew Dictionary<int,Camera^>();
-		static List<ScriptedFire^>^ FireCache = gcnew List<ScriptedFire^>();
-
-		static Queue<base::iDeletable^>^ DeleteCache = gcnew Queue<base::iDeletable^>();
-		static Queue<int>^ DeleteQueue = gcnew Queue<int>();
-
+		
 		static Dictionary<String^,System::Object^>^ metadata = gcnew Dictionary<String^,System::Object^>();
 
-		generic <class T> where T: base::Object
-		static void RemoveNonExisting(List<T>^ list);
-		generic <class T> where T: base::Object
-		static void RemoveNonExisting(Dictionary<int,T>^ dict);
+	public:
 
-		static void RemoveNonExisting();
-		static void RemoveAll(bool DeleteStuff);
-		static void DeleteStuff();
+		// IV-SDK .NET ScriptHookDotNet Cache stuff
+		static void AddEntity(GTA::base::Object^ obj);
 
-		static void AddPlayer(GTA::Player^ p);
-		static GTA::Player^ GetPlayer(int ID);
-		static void RemovePlayer(int ID);
-		static void RemovePlayer(GTA::Player^ p);
+		generic <class T>
+		static T GetEntity(int handle, HandleType type);
 
+		static void RemoveEntity(GTA::base::Object^ obj);
+		static void RemoveEntity(int handle);
+
+		// Ped
 		static void AddPed(GTA::Ped^ p);
 		static GTA::Ped^ GetPed(int Handle);
-		static void RemovePed(int Handle);
+		//static void RemovePed(int Handle);
 		static void RemovePed(GTA::Ped^ p);
-
+		
+		// Vehicle
 		static void AddVehicle(GTA::Vehicle^ v);
 		static GTA::Vehicle^ GetVehicle(int Handle);
-		static void RemoveVehicle(int Handle);
-		static void RemoveVehicle(GTA::Vehicle^ v);
+		//static void RemoveVehicle(int Handle);
+		//static void RemoveVehicle(GTA::Vehicle^ v);
 
+		// Object
 		static void AddObject(GTA::Object^ o);
 		static GTA::Object^ GetObject(int Handle);
-		static void RemoveObject(int Handle);
-		static void RemoveObject(GTA::Object^ o);
+		//static void RemoveObject(int Handle);
+		//static void RemoveObject(GTA::Object^ o);
 
+		// Pickup
 		static void AddPickup(GTA::Pickup^ p);
 		static GTA::Pickup^ GetPickup(int Handle);
-		static void RemovePickup(int Handle);
-		static void RemovePickup(GTA::Pickup^ p);
+		//static void RemovePickup(int Handle);
+		//static void RemovePickup(GTA::Pickup^ p);
 
+		// Group
 		static void AddGroup(GTA::Group^ g, bool CreatedByMe);
 		static GTA::Group^ GetGroup(int Handle, bool CreatedByMe);
-		static void RemoveGroup(int Handle);
+		//static void RemoveGroup(int Handle);
 		static void RemoveGroup(GTA::Group^ g);
 
+		// Blip
 		static void AddBlip(GTA::Blip^ b, bool CreatedByMe);
 		static GTA::Blip^ GetBlip(int Handle, bool CreatedByMe);
-		static void RemoveBlip(int Handle);
-		static void RemoveBlip(GTA::Blip^ b);
+		//static void RemoveBlip(int Handle);
+		//static void RemoveBlip(GTA::Blip^ b);
 
+		// Camera
 		static void AddCamera(GTA::Camera^ c, bool CreatedByMe);
 		static GTA::Camera^ GetCamera(int Handle, bool CreatedByMe);
-		static void RemoveCamera(int Handle);
-		static void RemoveCamera(GTA::Camera^ c);
+		//static void RemoveCamera(int Handle);
+		//static void RemoveCamera(GTA::Camera^ c);
 
+		// Fire
 		static void AddFire(GTA::ScriptedFire^ f, bool CreatedByMe);
 		static GTA::ScriptedFire^ GetFire(int Handle, bool CreatedByMe);
-		static void RemoveFire(int Handle);
-		static void RemoveFire(GTA::ScriptedFire^ f);
-		static void FireAmountCheck();
+		//static void RemoveFire(int Handle);
+		//static void RemoveFire(GTA::ScriptedFire^ f);
+		//static void FireAmountCheck();
+
+	public:
 
 		static System::Object^ GetMetaData(int ItemHandle, String^ ValueName) {
 			String^ id = ItemHandle.ToString() + "#" + ValueName->ToLower();

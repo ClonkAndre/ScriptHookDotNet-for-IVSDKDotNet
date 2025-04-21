@@ -37,7 +37,7 @@ namespace GTA
 
 	// - - - Constructor - - -
 	Pickup::Pickup(int Handle)
-		:HandleObject(Handle)
+		:HandleObject(Handle, HandleType::Pickup)
 	{
 	}
 

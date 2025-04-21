@@ -183,7 +183,7 @@ namespace GTA
 			{
 
 				// The "DialogueSystem" mod is trying to call the "SET_VOICE_ID_FROM_HEAD_COMPONENT" native passing a string to the "VoiceId" parameter but the native wants an integer?
-				// After checking all the sco scripts, none of the scripts using this native pass in a integer instead of a string...
+				// After checking all the sco scripts, none of the scripts using this native pass in a string, but instead pass in an integer
 				// Function.Call("SET_VOICE_ID_FROM_HEAD_COMPONENT", ped, "PED_COMPONENT_HEAD", 1);
 				if (args[1]->GetType() == System::String::typeid)
 					args[1] = 0; // Just default to 0...

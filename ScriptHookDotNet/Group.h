@@ -29,18 +29,15 @@ namespace GTA{
 		public base::HandleObject, 
 		public base::iGroup,
 		public base::iDeletable,
-		public System::Collections::Generic::IEnumerable<Ped^> {
-
+		public System::Collections::Generic::IEnumerable<Ped^>
+	{
 	protected:
-		//int pHandle;
 		static const int MAX_GROUP_SIZE = 7;
 
-	internal:
+	public:
 		Group(int Handle);
-		//property int Handle{ 
-		//	int get();
-		//}
 
+	internal:
 		void SetHandle(int Handle, bool CreatedByMe);
 		virtual bool InternalCheckExists() override;
 

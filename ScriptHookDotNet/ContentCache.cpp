@@ -20,6 +20,8 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "ContentCache.h"
@@ -40,432 +42,332 @@
 namespace GTA
 {
 
-	void ContentCache::RemoveAll(bool deletestuff)
+	// IV-SDK .NET ScriptHookDotNet Cache stuff
+	void ContentCache::AddEntity(GTA::base::Object^ obj)
 	{
-		PedCache->Clear();
-		VehicleCache->Clear();
-		ObjectCache->Clear();
-		PickupCache->Clear();
-		GroupCache->Clear();
-		BlipCache->Clear();
-		CameraCache->Clear();
-		FireCache->Clear();
-
-		PlayerCache->Clear();
-		DeleteCache->Clear();
-		metadata->Clear();
-	}
-	void ContentCache::RemoveNonExisting()
-	{
-		RemoveNonExisting(PedCache);
-		RemoveNonExisting(VehicleCache);
-		RemoveNonExisting(ObjectCache);
-		RemoveNonExisting(PickupCache);
-		RemoveNonExisting(GroupCache); 
-		RemoveNonExisting(BlipCache);
-		RemoveNonExisting(CameraCache);
-		RemoveNonExisting(FireCache);
+		GetManagerScript()->SHDNCache_AddEntity(obj);
 	}
 
-	generic <class T> where T: base::Object
-	void ContentCache::RemoveNonExisting(List<T>^ list)
+	generic <class T>
+	T ContentCache::GetEntity(int handle, HandleType type)
 	{
-		for (int i = list->Count-1; i >= 0; i--)
-		{
-			if (!list[i]->Exists())
-			{
-				list->RemoveAt(i);
-				WRITE_TO_DEBUG_OUTPUT( "Non-existing " + list[i]->GetType()->Name + " " + list[i]->UID.ToString() + " removed!" );
-			}
-		}
-	}
-	generic <class T> where T: base::Object
-	void ContentCache::RemoveNonExisting(Dictionary<int,T>^ list)
-	{
-		for each (KeyValuePair<int,T> kvp in list)
-		{
-			if (!kvp.Value->Exists())
-			{
-				DeleteQueue->Enqueue(kvp.Key);
-				WRITE_TO_DEBUG_OUTPUT( "Non-existing " + kvp.Value->GetType()->Name + " " + kvp.Value->UID.ToString() + " removed!" );
-			}
-		}
+		System::Object^ obj = GetManagerScript()->SHDNCache_GetEntity(handle, (int)type);
 
-		while (DeleteQueue->Count != 0)
-			list->Remove(DeleteQueue->Dequeue());
+		if (!obj)
+			return T();
+
+		return safe_cast<T>(obj);
 	}
 
-	// DELETABLES
-	void ContentCache::DeleteStuff()
+	void ContentCache::RemoveEntity(GTA::base::Object^ obj)
 	{
-#ifndef DEBUG
-		try
-		{
-#endif
-
-			while (DeleteCache->Count != 0)
-				DeleteCache->Dequeue()->Delete();
-
-#ifndef DEBUG
-		}
-		catch (...)
-		{
-		}
-#endif
+		GetManagerScript()->SHDNCache_RemoveEntity(obj);
+	}
+	void ContentCache::RemoveEntity(int handle)
+	{
+		GetManagerScript()->SHDNCache_RemoveEntity(handle);
 	}
 
-	// PLAYER
-	void ContentCache::AddPlayer(GTA::Player^ x)
-	{
-		if (PlayerCache->ContainsKey(x->ID))
-			return;
-		PlayerCache->Add(x->ID, x);
-		LogCount(PlayerCache,"PlayerCache",100);
-	}
-	GTA::Player^ ContentCache::GetPlayer(int ID)
-	{
-		GTA::Player^ x;
-		if (PlayerCache->TryGetValue(ID, x))
-			return x;
-		x = gcnew GTA::Player(ID);
-		PlayerCache->Add(x->ID, x);
-		LogCount(PlayerCache,"PlayerCache",100);
-		return x;
-	}
-	void ContentCache::RemovePlayer(int ID)
-	{
-		PlayerCache->Remove(ID);
-	}
-	void ContentCache::RemovePlayer(GTA::Player^ x)
-	{
-		RemovePlayer(x->ID);
-	}
-
-	// PED
+	// Ped
 	void ContentCache::AddPed(GTA::Ped^ x)
 	{
-		if (PedCache->ContainsKey(x->Handle))
-			return;
-		PedCache->Add(x->Handle, x);
-		LogCount(PedCache,"PedCache",1000);
+		AddEntity(x);
+
+		//if (PedCache->ContainsKey(x->Handle))
+		//	return;
+		//PedCache->Add(x->Handle, x);
+		//LogCount(PedCache,"PedCache",1000);
 	}
-	GTA::Ped^ ContentCache::GetPed(int Handle)
+	GTA::Ped^ ContentCache::GetPed(int handle)
 	{
-		if (Handle == 0)
-			return nullptr;
+		return GetEntity<GTA::Ped^>(handle, HandleType::Ped);
 
-		GTA::Ped^ x;
-		if (PedCache->TryGetValue(Handle, x))
-			return x;
-		x = gcnew GTA::Ped(Handle);
-		PedCache->Add(x->Handle, x);
+		//if (Handle == 0)
+		//	return nullptr;
 
-		WRITE_TO_DEBUG_OUTPUT("New Ped added to PedCache! Handle: " + Handle.ToString());
+		//GTA::Ped^ x;
+		//if (PedCache->TryGetValue(Handle, x))
+		//	return x;
+		//x = gcnew GTA::Ped(Handle);
+		//PedCache->Add(x->Handle, x);
 
-		LogCount(PedCache,"PedCache",1000);
-		return x;
+		//WRITE_TO_DEBUG_OUTPUT("New Ped added to PedCache! Handle: " + Handle.ToString());
+
+		//LogCount(PedCache,"PedCache",1000);
+		//return x;
 	}
-	void ContentCache::RemovePed(int Handle)
-	{
-		PedCache->Remove(Handle);
-	}
+	//void ContentCache::RemovePed(int Handle)
+	//{
+	//	PedCache->Remove(Handle);
+	//}
 	void ContentCache::RemovePed(GTA::Ped^ x)
 	{
-		RemovePed(x->Handle);
+		RemoveEntity(x->Handle);
 	}
 
-	// VEHICLE
+	// Vehicle
 	void ContentCache::AddVehicle(GTA::Vehicle^ x)
 	{
-		if (VehicleCache->ContainsKey(x->Handle))
-			return;
-		VehicleCache->Add(x->Handle, x);
-		LogCount(VehicleCache,"VehicleCache",1000);
+		AddEntity(x);
+
+		//if (VehicleCache->ContainsKey(x->Handle))
+		//	return;
+		//VehicleCache->Add(x->Handle, x);
+		//LogCount(VehicleCache,"VehicleCache",1000);
 	}
-	GTA::Vehicle^ ContentCache::GetVehicle(int Handle)
+	GTA::Vehicle^ ContentCache::GetVehicle(int handle)
 	{
-		if (Handle == 0)
-			return nullptr;
+		return GetEntity<GTA::Vehicle^>(handle, HandleType::Vehicle);
 
-		//IVSDKDotNet::IVPool^ pool = IVSDKDotNet::IVPools::GetVehiclePool();
+		//if (Handle == 0)
+		//	return nullptr;
 
-		//for (int i = 0; i < pool->Count; i++)
-		//{
-		//	UIntPtr ptr = pool->Get(i);
-
-		//	// Check if ptr is valid
-		//	if (ptr == UIntPtr::Zero)
-		//		continue;
-
-		//	// Get the handle
-		//	int handle = (int)pool->GetIndex(ptr);
-
-		//	if (Handle != handle)
-		//		continue;
-
-		//	// Check if entity exists
-		//	if (!IVSDKDotNet::Native::Natives::DOES_VEHICLE_EXIST(handle))
-		//		continue;
-
-		//	return gcnew GTA::Vehicle(handle);
-		//}
-
-		//return nullptr;
-
-		GTA::Vehicle^ x;
-		if (VehicleCache->TryGetValue(Handle, x))
-			return x;
-		x = gcnew GTA::Vehicle(Handle);
-		VehicleCache->Add(x->Handle, x);
-		LogCount(VehicleCache,"VehicleCache",1000);
-		return x;
+		//GTA::Vehicle^ x;
+		//if (VehicleCache->TryGetValue(Handle, x))
+		//	return x;
+		//x = gcnew GTA::Vehicle(Handle);
+		//VehicleCache->Add(x->Handle, x);
+		//LogCount(VehicleCache,"VehicleCache",1000);
+		//return x;
 	}
-	void ContentCache::RemoveVehicle(int Handle)
-	{
-		VehicleCache->Remove(Handle);
-	}
-	void ContentCache::RemoveVehicle(GTA::Vehicle^ x)
-	{
-		RemoveVehicle(x->Handle);
-	}
+	//void ContentCache::RemoveVehicle(int Handle)
+	//{
+	//	VehicleCache->Remove(Handle);
+	//}
+	//void ContentCache::RemoveVehicle(GTA::Vehicle^ x)
+	//{
+	//	RemoveVehicle(x->Handle);
+	//}
 
-	// OBJECT
+	// Object
 	void ContentCache::AddObject(GTA::Object^ x)
 	{
-		if (ObjectCache->ContainsKey(x->Handle))
-			return;
-		ObjectCache->Add(x->Handle, x);
-		LogCount(ObjectCache,"ObjectCache",1000);
+		AddEntity(x);
+
+		//if (ObjectCache->ContainsKey(x->Handle))
+		//	return;
+		//ObjectCache->Add(x->Handle, x);
+		//LogCount(ObjectCache,"ObjectCache",1000);
 	}
-	GTA::Object^ ContentCache::GetObject(int Handle)
+	GTA::Object^ ContentCache::GetObject(int handle)
 	{
-		if (Handle == 0)
-			return nullptr;
+		return GetEntity<GTA::Object^>(handle, HandleType::Object);
 
-		//IVSDKDotNet::IVPool^ pool = IVSDKDotNet::IVPools::GetObjectPool();
+		//if (Handle == 0)
+		//	return nullptr;
 
-		//for (int i = 0; i < pool->Count; i++)
-		//{
-		//	UIntPtr ptr = pool->Get(i);
-
-		//	// Check if ptr is valid
-		//	if (ptr == UIntPtr::Zero)
-		//		continue;
-
-		//	// Get the handle
-		//	int handle = (int)pool->GetIndex(ptr);
-
-		//	if (handle != Handle)
-		//		continue;
-
-		//	// Check if entity exists
-		//	if (!IVSDKDotNet::Native::Natives::DOES_OBJECT_EXIST(handle))
-		//		continue;
-
-		//	return gcnew GTA::Object(handle);
-		//}
-
-		GTA::Object^ x;
-		if (ObjectCache->TryGetValue(Handle, x))
-			return x;
-		x = gcnew GTA::Object(Handle);
-		ObjectCache->Add(x->Handle, x);
-		LogCount(ObjectCache,"ObjectCache",1000);
-		return x;
+		//GTA::Object^ x;
+		//if (ObjectCache->TryGetValue(Handle, x))
+		//	return x;
+		//x = gcnew GTA::Object(Handle);
+		//ObjectCache->Add(x->Handle, x);
+		//LogCount(ObjectCache,"ObjectCache",1000);
+		//return x;
 	}
-	void ContentCache::RemoveObject(int Handle)
-	{
-		ObjectCache->Remove(Handle);
-	}
-	void ContentCache::RemoveObject(GTA::Object^ x)
-	{
-		RemoveObject(x->Handle);
-	}
+	//void ContentCache::RemoveObject(int Handle)
+	//{
+	//	ObjectCache->Remove(Handle);
+	//}
+	//void ContentCache::RemoveObject(GTA::Object^ x)
+	//{
+	//	RemoveObject(x->Handle);
+	//}
 
-	// PICKUP
+	// Pickup
 	void ContentCache::AddPickup(GTA::Pickup^ x)
 	{
-		if (PickupCache->ContainsKey(x->Handle))
-			return;
-		PickupCache->Add(x->Handle, x);
-		LogCount(PickupCache,"PickupCache",500);
+		AddEntity(x);
+		//if (PickupCache->ContainsKey(x->Handle))
+		//	return;
+		//PickupCache->Add(x->Handle, x);
+		//LogCount(PickupCache,"PickupCache",500);
 	}
-	GTA::Pickup^ ContentCache::GetPickup(int Handle)
+	GTA::Pickup^ ContentCache::GetPickup(int handle)
 	{
-		if (Handle == 0)
-			return nullptr;
-		GTA::Pickup^ x;
-		if (PickupCache->TryGetValue(Handle, x))
-			return x;
-		x = gcnew GTA::Pickup(Handle);
-		PickupCache->Add(x->Handle, x);
-		LogCount(PickupCache,"PickupCache",500);
-		return x;
+		return GetEntity<GTA::Pickup^>(handle, HandleType::Pickup);
+		//if (Handle == 0)
+		//	return nullptr;
+		//GTA::Pickup^ x;
+		//if (PickupCache->TryGetValue(Handle, x))
+		//	return x;
+		//x = gcnew GTA::Pickup(Handle);
+		//PickupCache->Add(x->Handle, x);
+		//LogCount(PickupCache,"PickupCache",500);
+		//return x;
 	}
-	void ContentCache::RemovePickup(int Handle)
-	{
-		PickupCache->Remove(Handle);
-	}
-	void ContentCache::RemovePickup(GTA::Pickup^ x)
-	{
-		RemovePickup(x->Handle);
-	}
+	//void ContentCache::RemovePickup(int Handle)
+	//{
+	//	PickupCache->Remove(Handle);
+	//}
+	//void ContentCache::RemovePickup(GTA::Pickup^ x)
+	//{
+	//	RemovePickup(x->Handle);
+	//}
 
-	// GROUP
+	// Group
 	void ContentCache::AddGroup(GTA::Group^ x, bool CreatedByMe)
 	{
-		if (GroupCache->ContainsKey(x->Handle))
-			return;
-		GroupCache->Add(x->Handle, x);
-		if (CreatedByMe)
-			DeleteCache->Enqueue(x);
-		LogCount(GroupCache,"GroupCache",100);
+		AddEntity(x);
+		//if (GroupCache->ContainsKey(x->Handle))
+		//	return;
+		//GroupCache->Add(x->Handle, x);
+		//if (CreatedByMe)
+		//	DeleteCache->Enqueue(x);
+		//LogCount(GroupCache,"GroupCache",100);
 	}
-	GTA::Group^ ContentCache::GetGroup(int Handle, bool CreatedByMe)
+	GTA::Group^ ContentCache::GetGroup(int handle, bool CreatedByMe)
 	{
-		if (Handle == 0)
-			return nullptr;
-		GTA::Group^ x;
-		if (GroupCache->TryGetValue(Handle, x))
-			return x;
-		x = gcnew GTA::Group(Handle);
-		GroupCache->Add(x->Handle, x);
-		if (CreatedByMe)
-			DeleteCache->Enqueue(x);
-		LogCount(GroupCache,"GroupCache",100);
-		return x;
+		return GetEntity<GTA::Group^>(handle, HandleType::Group);
+		//if (Handle == 0)
+		//	return nullptr;
+		//GTA::Group^ x;
+		//if (GroupCache->TryGetValue(Handle, x))
+		//	return x;
+		//x = gcnew GTA::Group(Handle);
+		//GroupCache->Add(x->Handle, x);
+		//if (CreatedByMe)
+		//	DeleteCache->Enqueue(x);
+		//LogCount(GroupCache,"GroupCache",100);
+		//return x;
 	}
-	void ContentCache::RemoveGroup(int Handle)
-	{
-		GroupCache->Remove(Handle);
-	}
+	//void ContentCache::RemoveGroup(int Handle)
+	//{
+	//	GroupCache->Remove(Handle);
+	//}
 	void ContentCache::RemoveGroup(GTA::Group^ x)
 	{
-		RemoveGroup(x->Handle);
+		RemoveEntity(x->Handle);
 	}
 
-	// BLIP
+	// Blip
 	void ContentCache::AddBlip(GTA::Blip^ x, bool CreatedByMe)
 	{
-		if (BlipCache->ContainsKey(x->Handle))
-			return;
-		BlipCache->Add(x->Handle, x);
-		if (CreatedByMe)
-			DeleteCache->Enqueue(x);
-		LogCount(BlipCache,"BlipCache",200);
+		AddEntity(x);
+		//if (BlipCache->ContainsKey(x->Handle))
+		//	return;
+		//BlipCache->Add(x->Handle, x);
+		//if (CreatedByMe)
+		//	DeleteCache->Enqueue(x);
+		//LogCount(BlipCache,"BlipCache",200);
 	}
-	GTA::Blip^ ContentCache::GetBlip(int Handle, bool CreatedByMe)
+	GTA::Blip^ ContentCache::GetBlip(int handle, bool CreatedByMe)
 	{
-		if (Handle == 0)
-			return nullptr;
-		GTA::Blip^ x;
-		if (BlipCache->TryGetValue(Handle, x))
-			return x;
-		x = gcnew GTA::Blip(Handle);
-		BlipCache->Add(x->Handle, x);
-		if (CreatedByMe)
-			DeleteCache->Enqueue(x);
-		LogCount(BlipCache,"BlipCache",200);
-		return x;
+		return GetEntity<GTA::Blip^>(handle, HandleType::Blip);
+		//if (Handle == 0)
+		//	return nullptr;
+		//GTA::Blip^ x;
+		//if (BlipCache->TryGetValue(Handle, x))
+		//	return x;
+		//x = gcnew GTA::Blip(Handle);
+		//BlipCache->Add(x->Handle, x);
+		//if (CreatedByMe)
+		//	DeleteCache->Enqueue(x);
+		//LogCount(BlipCache,"BlipCache",200);
+		//return x;
 	}
-	void ContentCache::RemoveBlip(int Handle)
-	{
-		BlipCache->Remove(Handle);
-	}
-	void ContentCache::RemoveBlip(GTA::Blip^ x)
-	{
-		RemoveBlip(x->Handle);
-	}
+	//void ContentCache::RemoveBlip(int Handle)
+	//{
+	//	BlipCache->Remove(Handle);
+	//}
+	//void ContentCache::RemoveBlip(GTA::Blip^ x)
+	//{
+	//	RemoveBlip(x->Handle);
+	//}
 
-	// CAMERA
+	// Camera
 	void ContentCache::AddCamera(GTA::Camera^ x, bool CreatedByMe)
 	{
-		if (CameraCache->ContainsKey(x->Handle))
-			return;
-		CameraCache->Add(x->Handle, x);
-		if (CreatedByMe)
-			DeleteCache->Enqueue(x);
-		LogCount(CameraCache,"CameraCache",50);
+		AddEntity(x);
+		//if (CameraCache->ContainsKey(x->Handle))
+		//	return;
+		//CameraCache->Add(x->Handle, x);
+		//if (CreatedByMe)
+		//	DeleteCache->Enqueue(x);
+		//LogCount(CameraCache,"CameraCache",50);
 	}
-	GTA::Camera^ ContentCache::GetCamera(int Handle, bool CreatedByMe)
+	GTA::Camera^ ContentCache::GetCamera(int handle, bool CreatedByMe)
 	{
-		if (Handle == 0)
-			return nullptr;
+		return GetEntity<GTA::Camera^>(handle, HandleType::Camera);
 
-		GTA::Camera^ x;
-		if (CameraCache->TryGetValue(Handle, x))
-			return x;
-		x = gcnew GTA::Camera(Handle);
-		CameraCache->Add(x->Handle, x);
-		if (CreatedByMe)
-			DeleteCache->Enqueue(x);
-		LogCount(CameraCache,"CameraCache",50);
-		return x;
-	}
-	void ContentCache::RemoveCamera(int Handle)
-	{
-		CameraCache->Remove(Handle);
-	}
-	void ContentCache::RemoveCamera(GTA::Camera^ x)
-	{
-		RemoveCamera(x->Handle);
-	}
+		//if (Handle == 0)
+		//	return nullptr;
 
-	// FIRE
+		//GTA::Camera^ x;
+		//if (CameraCache->TryGetValue(Handle, x))
+		//	return x;
+		//x = gcnew GTA::Camera(Handle);
+		//CameraCache->Add(x->Handle, x);
+		//if (CreatedByMe)
+		//	DeleteCache->Enqueue(x);
+		//LogCount(CameraCache,"CameraCache",50);
+		//return x;
+	}
+	//void ContentCache::RemoveCamera(int Handle)
+	//{
+	//	CameraCache->Remove(Handle);
+	//}
+	//void ContentCache::RemoveCamera(GTA::Camera^ x)
+	//{
+	//	RemoveCamera(x->Handle);
+	//}
+
+	// Fire
 	void ContentCache::AddFire(GTA::ScriptedFire^ x, bool CreatedByMe)
 	{
-		if (FireCache->Contains(x))
-			return;
-		FireAmountCheck();
-		FireCache->Add(x);
-		if (CreatedByMe)
-			DeleteCache->Enqueue(x);
-		LogCount(FireCache,"FireCache",1000);
-		//NetHook::DisplayText("Fire " + x->Handle + " num " + FireCache->Count,4000);
+		AddEntity(x);
+		//if (FireCache->Contains(x))
+		//	return;
+		//FireAmountCheck();
+		//FireCache->Add(x);
+		//if (CreatedByMe)
+		//	DeleteCache->Enqueue(x);
+		//LogCount(FireCache,"FireCache",1000);
+		////NetHook::DisplayText("Fire " + x->Handle + " num " + FireCache->Count,4000);
 	}
-	GTA::ScriptedFire^ ContentCache::GetFire(int Handle, bool CreatedByMe)
+	GTA::ScriptedFire^ ContentCache::GetFire(int handle, bool CreatedByMe)
 	{
-		if (Handle == 0)
-			return nullptr;
+		return GetEntity<GTA::ScriptedFire^>(handle, HandleType::ScriptedFire);
+		//if (Handle == 0)
+		//	return nullptr;
 
-		for (int i = 0; i < FireCache->Count; i++)
-		{
-			if (FireCache[i]->Handle == Handle)
-				return FireCache[i];
-		}
-		FireAmountCheck();
-		GTA::ScriptedFire^ x = gcnew GTA::ScriptedFire(Handle);
-		FireCache->Add(x);
-		if (CreatedByMe)
-			DeleteCache->Enqueue(x);
-		//NetHook::DisplayText("Fire " + x->Handle + " num " + FireCache->Count,4000);
-		LogCount(FireCache,"FireCache",1000);
-		return x;
+		//for (int i = 0; i < FireCache->Count; i++)
+		//{
+		//	if (FireCache[i]->Handle == Handle)
+		//		return FireCache[i];
+		//}
+		//FireAmountCheck();
+		//GTA::ScriptedFire^ x = gcnew GTA::ScriptedFire(Handle);
+		//FireCache->Add(x);
+		//if (CreatedByMe)
+		//	DeleteCache->Enqueue(x);
+		////NetHook::DisplayText("Fire " + x->Handle + " num " + FireCache->Count,4000);
+		//LogCount(FireCache,"FireCache",1000);
+		//return x;
 	}
-	void ContentCache::RemoveFire(int Handle)
-	{
-		//FireCache->Remove(Handle);
-		for (int i = 0; i < FireCache->Count; i++)
-		{
-			if (FireCache[i]->Handle == Handle)
-			{
-				FireCache->RemoveAt(i);
-				return;
-			}
-		}
-	}
-	void ContentCache::RemoveFire(GTA::ScriptedFire^ x)
-	{
-		//RemoveFire(x->Handle);
-		FireCache->Remove(x);
-	}
-	void ContentCache::FireAmountCheck()
-	{
-		while (FireCache->Count >= MAX_FIRES)
-		{
-			FireCache[0]->Delete();
-			FireCache->RemoveAt(0);
-		}
-	}
+	//void ContentCache::RemoveFire(int Handle)
+	//{
+	//	//FireCache->Remove(Handle);
+	//	for (int i = 0; i < FireCache->Count; i++)
+	//	{
+	//		if (FireCache[i]->Handle == Handle)
+	//		{
+	//			FireCache->RemoveAt(i);
+	//			return;
+	//		}
+	//	}
+	//}
+	//void ContentCache::RemoveFire(GTA::ScriptedFire^ x)
+	//{
+	//	//RemoveFire(x->Handle);
+	//	FireCache->Remove(x);
+	//}
+	//void ContentCache::FireAmountCheck()
+	//{
+	//	while (FireCache->Count >= MAX_FIRES)
+	//	{
+	//		FireCache[0]->Delete();
+	//		FireCache->RemoveAt(0);
+	//	}
+	//}
 
 }

@@ -43,6 +43,7 @@ namespace base
 	private:
 		bool bExists;
 		int pUID;
+		HandleType eType;
 
 	protected:
 		[System::ComponentModel::EditorBrowsableAttribute(EditorBrowsableState::Never)]
@@ -55,12 +56,6 @@ namespace base
 		virtual bool InternalCheckExists()
 		{
 			return true;
-		}
-
-		property int UID
-		{
-			int get() { return pUID; }
-			void set(int value) { pUID = value; }
 		}
 
 		void SetExistsFalse()
@@ -85,6 +80,41 @@ namespace base
 		{
 			bExists = true;
 			pUID = 0;
+		}
+
+		/// <summary>
+		/// The unique identifier of the object.
+		/// This is basically just the game handle of the object, but named "UID" assumingly to avoid conflicts with the "Handle" property within the HandleObject class.
+		/// </summary>
+		property int UID
+		{
+		public:
+			int get()
+			{
+				return pUID;
+			}
+		internal:
+			void set(int value)
+			{
+				pUID = value;
+			}
+		}
+
+		/// <summary>
+		/// The type of this entity.
+		/// </summary>
+		property HandleType Type
+		{
+		public:
+			HandleType get()
+			{
+				return eType;
+			}
+		internal:
+			void set(HandleType value)
+			{
+				eType = value;
+			}
 		}
 
 		/// <summary>

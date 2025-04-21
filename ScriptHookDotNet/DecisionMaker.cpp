@@ -33,10 +33,13 @@
 namespace GTA
 {
 
+	// TODO: Note that we need to set the DecisionMaker category after we created a new instance of it!
+	//		 Before you could instantly set it using the constructor, now we need to set it AFTER it got constructed!
+
 	// - - - Constructor - - -
-	DecisionMaker::DecisionMaker(int Handle, DecisionCategory Category) :HandleObject(Handle)
+	DecisionMaker::DecisionMaker(int Handle) :HandleObject(Handle, HandleType::DecisionMaker)
 	{
-		pCategory = Category;
+
 	}
 	DecisionMaker::~DecisionMaker()
 	{
@@ -99,11 +102,6 @@ namespace GTA
 		//if (dm == 0) return nullptr;
 		//return gcnew DecisionMaker(dm, DecisionCategory::GroupCombat);
 		return nullptr;
-	}
-
-	DecisionCategory DecisionMaker::Category::get()
-	{
-		return pCategory;
 	}
 
 	void DecisionMaker::ApplyTo(GTA::Ped^ ped)

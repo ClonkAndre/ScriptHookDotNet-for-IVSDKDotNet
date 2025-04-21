@@ -112,7 +112,8 @@ namespace GTA
 	}
 	GTA::Player^ Game::LocalPlayer::get()
 	{
-		return ContentCache::GetPlayer((int)IVSDKDotNet::Native::Natives::GET_PLAYER_ID());
+		//return ContentCache::GetPlayer((int)IVSDKDotNet::Native::Natives::GET_PLAYER_ID());
+		return gcnew GTA::Player((int)IVSDKDotNet::Native::Natives::GET_PLAYER_ID());
 	}
 	array<GTA::Player^>^ Game::PlayerList::get()
 	{
@@ -129,7 +130,10 @@ namespace GTA
 		for (int i = 0; i < 32; i++)
 		{
 			if (isPlayerActive(i))
-				list->Add(ContentCache::GetPlayer(i));
+			{
+				//list->Add(ContentCache::GetPlayer(i));
+				list->Add(gcnew GTA::Player(i));
+			}
 		}
 
 		return list->ToArray();

@@ -39,7 +39,7 @@ namespace GTA
 
 	// - - - Constructor - - -
 	Blip::Blip(int Handle)
-		:HandleObject(Handle)
+		:HandleObject(Handle, HandleType::Blip)
 	{
 	}
 

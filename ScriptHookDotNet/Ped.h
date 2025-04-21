@@ -30,8 +30,8 @@ namespace GTA{
 	public ref class Ped sealed :
 		public base::HandleObject,
 		public base::iComplexObject,
-		public base::iMissionObject {
-
+		public base::iMissionObject
+	{
 	private:
 		[NonSerializedAttribute]
 		value::PedAnimation^ pAnimation;
@@ -49,9 +49,10 @@ namespace GTA{
 		value::Euphoria^ pEuphoria;
 		//Dictionary<GTA::Weapon,GTA::value::Weapon^>^ pWeaponCache;
 
-	internal:
+	public:
 		Ped(int Handle);
 
+	internal:
 		void SetHandle(int Handle);
 		virtual bool InternalCheckExists() override;
 

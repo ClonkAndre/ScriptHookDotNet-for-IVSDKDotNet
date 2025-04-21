@@ -46,7 +46,7 @@ namespace GTA
 
 	// - - - Constructor - - -
 	Ped::Ped(int Handle)
-		:HandleObject(Handle)
+		:HandleObject(Handle, HandleType::Ped)
 	{
 	}
 
