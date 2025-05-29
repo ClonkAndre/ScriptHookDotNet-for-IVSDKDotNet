@@ -39,19 +39,19 @@ namespace GTA{
 		[NonSerializedAttribute]
 		value::PlayerSkin^ pSkin;
 
-	internal:
-
-		property int PedHandle{
-			int get();
-		}
-
 	public:
 		Player(int ID);
+		
+		void EnsurePlayerPedHandleIsUpToDate();
 
+	public:
 		property int ID{
 			int get();
 		}
 		property int Index{
+			int get();
+		}
+		property int PedHandle {
 			int get();
 		}
 

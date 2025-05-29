@@ -55,8 +55,8 @@ namespace GTA
 	void Group::SetHandle(int Handle, bool CreatedByMe)
 	{
 		ContentCache::RemoveGroup(this);
-		pHandle = Handle;
-		// ResetExists(); // TODO: Remove completely probably
+		SetInternalHandle(Handle);
+		ResetExists();
 		ContentCache::AddGroup(this, CreatedByMe);
 	}
 
@@ -70,7 +70,7 @@ namespace GTA
 		if (p == 0)
 			return nullptr;
 
-		return ContentCache::GetPed(p);
+		return ContentCache::GetPed(p, false);
 	}
 	void Group::Leader::set(Ped^ value)
 	{
@@ -132,7 +132,7 @@ namespace GTA
 		if (p == 0)
 			return nullptr;
 
-		return ContentCache::GetPed(p);
+		return ContentCache::GetPed(p, false);
 	}
 	void Group::RemoveAllMembers()
 	{

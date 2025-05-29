@@ -20,6 +20,8 @@
 * THE SOFTWARE.
 */
 
+// IV-SDK .NET translation layer by ItsClonkAndre
+
 #include "stdafx.h"
 
 #include "World.h"
@@ -294,7 +296,7 @@ namespace GTA
 		if (ped == 0)
 			return nullptr;
 
-		return ContentCache::GetPed(ped);
+		return ContentCache::GetPed(ped, false);
 	}
 	Ped^ World::GetRandomPed(Vector3 Position, float Radius)
 	{
@@ -307,7 +309,7 @@ namespace GTA
 		if (ped == 0)
 			return nullptr;
 
-		return ContentCache::GetPed(ped);
+		return ContentCache::GetPed(ped, false);
 	}
 
 	array<Ped^>^ World::GetPeds(Vector3 Position, float Radius, int MaxAmount)
@@ -318,8 +320,8 @@ namespace GTA
 
 		for (int i = 0; i < handles->Length; i++)
 		{
-			p = ContentCache::GetPed(handles[i]);
-			if (p->Position.DistanceTo(Position) <= Radius)
+			p = ContentCache::GetPed(handles[i], false);
+ 			if (p->Position.DistanceTo(Position) <= Radius)
 			{
 				list->Add(p);
 				if (list->Count >= MaxAmount) return list->ToArray();
@@ -338,7 +340,7 @@ namespace GTA
 		array<Ped^>^ list = gcnew array<Ped^>(handles->Length);
 		for (int i = 0; i < handles->Length; i++)
 		{
-			list[i] = ContentCache::GetPed(handles[i]);
+			list[i] = ContentCache::GetPed(handles[i], false);
 			//if ( (!list[i]->Exists()) || (list[i]->MemoryAddress == 0) || (!list[i]->Exists()) ) list[i] = nullptr;
 		}
 		return list;
@@ -355,7 +357,7 @@ namespace GTA
 		array<int>^ handles = GetValidVehicleHandles(Model);
 		for (int i = 0; i < handles->Length; i++)
 		{
-			v = ContentCache::GetVehicle(handles[i]);
+			v = ContentCache::GetVehicle(handles[i], false);
 			if (v->Position.DistanceTo(Position) <= Radius)
 				list->Add(v);
 		}
@@ -372,7 +374,7 @@ namespace GTA
 		array<Vehicle^>^ list = gcnew array<Vehicle^>(handles->Length);
 		for (int i = 0; i < handles->Length; i++)
 		{
-			list[i] = ContentCache::GetVehicle(handles[i]);
+			list[i] = ContentCache::GetVehicle(handles[i], false);
 		}
 		return list;
 	}
@@ -392,7 +394,7 @@ namespace GTA
 
 		for (int i = 0; i < handles->Length; i++)
 		{
-			v = ContentCache::GetVehicle(handles[i]);
+			v = ContentCache::GetVehicle(handles[i], false);
 
 			dist = v->Position.DistanceTo(Position);
 
@@ -417,7 +419,7 @@ namespace GTA
 
 		for (int i = 0; i < handles->Length; i++)
 		{
-			GTA::Object^ obj = ContentCache::GetObject(handles[i]);
+			GTA::Object^ obj = ContentCache::GetObject(handles[i], false);
 
 			if (!obj)
 				continue;
@@ -553,6 +555,7 @@ namespace GTA
 		IVSDKDotNet::Native::Natives::SET_RELATIONSHIP((int)level, (int)group, (int)targetgroup);
 	}
 
+	// Fire
 	ScriptedFire^ World::StartFire(Vector3 Position, int Unknown1, int Unknown2)
 	{
 		int fire = IVSDKDotNet::Native::Natives::START_SCRIPT_FIRE(GTAVector3ToVector3(Position), Unknown1, Unknown2);
@@ -591,6 +594,7 @@ namespace GTA
 		IVSDKDotNet::Native::Natives::SET_STATE_OF_CLOSEST_DOOR_OF_TYPE(model.Hash, pos.X, pos.Y, pos.Z, locked, angle);
 	}
 
+	// Ped
 	Ped^ World::CreatePed(Vector3 Position, GTA::Gender Gender)
 	{
 		int ped;
@@ -603,9 +607,7 @@ namespace GTA
 		if (ped == 0)
 			return nullptr;
 
-		Ped^ res = ContentCache::GetPed(ped);
-
-		return res;
+		return ContentCache::GetPed(ped, true);
 	}
 	Ped^ World::CreatePed(Vector3 Position)
 	{
@@ -615,9 +617,7 @@ namespace GTA
 		if (ped == 0)
 			return nullptr;
 
-		Ped^ res = ContentCache::GetPed(ped);
-
-		return res;
+		return ContentCache::GetPed(ped, true);
 	}
 	Ped^ World::CreatePed(GTA::Model Model, Vector3 Position, RelationshipGroup Type)
 	{
@@ -633,9 +633,7 @@ namespace GTA
 		if (ped == 0)
 			return nullptr;
 
-		Ped^ res = ContentCache::GetPed(ped);
-
-		return res;
+		return ContentCache::GetPed(ped, true);
 	}
 	Ped^ World::CreatePed(GTA::Model Model, Vector3 Position)
 	{
@@ -650,6 +648,7 @@ namespace GTA
 		return res;
 	}
 
+	// Vehicle
 	Vehicle^ World::CreateVehicle(Vector3 Position)
 	{
 		int car;
@@ -662,7 +661,7 @@ namespace GTA
 		if (car == 0)
 			return nullptr;
 
-		return ContentCache::GetVehicle(car);
+		return ContentCache::GetVehicle(car, true);
 	}
 	Vehicle^ World::CreateVehicle(GTA::Model Model, Vector3 Position)
 	{
@@ -678,7 +677,7 @@ namespace GTA
 		if (car == 0)
 			return nullptr;
 
-		return ContentCache::GetVehicle(car);
+		return ContentCache::GetVehicle(car, true);
 	}
 	Vehicle^ World::CreateMissionTrain(Vector3 Position)
 	{
@@ -694,9 +693,10 @@ namespace GTA
 		if (car == 0)
 			return nullptr;
 
-		return ContentCache::GetVehicle(car);
+		return ContentCache::GetVehicle(car, true);
 	}
 
+	// Object
 	GTA::Object^ World::CreateObject(GTA::Model Model, Vector3 Position)
 	{
 		if (!Model.LoadToMemoryNow())
@@ -709,7 +709,7 @@ namespace GTA
 		if (obj == 0)
 			return nullptr;
 
-		return ContentCache::GetObject(obj);
+		return ContentCache::GetObject(obj, true);
 	}
 
 }

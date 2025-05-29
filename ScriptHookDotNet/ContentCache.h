@@ -26,9 +26,6 @@
 namespace GTA
 {
 
-	// TODO: Continue with the cleanup
-	//		 Figure something out with the metadata stuff
-
 	CLASS_ATTRIBUTES
 	public ref class ContentCache sealed
 	{
@@ -43,62 +40,52 @@ namespace GTA
 		static void AddEntity(GTA::base::Object^ obj);
 
 		generic <class T>
-		static T GetEntity(int handle, HandleType type);
+		static T GetEntity(int handle, HandleType type, bool wasCreatedByScript);
 
 		static void RemoveEntity(GTA::base::Object^ obj);
 		static void RemoveEntity(int handle);
 
+		// Player
+		static void AddPlayer(GTA::Player^ p);
+		static GTA::Player^ GetPlayer(int id);
+		static void RemovePlayer(GTA::Player^ p);
+
 		// Ped
 		static void AddPed(GTA::Ped^ p);
-		static GTA::Ped^ GetPed(int Handle);
-		//static void RemovePed(int Handle);
+		static GTA::Ped^ GetPed(int handle, bool wasCreatedByScript);
 		static void RemovePed(GTA::Ped^ p);
 		
 		// Vehicle
 		static void AddVehicle(GTA::Vehicle^ v);
-		static GTA::Vehicle^ GetVehicle(int Handle);
-		//static void RemoveVehicle(int Handle);
-		//static void RemoveVehicle(GTA::Vehicle^ v);
+		static GTA::Vehicle^ GetVehicle(int handle, bool wasCreatedByScript);
 
 		// Object
 		static void AddObject(GTA::Object^ o);
-		static GTA::Object^ GetObject(int Handle);
-		//static void RemoveObject(int Handle);
-		//static void RemoveObject(GTA::Object^ o);
+		static GTA::Object^ GetObject(int handle, bool wasCreatedByScript);
 
 		// Pickup
 		static void AddPickup(GTA::Pickup^ p);
-		static GTA::Pickup^ GetPickup(int Handle);
-		//static void RemovePickup(int Handle);
-		//static void RemovePickup(GTA::Pickup^ p);
+		static GTA::Pickup^ GetPickup(int handle, bool wasCreatedByScript);
 
 		// Group
-		static void AddGroup(GTA::Group^ g, bool CreatedByMe);
-		static GTA::Group^ GetGroup(int Handle, bool CreatedByMe);
-		//static void RemoveGroup(int Handle);
+		static void AddGroup(GTA::Group^ g, bool wasCreatedByScript);
+		static GTA::Group^ GetGroup(int handle, bool wasCreatedByScript);
 		static void RemoveGroup(GTA::Group^ g);
 
 		// Blip
-		static void AddBlip(GTA::Blip^ b, bool CreatedByMe);
-		static GTA::Blip^ GetBlip(int Handle, bool CreatedByMe);
-		//static void RemoveBlip(int Handle);
-		//static void RemoveBlip(GTA::Blip^ b);
+		static void AddBlip(GTA::Blip^ b, bool wasCreatedByScript);
+		static GTA::Blip^ GetBlip(int handle, bool wasCreatedByScript);
 
 		// Camera
-		static void AddCamera(GTA::Camera^ c, bool CreatedByMe);
-		static GTA::Camera^ GetCamera(int Handle, bool CreatedByMe);
-		//static void RemoveCamera(int Handle);
-		//static void RemoveCamera(GTA::Camera^ c);
+		static void AddCamera(GTA::Camera^ c, bool wasCreatedByScript);
+		static GTA::Camera^ GetCamera(int handle, bool wasCreatedByScript);
 
 		// Fire
-		static void AddFire(GTA::ScriptedFire^ f, bool CreatedByMe);
-		static GTA::ScriptedFire^ GetFire(int Handle, bool CreatedByMe);
-		//static void RemoveFire(int Handle);
-		//static void RemoveFire(GTA::ScriptedFire^ f);
-		//static void FireAmountCheck();
+		static void AddFire(GTA::ScriptedFire^ f, bool wasCreatedByScript);
+		static GTA::ScriptedFire^ GetFire(int handle, bool wasCreatedByScript);
 
 	public:
-
+		// TODO: See how i could handle these
 		static System::Object^ GetMetaData(int ItemHandle, String^ ValueName) {
 			String^ id = ItemHandle.ToString() + "#" + ValueName->ToLower();
 			if (!metadata->ContainsKey(id)) return nullptr;

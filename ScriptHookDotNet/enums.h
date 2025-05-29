@@ -49,7 +49,7 @@ namespace GTA
 
 	public enum class HandleType
 	{
-		Blip,
+		Blip = 1,
 		Camera,
 		DecisionMaker,
 		Group,

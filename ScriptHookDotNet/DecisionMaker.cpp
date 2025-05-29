@@ -33,13 +33,13 @@
 namespace GTA
 {
 
-	// TODO: Note that we need to set the DecisionMaker category after we created a new instance of it!
-	//		 Before you could instantly set it using the constructor, now we need to set it AFTER it got constructed!
+	// Note that we need to set the DecisionMaker category after we created a new instance of it!
+	// Before you could instantly set it using the constructor, now we need to set it AFTER it got constructed!
 
 	// - - - Constructor - - -
 	DecisionMaker::DecisionMaker(int Handle) :HandleObject(Handle, HandleType::DecisionMaker)
 	{
-
+		
 	}
 	DecisionMaker::~DecisionMaker()
 	{
@@ -49,59 +49,77 @@ namespace GTA
 	// - - - Properties, Methods and Functions - - -
 	DecisionMaker^ DecisionMaker::LoadBehavior(BehaviorTemplate Template)
 	{
-		NotImplementedYet("DecisionMaker::LoadBehavior");
-		//u32 dm = 0;
-		//Scripting::LoadCharDecisionMaker((int)Template, &dm);
-		//if (dm == 0) return nullptr;
-		//return gcnew DecisionMaker(dm, DecisionCategory::Behavior);
-		return nullptr;
+		int dm;
+		IVSDKDotNet::Native::Natives::LOAD_CHAR_DECISION_MAKER((uint32_t)Template, dm);
+
+		if (dm == 0)
+			return nullptr;
+
+		DecisionMaker^ instance = gcnew DecisionMaker(dm);
+		instance->Category = DecisionCategory::Behavior;
+		return instance;
 	}
 	DecisionMaker^ DecisionMaker::LoadCombat(CombatTemplate Template)
 	{
-		NotImplementedYet("DecisionMaker::LoadCombat");
-		//u32 dm = 0;
-		//Scripting::LoadCombatDecisionMaker((int)Template, &dm);
-		//if (dm == 0) return nullptr;
-		//return gcnew DecisionMaker(dm, DecisionCategory::Combat);
-		return nullptr;
+		int dm;
+		IVSDKDotNet::Native::Natives::LOAD_COMBAT_DECISION_MAKER((uint32_t)Template, dm);
+
+		if (dm == 0)
+			return nullptr;
+
+		DecisionMaker^ instance = gcnew DecisionMaker(dm);
+		instance->Category = DecisionCategory::Combat;
+		return instance;
 	}
 
 	DecisionMaker^ DecisionMaker::CopyBehavior(CopyTemplate Template)
 	{
-		NotImplementedYet("DecisionMaker::CopyBehavior");
-		//u32 dm = 0;
-		//Scripting::CopyCharDecisionMaker((int)Template, &dm);
-		//if (dm == 0) return nullptr;
-		//return gcnew DecisionMaker(dm, DecisionCategory::Behavior);
-		return nullptr;
+		int dm;
+		IVSDKDotNet::Native::Natives::COPY_CHAR_DECISION_MAKER((uint32_t)Template, dm);
+
+		if (dm == 0)
+			return nullptr;
+
+		DecisionMaker^ instance = gcnew DecisionMaker(dm);
+		instance->Category = DecisionCategory::Behavior;
+		return instance;
 	}
 	DecisionMaker^ DecisionMaker::CopyCombat(CopyTemplate Template)
 	{
-		NotImplementedYet("DecisionMaker::CopyCombat");
-		//u32 dm = 0;
-		//Scripting::CopyCombatDecisionMaker((int)Template, &dm);
-		//if (dm == 0) return nullptr;
-		//return gcnew DecisionMaker(dm, DecisionCategory::Combat);
-		return nullptr;
+		int dm;
+		IVSDKDotNet::Native::Natives::COPY_COMBAT_DECISION_MAKER((uint32_t)Template, dm);
+
+		if (dm == 0)
+			return nullptr;
+
+		DecisionMaker^ instance = gcnew DecisionMaker(dm);
+		instance->Category = DecisionCategory::Combat;
+		return instance;
 	}
 
 	DecisionMaker^ DecisionMaker::CopyBehaviorForGroupMembers(CopyTemplate Template)
 	{
-		NotImplementedYet("DecisionMaker::CopyBehaviorForGroupMembers");
-		//u32 dm = 0;
-		//Scripting::CopyGroupCharDecisionMaker((int)Template, &dm);
-		//if (dm == 0) return nullptr;
-		//return gcnew DecisionMaker(dm, DecisionCategory::GroupBehavior);
-		return nullptr;
+		int dm;
+		IVSDKDotNet::Native::Natives::COPY_GROUP_CHAR_DECISION_MAKER((uint32_t)Template, dm);
+
+		if (dm == 0)
+			return nullptr;
+
+		DecisionMaker^ instance = gcnew DecisionMaker(dm);
+		instance->Category = DecisionCategory::GroupBehavior;
+		return instance;
 	}
 	DecisionMaker^ DecisionMaker::CopyCombatForGroupMembers(CopyTemplate Template)
 	{
-		NotImplementedYet("DecisionMaker::CopyCombatForGroupMembers");
-		//u32 dm = 0;
-		//Scripting::CopyGroupCombatDecisionMaker((int)Template, &dm);
-		//if (dm == 0) return nullptr;
-		//return gcnew DecisionMaker(dm, DecisionCategory::GroupCombat);
-		return nullptr;
+		int dm;
+		IVSDKDotNet::Native::Natives::COPY_GROUP_COMBAT_DECISION_MAKER((uint32_t)Template, dm);
+
+		if (dm == 0)
+			return nullptr;
+
+		DecisionMaker^ instance = gcnew DecisionMaker(dm);
+		instance->Category = DecisionCategory::GroupCombat;
+		return instance;
 	}
 
 	void DecisionMaker::ApplyTo(GTA::Ped^ ped)
@@ -134,41 +152,42 @@ namespace GTA
 
 	void DecisionMaker::RemoveEventResponse(int EventID)
 	{
-		NotImplementedYet("DecisionMaker::RemoveEventResponse");
-		//NON_EXISTING_CHECK();
-		//switch (pCategory)
-		//{
-		//	case DecisionCategory::Behavior:
-		//	case DecisionCategory::GroupBehavior:
-		//		Scripting::ClearCharDecisionMakerEventResponse(pHandle,EventID);
-		//		return;
-		//	case DecisionCategory::Combat:
-		//	case DecisionCategory::GroupCombat:
-		//		Scripting::ClearCombatDecisionMakerEventResponse(pHandle,EventID);
-		//		return;
-		//	//case DecisionCategory::Group:
-		//	//	Scripting::ClearGroupDecisionMakerEventResponse(pHandle,EventID);
-		//	//	return;
-		//}
+		NON_EXISTING_CHECK();
+		switch (pCategory)
+		{
+			case DecisionCategory::Behavior:
+			case DecisionCategory::GroupBehavior:
+				//Scripting::ClearCharDecisionMakerEventResponse(pHandle,EventID);
+				NotImplementedYet("Scripting::ClearCharDecisionMakerEventResponse");
+				return;
+			case DecisionCategory::Combat:
+			case DecisionCategory::GroupCombat:
+				//Scripting::ClearCombatDecisionMakerEventResponse(pHandle,EventID);
+				NotImplementedYet("Scripting::ClearCombatDecisionMakerEventResponse");
+				return;
+			//case DecisionCategory::Group:
+			//	Scripting::ClearGroupDecisionMakerEventResponse(pHandle,EventID);
+			//	return;
+		}
 	}
 	void DecisionMaker::AddEventResponse(int EventID, int ResponseID, float param1, float param2, float param3, float param4)
 	{
-		NotImplementedYet("DecisionMaker::AddEventResponse");
-		//NON_EXISTING_CHECK();
-		//switch (pCategory)
-		//{
-		//	case DecisionCategory::Behavior:
-		//	case DecisionCategory::GroupBehavior:
-		//		IVSDKDotNet::Native::Natives::ADD_CHAR_DECISION_MAKER_EVENT_RESPONSE(pHandle,EventID,ResponseID,param1,param2,param3,param4,1,1);
-		//		return;
-		//	case DecisionCategory::Combat:
-		//	case DecisionCategory::GroupCombat:
-		//		Scripting::AddCombatDecisionMakerEventResponse(pHandle,EventID,ResponseID,param1,param2,param3,param4,1,1);
-		//		return;
-		//	//case DecisionCategory::Group:
-		//	//	Scripting::AddGroupDecisionMakerEventResponse(pHandle,EventID,ResponseID,param1,param2,param3,param4,1,1);
-		//	//	return;
-		//}
+		NON_EXISTING_CHECK();
+		switch (pCategory)
+		{
+			case DecisionCategory::Behavior:
+			case DecisionCategory::GroupBehavior:
+				IVSDKDotNet::Native::Natives::ADD_CHAR_DECISION_MAKER_EVENT_RESPONSE(pHandle,EventID,ResponseID,param1,param2,param3,param4,1,1);
+				return;
+			case DecisionCategory::Combat:
+			case DecisionCategory::GroupCombat:
+				//Scripting::AddCombatDecisionMakerEventResponse(pHandle,EventID,ResponseID,param1,param2,param3,param4,1,1);
+				NotImplementedYet("Scripting::AddCombatDecisionMakerEventResponse");
+				return;
+			//case DecisionCategory::Group:
+			//	Scripting::AddGroupDecisionMakerEventResponse(pHandle,EventID,ResponseID,param1,param2,param3,param4,1,1);
+			//	return;
+		}
 	}
 
 	void DecisionMaker::CanChangeTarget::set(bool value)

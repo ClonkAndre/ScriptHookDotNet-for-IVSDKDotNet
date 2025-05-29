@@ -49,7 +49,7 @@ namespace value {
 	void PedAnimation::WaitUntilFinished(GTA::AnimationSet^ AnimationSet, String^ AnimationName) {
 		if isNULL(AnimationSet) return;
 		while (AnimationSet->isPedPlayingAnimation(ped,AnimationName)) {
-			WHILE_LOG("PedAnimation::WaitUntilFinished");
+			//WHILE_LOG("PedAnimation::WaitUntilFinished"); // <- This should work now
 			GTA::Game::WaitInCurrentScript(0);
 		}
 	}

@@ -188,6 +188,7 @@ typedef float f32;
 #define WHILE_LOG(sender) if (VERBOSE) GTA::NetHook::Log("IN WHILE LOOP: " + sender)
 
 #define WRITE_TO_DEBUG_OUTPUT(text) if (VERBOSE && System::Diagnostics::Debugger::IsAttached) System::Diagnostics::Debugger::Log(0, "ScriptHookDotNet", text + "\n")
+#define WRITE_TO_DEBUG_OUTPUT_FORCED(text) System::Diagnostics::Debugger::Log(0, "ScriptHookDotNet", text + "\n")
 #define LOG_NATIVE_CALL_TO_DEBUG_OUTPUT(text) if (VERBOSENATIVECALL && System::Diagnostics::Debugger::IsAttached) System::Diagnostics::Debugger::Log(0, "ScriptHookDotNet Native Call", text + "\n")
 #define LOG_STACK_TRACE() if (VERBOSE) WRITE_TO_DEBUG_OUTPUT((gcnew System::Diagnostics::StackTrace())->ToString())
 
@@ -200,6 +201,7 @@ typedef float f32;
 #define WHILE_LOG(sender)
 
 #define WRITE_TO_DEBUG_OUTPUT(text)
+#define WRITE_TO_DEBUG_OUTPUT_FORCED(text)
 #define LOG_NATIVE_CALL_TO_DEBUG_OUTPUT(text)
 #define LOG_STACK_TRACE()
 

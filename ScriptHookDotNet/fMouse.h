@@ -70,7 +70,10 @@ namespace Forms
 				bool rD = IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::Right);
 				bool mD = IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::Middle);
 
-				if (!lD && !rD && !mD)
+				bool xBtn1 = IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::XButton1);
+				bool xBtn2 = IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::XButton2);
+
+				if (!lD && !rD && !mD && !xBtn1 && !xBtn2)
 					return System::Windows::Forms::MouseButtons::None;
 
 				System::Windows::Forms::MouseButtons pressedButtons;
@@ -82,13 +85,17 @@ namespace Forms
 				if (mD)
 					pressedButtons = pressedButtons | System::Windows::Forms::MouseButtons::Middle;
 
+				if (xBtn1)
+					pressedButtons = pressedButtons | System::Windows::Forms::MouseButtons::XButton1;
+				if (xBtn2)
+					pressedButtons = pressedButtons | System::Windows::Forms::MouseButtons::XButton2;
+
 				return pressedButtons;
 			}
 		}
 
 		virtual bool isButtonDown(System::Windows::Forms::MouseButtons Button) override
 		{
-			// TODO: Add support for XButton1 and XButton2 in the future (If needed)
 			switch (Button)
 			{
 				case System::Windows::Forms::MouseButtons::Left:
@@ -97,6 +104,10 @@ namespace Forms
 					return IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::Right);
 				case System::Windows::Forms::MouseButtons::Middle:
 					return IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::Middle);
+				case System::Windows::Forms::MouseButtons::XButton1:
+					return IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::XButton1);
+				case System::Windows::Forms::MouseButtons::XButton2:
+					return IVSDKDotNet::ImGuiIV::IsMouseDown(IVSDKDotNet::Enums::eImGuiMouseButton::XButton2);
 				default:
 					return false;
 			}

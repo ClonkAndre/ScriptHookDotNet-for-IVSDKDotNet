@@ -53,7 +53,7 @@ namespace GTA{
 		Ped(int Handle);
 
 	internal:
-		void SetHandle(int Handle);
+		void SetHandle(int newHandle, String^ callerFunctionName);
 		virtual bool InternalCheckExists() override;
 
 #ifdef DEBUG

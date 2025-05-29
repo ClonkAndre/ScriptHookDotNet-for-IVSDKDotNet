@@ -48,8 +48,8 @@ namespace GTA
 	{
 		pName = ModelName;
 		
-		//pHash = IVSDKDotNet::Native::Natives::GET_HASH_KEY(ModelName);
-		pHash = (int)IVSDKDotNet::RAGE::AtStringHash(ModelName);
+		pHash = force_cast<int>(IVSDKDotNet::Native::Natives::GET_HASH_KEY_2(ModelName));
+		//pHash = force_cast<int>(IVSDKDotNet::RAGE::AtStringHash(ModelName));
 	}
 
 	// - - - Properties, Methods and Functions - - -
@@ -91,7 +91,7 @@ namespace GTA
 		if (pHash == 0)
 			return false;
 
-		IVSDKDotNet::IVStreaming::ScriptRequestModel(pHash);
+		IVSDKDotNet::Native::Natives::REQUEST_MODEL(pHash);
 
 		if (isInMemory)
 			return true;
@@ -106,18 +106,22 @@ namespace GTA
 		{
 			Game::WaitInCurrentScript(0);
 
-			IVSDKDotNet::IVStreaming::ScriptRequestModel(pHash);
+			IVSDKDotNet::Native::Natives::REQUEST_MODEL(pHash);
 
-			// Timeout. Force model to load if current thread is the main thread
+			// Timeout. Try to force model load.
 			if (DateTime::Now > maxtime)
 			{
-				if (GetManagerScript()->GetMainThreadID() == GetCurrentThreadID())
-				{
-					IVSDKDotNet::IVStreaming::LoadAllRequestedModels(false);
-					return true;
-				}
+				WRITE_TO_DEBUG_OUTPUT_FORCED(String::Format("About to try forcing the model {0} to load (using IVSDKDotNet::IVStreaming::LoadAllRequestedModels) because it did not load in time.", pHash));
 
-				return false;
+				GetManagerScript()->ThreadManager_StoreCurrentThreadTlsContext();
+				GetManagerScript()->ThreadManager_ChangeTlsContextOfCurrentThreadToContextOfTargetThread(0);
+
+				IVSDKDotNet::IVStreaming::ScriptRequestModel(pHash);
+				IVSDKDotNet::IVStreaming::LoadAllRequestedModels(false);
+
+				GetManagerScript()->ThreadManager_RestoreTlsContextForCurrentThread();
+
+				return isInMemory;
 			}
 		}
 
@@ -140,7 +144,23 @@ namespace GTA
 		if (isCollisionDataInMemory)
 			return true;
 
-		IVSDKDotNet::Native::Natives::REQUEST_COLLISION_FOR_MODEL((u32)pHash);
+		DateTime maxtime;
+		if (timeout >= 0)
+			maxtime = DateTime::Now + TimeSpan::FromMilliseconds(timeout);
+		else
+			maxtime = DateTime::MaxValue;
+
+		while (!isCollisionDataInMemory)
+		{
+			Game::WaitInCurrentScript(0);
+
+			IVSDKDotNet::Native::Natives::REQUEST_COLLISION_FOR_MODEL((u32)pHash);
+
+			// Timeout.
+			if (DateTime::Now > maxtime)
+				return false;
+		}
+
 		return true;
 	}
 

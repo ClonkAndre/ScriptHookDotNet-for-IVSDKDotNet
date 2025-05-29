@@ -112,8 +112,7 @@ namespace GTA
 	}
 	GTA::Player^ Game::LocalPlayer::get()
 	{
-		//return ContentCache::GetPlayer((int)IVSDKDotNet::Native::Natives::GET_PLAYER_ID());
-		return gcnew GTA::Player((int)IVSDKDotNet::Native::Natives::GET_PLAYER_ID());
+		return ContentCache::GetPlayer((int)IVSDKDotNet::Native::Natives::GET_PLAYER_ID());
 	}
 	array<GTA::Player^>^ Game::PlayerList::get()
 	{
@@ -131,8 +130,7 @@ namespace GTA
 		{
 			if (isPlayerActive(i))
 			{
-				//list->Add(ContentCache::GetPlayer(i));
-				list->Add(gcnew GTA::Player(i));
+				list->Add(ContentCache::GetPlayer(i));
 			}
 		}
 
@@ -496,7 +494,6 @@ namespace GTA
 
 	bool Game::CanWaitNow::get()
 	{
-		// TODO
 		//Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
 		//if isNotNULL(scr) {
 		//	return scr->CanWaitNow;
@@ -510,18 +507,7 @@ namespace GTA
 
 	void Game::WaitInCurrentScript(int ms)
 	{
-		// TODO
 		GetManagerScript()->WaitInScript(System::Guid::Empty, ms);
-
-		//Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
-		//if isNotNULL(scr) { 
-		//	scr->Wait(ms);
-		//	return;
-		//}
-		//NetThread^ trd = RemoteScriptDomain::Instance->CurrentThread;
-		//if isNotNULL(trd) {
-		//	return trd->Wait(ms);
-		//}
 	}
 
 	int Game::GenerateHash(String^ input)
