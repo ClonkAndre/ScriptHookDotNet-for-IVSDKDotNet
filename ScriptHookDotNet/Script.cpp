@@ -78,7 +78,6 @@ namespace GTA
 		BoundKeys = gcnew List<BoundKeyItem>();
 		ScriptCommands = gcnew List<BoundScriptCommandItem>();
 		ConsoleCommands = gcnew List<BoundCommandItem>();
-		ActionQueue = gcnew Queue<ScriptAction>();
 
 		// Settings
 		String^ settingsFilePath = String::Format("{0}\\scripts\\{1}.ini", IVSDKDotNet::IVGame::GameStartupPath, pFilenameWithoutExtension);
@@ -154,7 +153,7 @@ namespace GTA
 
 	bool Script::Exists(System::Object^ Object)
 	{
-		if isNULL(Object)
+		if (Object::ReferenceEquals(Object, nullptr))
 			return false;
 
 		if (Object->GetType()->IsSubclassOf(GTA::base::Object::typeid))
@@ -220,11 +219,6 @@ namespace GTA
 		{
 			ConsoleCommands->Clear();
 			ConsoleCommands = nullptr;
-		}
-		if (ActionQueue)
-		{
-			ActionQueue->Clear();
-			ActionQueue = nullptr;
 		}
 	}
 	void Script::Abort()

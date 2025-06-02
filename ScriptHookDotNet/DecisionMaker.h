@@ -32,9 +32,10 @@ namespace GTA {
 		GroupCombat,
 	};
 
-	public ref class DecisionMaker sealed : base::HandleObject {
-
-		private:static const int COPY_OFFSET = 0xFFFF + 1;
+	public ref class DecisionMaker sealed : base::HandleObject
+	{
+	private:
+		static const int COPY_OFFSET = 0xFFFF + 1;
 
 	public:
 
@@ -123,9 +124,10 @@ namespace GTA {
 
 		DecisionCategory pCategory;
 
-	internal:
-		DecisionMaker(int Handle, DecisionCategory Category);
+	public:
+		DecisionMaker(int Handle);
 
+	internal:
 		virtual bool InternalCheckExists() override;
 		
 	public:
@@ -141,8 +143,18 @@ namespace GTA {
 		//property DecisionTemplate Template {
 		//	DecisionTemplate get();
 		//}
-		property DecisionCategory Category {
-			DecisionCategory get();
+		property DecisionCategory Category
+		{
+		public:
+			DecisionCategory get()
+			{
+				return pCategory;
+			}
+		private:
+			void set(DecisionCategory value)
+			{
+				pCategory = value;
+			}
 		}
 
 		void ApplyTo(GTA::Ped^ Ped);

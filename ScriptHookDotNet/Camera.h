@@ -31,17 +31,12 @@ namespace GTA{
 		public base::HandleObject,
 		public base::iPositioned,
 		public base::iRotatable,
-		public base::iDeletable {
-
-	protected:
-		//int pHandle;
+		public base::iDeletable
+	{
+	public:
+		Camera(int Handle);
 
 	internal:
-		Camera(int Handle);
-		//property int Handle{ 
-		//	int get();
-		//}
-
 		virtual bool InternalCheckExists() override;
 
 	public:

@@ -41,7 +41,7 @@ namespace GTA
 
 	// - - - Constructor - - -
 	Vehicle::Vehicle(int handle)
-		:HandleObject(handle)
+		:HandleObject(handle, HandleType::Vehicle)
 	{
 	}
 
@@ -541,7 +541,7 @@ namespace GTA
 		if (ped == 0)
 			return nullptr;
 
-		return ContentCache::GetPed(ped);
+		return ContentCache::GetPed(ped, true);
 	}
 	GTA::Ped^ Vehicle::CreatePedOnSeat(VehicleSeat Seat, GTA::Model model, RelationshipGroup Type)
 	{
@@ -565,7 +565,7 @@ namespace GTA
 		if (ped == 0)
 			return nullptr;
 
-		return ContentCache::GetPed(ped);
+		return ContentCache::GetPed(ped, true);
 	}
 	GTA::Ped^ Vehicle::CreatePedOnSeat(VehicleSeat Seat, GTA::Model model)
 	{
@@ -599,7 +599,7 @@ namespace GTA
 		if (ped == 0)
 			return nullptr;
 
-		return ContentCache::GetPed(ped);
+		return ContentCache::GetPed(ped, false);
 	}
 
 	bool Vehicle::isSeatFree(VehicleSeat Seat)

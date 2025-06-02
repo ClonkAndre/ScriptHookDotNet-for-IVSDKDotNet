@@ -39,6 +39,7 @@ namespace GTA
 		}
 	};
 
+	[System::Runtime::InteropServices::GuidAttribute("4a37a67c-c639-4548-8ad5-72f021623f9f")]
 	public ref class Script abstract
 	{
 	private:
@@ -252,7 +253,6 @@ namespace GTA
 		List<BoundKeyItem>^ BoundKeys;
 		List<BoundScriptCommandItem>^ ScriptCommands;
 		List<BoundCommandItem>^ ConsoleCommands;
-		Queue<ScriptAction>^ ActionQueue;
 
 		Graphics^ GFX;
 

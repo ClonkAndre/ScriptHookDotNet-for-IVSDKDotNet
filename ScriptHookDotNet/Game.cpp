@@ -129,7 +129,9 @@ namespace GTA
 		for (int i = 0; i < 32; i++)
 		{
 			if (isPlayerActive(i))
+			{
 				list->Add(ContentCache::GetPlayer(i));
+			}
 		}
 
 		return list->ToArray();
@@ -492,7 +494,6 @@ namespace GTA
 
 	bool Game::CanWaitNow::get()
 	{
-		// TODO
 		//Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
 		//if isNotNULL(scr) {
 		//	return scr->CanWaitNow;
@@ -506,18 +507,7 @@ namespace GTA
 
 	void Game::WaitInCurrentScript(int ms)
 	{
-		// TODO
 		GetManagerScript()->WaitInScript(System::Guid::Empty, ms);
-
-		//Script^ scr = RemoteScriptDomain::Instance->CurrentScript;
-		//if isNotNULL(scr) { 
-		//	scr->Wait(ms);
-		//	return;
-		//}
-		//NetThread^ trd = RemoteScriptDomain::Instance->CurrentThread;
-		//if isNotNULL(trd) {
-		//	return trd->Wait(ms);
-		//}
 	}
 
 	int Game::GenerateHash(String^ input)

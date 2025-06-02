@@ -32,18 +32,17 @@ namespace base
 	[System::SerializableAttribute]
 	public ref class HandleObject abstract : base::Object, base::iHandleObject, System::IEquatable<HandleObject^>
 	{
-	protected:
-		[System::ComponentModel::EditorBrowsableAttribute(EditorBrowsableState::Never)]
-		int pHandle;
-
 	internal:
-		HandleObject(int Handle)
+		HandleObject(int handle, HandleType type)
 		{
-			pHandle = Handle;
-			UID = Handle;
+			SetInternalHandle(handle);
+			Type = type;
 		}
 
 	public:
+		[System::ComponentModel::EditorBrowsableAttribute(EditorBrowsableState::Never)]
+		int pHandle;
+
 		property int Handle
 		{
 			virtual int get() = base::iHandleObject::Handle::get
@@ -61,6 +60,13 @@ namespace base
 		property System::Object^ Metadata
 		{
 			virtual System::Object^ get();
+		}
+
+	public:
+		void SetInternalHandle(int handle)
+		{
+			pHandle = handle;
+			UID = handle;
 		}
 
 	public:

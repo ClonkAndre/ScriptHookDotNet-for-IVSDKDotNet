@@ -151,6 +151,19 @@ namespace GTA
 				System::Object^ get();
 				void set(System::Object^ value);
 			}
+			property Type^ OriginalType
+			{
+			public:
+				Type^ get()
+				{
+					return m_pOriginalType;
+				}
+			internal:
+				void set(Type^ t)
+				{
+					m_pOriginalType = t;
+				}
+			}
 
 			static operator Parameter ^ (int source);
 			static operator Parameter ^ (uint32_t source);
@@ -173,7 +186,7 @@ namespace GTA
 		private:
 			Object^ m_pValue;
 			vtype m_eType;
-
+			Type^ m_pOriginalType;
 		};
 
 		CLASS_ATTRIBUTES

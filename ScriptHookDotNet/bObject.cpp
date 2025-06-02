@@ -41,13 +41,16 @@ namespace GTA
 
 			bExists = InternalCheckExists();
 
-			// Some hacks if the function returned false
-			// thought the previous method worked.. well it did.. kinda... and apparently only once... ffs...
-			if (!bExists /*&& System::Threading::Thread::CurrentThread->ManagedThreadId != IVSDKDotNet::Manager::ManagerScript::GetInstance()->GetMainThreadID()*/)
+			// Some hacks if the function above returned false
+			if (!bExists)
 			{
 
-				// HACK: If the UID is equal to the local player character handle ID then always return true as the local player never stops existing...
-				if (UID == Game::LocalPlayer->Character->Handle)
+				int playerPedHandle;
+				int playerVehicleHandle;
+				GetManagerScript()->GetPlayerAndCurrentVehicleHandle(playerPedHandle, playerVehicleHandle);
+
+				// HACK: If the UID (Handle) is equal to the player ped handle then always return true as the player ped never stops existing...
+				if (UID == playerPedHandle)
 					bExists = true;
 
 			}

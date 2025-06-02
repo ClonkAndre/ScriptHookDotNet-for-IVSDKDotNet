@@ -47,6 +47,19 @@ namespace GTA
 		PerFrameDrawing
 	};
 
+	public enum class HandleType
+	{
+		Blip = 1,
+		Camera,
+		DecisionMaker,
+		Group,
+		Object,
+		Ped,
+		Pickup,
+		ScriptedFire,
+		Vehicle,
+	};
+
 	[FlagsAttribute]
 	public enum class AnimationFlags
 	{

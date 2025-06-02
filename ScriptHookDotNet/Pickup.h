@@ -31,11 +31,12 @@ namespace GTA{
 		public base::HandleObject,
 		public base::iPositioned,
 		public base::iInteriorObject,
-		public base::iDeletable {
-
-	internal:
+		public base::iDeletable
+	{
+	public:
 		Pickup(int Handle);
 
+	internal:
 		virtual bool InternalCheckExists() override;
 
 	public:

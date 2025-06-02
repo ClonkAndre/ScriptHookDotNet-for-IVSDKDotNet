@@ -39,7 +39,7 @@ namespace GTA
 
 	// - - - Constructor - - -
 	GTA::Object::Object(int Handle)
-		:HandleObject(Handle)
+		:HandleObject(Handle, HandleType::Object)
 	{
 	}
 

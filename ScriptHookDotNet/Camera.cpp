@@ -38,10 +38,10 @@ namespace GTA
 
 	// - - - Constructor - - -
 	Camera::Camera(int Handle)
-		:HandleObject(Handle)
+		:HandleObject(Handle, HandleType::Camera)
 	{
 	}
-	Camera::Camera() :HandleObject(0)
+	Camera::Camera() :HandleObject(0, HandleType::Camera)
 	{
 		int c;
 		IVSDKDotNet::Native::Natives::CREATE_CAM(14, c);

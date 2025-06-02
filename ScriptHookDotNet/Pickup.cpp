@@ -37,7 +37,7 @@ namespace GTA
 
 	// - - - Constructor - - -
 	Pickup::Pickup(int Handle)
-		:HandleObject(Handle)
+		:HandleObject(Handle, HandleType::Pickup)
 	{
 	}
 
@@ -126,7 +126,7 @@ namespace GTA
 		if (res == 0)
 			return nullptr;
 
-		return ContentCache::GetPickup(res);
+		return ContentCache::GetPickup(res, true);
 	}
 	GTA::Pickup^ Pickup::CreatePickup(Vector3 Position, GTA::Model Model, PickupType Type)
 	{
@@ -140,7 +140,7 @@ namespace GTA
 		if (res == 0)
 			return nullptr;
 
-		return ContentCache::GetPickup(res);
+		return ContentCache::GetPickup(res, true);
 	}
 
 	GTA::Pickup^ Pickup::CreateWeaponPickup(Vector3 Position, GTA::Weapon Weapon, int Ammo, Vector3 Rotation)
@@ -157,7 +157,7 @@ namespace GTA
 		if (res == 0)
 			return nullptr;
 
-		return ContentCache::GetPickup(res);
+		return ContentCache::GetPickup(res, true);
 	}
 	GTA::Pickup^ Pickup::CreateWeaponPickup(Vector3 Position, GTA::Weapon Weapon, int Ammo)
 	{
@@ -173,7 +173,7 @@ namespace GTA
 		if (res == 0)
 			return nullptr;
 
-		return ContentCache::GetPickup(res);
+		return ContentCache::GetPickup(res, true);
 	}
 
 	GTA::Pickup^ Pickup::CreateMoneyPickup(Vector3 Position, int MoneyAmount)
@@ -184,7 +184,7 @@ namespace GTA
 		if (res == 0)
 			return nullptr;
 
-		return ContentCache::GetPickup(res);
+		return ContentCache::GetPickup(res, true);
 	}
 
 }

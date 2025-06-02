@@ -30,8 +30,10 @@ namespace value {
 	public ref class Tasks abstract {
 
 	protected:
-		Ped^ ped;
 		static int const MAX_DURATION = 3600000; // 1 hour
+
+	public:
+		Ped^ ped;
 
 	internal:
 		Tasks(Ped^ ped);

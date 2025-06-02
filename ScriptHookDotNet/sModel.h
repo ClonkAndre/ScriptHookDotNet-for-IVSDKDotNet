@@ -47,9 +47,6 @@ namespace GTA
 
 		void AllowDisposeFromMemory();
 
-		property unsigned int Handle { 
-			unsigned int get();
-		}
 		property bool isCollisionDataInMemory { 
 			bool get();
 		}
@@ -68,6 +65,9 @@ namespace GTA
 			}
 		}
 
+		property unsigned int Handle {
+			unsigned int get();
+		}
 		property int Hash { 
 			int get();
 		}

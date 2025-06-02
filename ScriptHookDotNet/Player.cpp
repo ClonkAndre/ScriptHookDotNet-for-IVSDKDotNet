@@ -47,6 +47,25 @@ namespace GTA
 	}
 
 	// - - - Properties, Methods and Functions - - -
+	void Player::EnsurePlayerPedHandleIsUpToDate()
+	{
+		// If there is currently no stored Ped then we dont need to do anything
+		if (!pPed)
+			return;
+
+		// Get the handle of the character of this player
+		int handle;
+		IVSDKDotNet::Native::Natives::GET_PLAYER_CHAR(Index, handle);
+
+		// This should never return a junk handle as this function is always getting called from the main thread. But check it just in case.
+		if (handle <= 0)
+			return;
+
+		// Check and update handle if the handles dont match
+		if (handle != pPed->Handle)
+			pPed->SetHandle(handle, "Player::EnsurePlayerPedHandleIsUpToDate");
+	}
+
 	int Player::ID::get()
 	{
 		return pID;
@@ -57,28 +76,34 @@ namespace GTA
 	}
 	int Player::PedHandle::get()
 	{
-		int c;
-		IVSDKDotNet::Native::Natives::GET_PLAYER_CHAR(Index, c);
-		return c;
+		int handle;
+		IVSDKDotNet::Native::Natives::GET_PLAYER_CHAR(Index, handle);
+		return handle;
 	}
 
 	Ped^ Player::Character::get()
 	{
 		int handle = PedHandle;
 
-		if (handle == 0)
-			return nullptr;
+		// Most scripts call this function from the render thread, and it can happen that the "GET_PLAYER_CHAR" native
+		// returns something like "-25651", which is ultra invalid. So we just check for such a case here and return
+		// the already existing Ped which hopefully still has a valid handle.
+		if (handle <= 0)
+		{
+			WRITE_TO_DEBUG_OUTPUT_FORCED(String::Format("Got junk handle {0} for the Ped of Player {1}. Not updating.", handle, ID));
+			return pPed ? pPed : nullptr;
+		}
 
 		if (pPed)
 		{
 			if (handle == pPed->Handle)
 				return pPed;
-
-			pPed->SetHandle(handle);
+			else
+				pPed->SetHandle(handle, "Player::Character::get");
 		}
 		else
 		{
-			pPed = ContentCache::GetPed(handle);
+			pPed = ContentCache::GetPed(handle, false);
 		}
 
 		return pPed;
@@ -254,7 +279,7 @@ namespace GTA
 		if (car == 0)
 			return nullptr;
 
-		return ContentCache::GetVehicle(car);
+		return ContentCache::GetVehicle(car, false);
 	}
 
 	bool Player::isLocalPlayer::get()
@@ -304,7 +329,7 @@ namespace GTA
 		for (int i = 0; i < list->Length; i++)
 		{
 			if (IVSDKDotNet::Native::Natives::IS_PLAYER_FREE_AIMING_AT_CHAR(Index, list[i]))
-				return ContentCache::GetPed(list[i]);
+				return ContentCache::GetPed(list[i], false);
 		}
 
 		return nullptr;

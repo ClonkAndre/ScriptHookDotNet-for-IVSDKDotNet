@@ -29,11 +29,12 @@ namespace GTA{
 	[SerializableAttribute]
 	public ref class Object sealed :
 		public base::HandleObject,
-		public base::iComplexObject {
-
-	internal:
+		public base::iComplexObject
+	{
+	public:
 		Object(int Handle);
 
+	internal:
 		property bool RecordCollisions {
 			void set(bool value);
 		}

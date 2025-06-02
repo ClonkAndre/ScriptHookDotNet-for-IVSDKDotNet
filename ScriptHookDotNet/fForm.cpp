@@ -305,17 +305,11 @@ namespace Forms
 			return Windows::Forms::DialogResult::None;
 
 		Show();
-		
-		// TODO
-		//try {
-		//	GTA::Script^ scr = RemoteScriptDomain::Instance->GetCurrentScript(ScriptEvent::Tick);
-		//	if isNULL(scr) return Windows::Forms::DialogResult::None;
-		//	while (Visible) {
-		//		//GTA::Game::WaitInCurrentScript(0);
-		//		scr->Wait(0);
-		//		//if (Visible) scr->ProcessEvents();
-		//	}
-		//} catchErrors("Error during Form.ShowDialog",)
+
+		while (Visible)
+		{
+			GTA::Game::WaitInCurrentScript(0);
+		}
 
 		return DialogResult;
 	}

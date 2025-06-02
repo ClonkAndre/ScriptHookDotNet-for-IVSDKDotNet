@@ -39,7 +39,7 @@ namespace GTA
 
 	// - - - Constructor - - -
 	Blip::Blip(int Handle)
-		:HandleObject(Handle)
+		:HandleObject(Handle, HandleType::Blip)
 	{
 	}
 
@@ -135,7 +135,7 @@ namespace GTA
 				if (!IVSDKDotNet::Native::Natives::DOES_VEHICLE_EXIST(id))
 					return nullptr;
 
-				return ContentCache::GetVehicle(id);
+				return ContentCache::GetVehicle(id, false);
 			}
 			case BlipType::Ped:
 			{
@@ -144,7 +144,7 @@ namespace GTA
 				if (!IVSDKDotNet::Native::Natives::DOES_CHAR_EXIST(id))
 					return nullptr;
 
-				return ContentCache::GetPed(id);
+				return ContentCache::GetPed(id, false);
 			}
 			case BlipType::Object:
 			{
@@ -153,7 +153,7 @@ namespace GTA
 				if (!IVSDKDotNet::Native::Natives::DOES_OBJECT_EXIST(id))
 					return nullptr;
 
-				return ContentCache::GetObject(id);
+				return ContentCache::GetObject(id, false);
 			}
 			case BlipType::Pickup:
 			{
@@ -162,7 +162,7 @@ namespace GTA
 				if (!IVSDKDotNet::Native::Natives::DOES_PICKUP_EXIST(id))
 					return nullptr;
 
-				return ContentCache::GetPickup(id);
+				return ContentCache::GetPickup(id, false);
 			}
 		}
 

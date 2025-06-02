@@ -367,6 +367,7 @@ namespace GTA
 		// public:
 		Pointer::Pointer(System::Type^ type)
 		{
+			OriginalType = type;
 			SetTargetType(Parameter::GetType(type));
 		}
 

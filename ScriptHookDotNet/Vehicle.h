@@ -30,8 +30,8 @@ namespace GTA{
 	public ref class Vehicle sealed :
 		public base::HandleObject,
 		public base::iComplexObject,
-		public base::iMissionObject {
-
+		public base::iMissionObject
+	{
 	private:
 		[NonSerializedAttribute]
 		Dictionary<GTA::VehicleDoor,GTA::value::VehicleDoor^>^ pDoorCache;
@@ -45,11 +45,10 @@ namespace GTA{
 		[NonSerializedAttribute]
 		static Vehicle^ pAnyVehicle = gcnew Vehicle(0);
 
-	internal:
+	public:
 		Vehicle(int Handle);
-		//property IntPtr Handle{ 
-		//	IntPtr get();
-		//}
+
+	internal:
 		static property Vehicle^ AnyVehicle {
 			Vehicle^ get() { return pAnyVehicle; }
 		}

@@ -28,11 +28,12 @@ namespace GTA{
 	CLASS_ATTRIBUTES
 	public ref class ScriptedFire sealed :
 		public base::HandleObject,
-		public base::iDeletable {
-
-	internal:
+		public base::iDeletable
+	{
+	public:
 		ScriptedFire(int Handle);
 
+	internal:
 		virtual bool InternalCheckExists() override;
 
 	public:

@@ -46,15 +46,17 @@ namespace GTA
 
 	// - - - Constructor - - -
 	Ped::Ped(int Handle)
-		:HandleObject(Handle)
+		:HandleObject(Handle, HandleType::Ped)
 	{
 	}
 
 	// - - - Properties, Methods and Functions - - -
-	void Ped::SetHandle(int Handle)
+	void Ped::SetHandle(int newHandle, String^ callerFunctionName)
 	{
+		WRITE_TO_DEBUG_OUTPUT_FORCED(String::Format("Handle of ped {0} updated to {1}! Called from: {2}", Handle, newHandle, callerFunctionName));
+
 		ContentCache::RemovePed(this);
-		pHandle = Handle;
+		SetInternalHandle(newHandle);
 		ResetExists();
 		ContentCache::AddPed(this);
 	}
@@ -415,7 +417,7 @@ namespace GTA
 			return nullptr;
 
 		// return gcnew GTA::Vehicle(car);
-		return ContentCache::GetVehicle(car);
+		return ContentCache::GetVehicle(car, false);
 	}
 
 	Blip^ Ped::AttachBlip()
